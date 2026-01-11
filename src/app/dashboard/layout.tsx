@@ -22,7 +22,7 @@ export default async function DashboardLayout({
     .eq('auth_user_id', user.id)
     .single()
 
-  const restaurant = restaurantUser?.restaurants as { name: string; slug: string } | null
+  const restaurant = restaurantUser?.restaurants as unknown as { name: string; slug: string } | null
 
   return (
     <div className="flex h-screen bg-gray-50">

@@ -55,7 +55,7 @@ export default async function DashboardPage() {
     .eq('auth_user_id', user?.id)
     .single()
 
-  const restaurant = restaurantUser?.restaurants as { name: string; slug: string } | null
+  const restaurant = restaurantUser?.restaurants as unknown as { name: string; slug: string } | null
 
   // Get stats
   const { count: categoryCount } = await supabase
