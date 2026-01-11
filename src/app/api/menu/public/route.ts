@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServiceClient } from '@/lib/supabase/server'
+import { createClient } from '@supabase/supabase-js'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -10,7 +10,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Slug is required' }, { status: 400 })
   }
 
-  const supabase = createServiceClient()
+  // Use service role to bypass RLS
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
 
   // Get restaurant
   const { data: restaurant, error: restaurantError } = await supabase
@@ -20,6 +24,7 @@ export async function GET(request: NextRequest) {
     .single()
 
   if (restaurantError || !restaurant) {
+    console.error('Restaurant error:', restaurantError)
     return NextResponse.json({ error: 'Restaurant not found' }, { status: 404 })
   }
 
@@ -30,34 +35,31 @@ export async function GET(request: NextRequest) {
     .eq('restaurant_id', restaurant.id)
     .single()
 
-  // Get categories with items
+  // Get categories
   const { data: categories, error: categoriesError } = await supabase
     .from('menu_categories')
-    .select(`
-      *,
-      items:menu_items(
-        *,
-        options:menu_item_options(*)
-      ),
-      subcategories:menu_subcategories(*)
-    `)
+    .select('*')
     .eq('restaurant_id', restaurant.id)
     .eq('is_active', true)
     .order('sort_order')
 
   if (categoriesError) {
-    return NextResponse.json({ error: 'Failed to fetch menu' }, { status: 500 })
+    console.error('Categories error:', categoriesError)
+    return NextResponse.json({ error: 'Failed to fetch categories' }, { status: 500 })
   }
 
-  // Filter active items and sort
+  // Get items for each category
+  const { data: allItems } = await supabase
+    .from('menu_items')
+    .select('*')
+    .eq('restaurant_id', restaurant.id)
+    .eq('is_available', true)
+    .order('sort_order')
+
+  // Attach items to categories
   const processedCategories = categories?.map(category => ({
     ...category,
-    items: category.items
-      ?.filter((item: { is_available: boolean }) => item.is_available)
-      .sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order),
-    subcategories: category.subcategories
-      ?.filter((sub: { is_active: boolean }) => sub.is_active)
-      .sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order),
+    items: allItems?.filter(item => item.category_id === category.id) || [],
   })) || []
 
   // Get translations if language is not primary
@@ -80,21 +82,11 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Get featured events
-  const { data: events } = await supabase
-    .from('events')
-    .select('*')
-    .eq('restaurant_id', restaurant.id)
-    .eq('status', 'published')
-    .gte('end_at', new Date().toISOString())
-    .order('start_at')
-    .limit(5)
-
   return NextResponse.json({
     restaurant,
     settings,
     categories: processedCategories,
     translations,
-    events: events || [],
+    events: [],
   })
 }
