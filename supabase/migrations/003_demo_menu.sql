@@ -1,128 +1,132 @@
--- Demo Menu Content for Kozbeyli Konağı
--- Similar to thefoost.com style menus
+-- Foost-Style Demo Menu Content
+-- Modern restaurant menu with international cuisine
 
--- First, get or create the restaurant
 DO $$
 DECLARE
   rest_id uuid;
 BEGIN
-  -- Get existing restaurant or use a placeholder
+  -- Get existing restaurant or create new one
   SELECT id INTO rest_id FROM restaurants WHERE slug = 'kozbeyli-konagi' LIMIT 1;
 
   IF rest_id IS NULL THEN
-    INSERT INTO restaurants (name, slug, phone, address)
-    VALUES ('Kozbeyli Konağı', 'kozbeyli-konagi', '+90 232 XXX XX XX', 'İzmir, Türkiye')
+    INSERT INTO restaurants (name, slug, phone, address, default_currency)
+    VALUES ('Kozbeyli Konağı', 'kozbeyli-konagi', '+90 232 XXX XX XX', 'İzmir, Türkiye', 'USD')
     RETURNING id INTO rest_id;
+  ELSE
+    UPDATE restaurants SET default_currency = 'USD' WHERE id = rest_id;
   END IF;
 
-  -- Delete existing categories and items to avoid duplicates
+  -- Clean up existing menu data
   DELETE FROM menu_items WHERE restaurant_id = rest_id;
   DELETE FROM menu_categories WHERE restaurant_id = rest_id;
 
-  -- Create Categories
-  -- 1. Başlangıçlar (Appetizers)
+  -- ========================================
+  -- CATEGORIES (Foost Style)
+  -- ========================================
+
+  -- 1. Cold - Soğuk Mezeler
   INSERT INTO menu_categories (id, restaurant_id, name, description, sort_order, is_active, is_special)
   VALUES (
-    'a1000000-0000-0000-0000-000000000001',
+    'c1000000-0000-0000-0000-000000000001',
     rest_id,
-    'Başlangıçlar',
-    'Geleneksel Türk mutfağının en seçkin mezeleri',
+    'Cold',
+    'Fresh salads and cold appetizers',
     1,
     true,
     false
   );
 
-  -- 2. Soğuk Mezeler
+  -- 2. Hot - Sıcak Yemekler
   INSERT INTO menu_categories (id, restaurant_id, name, description, sort_order, is_active, is_special)
   VALUES (
-    'a1000000-0000-0000-0000-000000000002',
+    'c1000000-0000-0000-0000-000000000002',
     rest_id,
-    'Soğuk Mezeler',
-    'Taze ve lezzetli soğuk başlangıçlar',
+    'Hot',
+    'Warm dishes and appetizers',
     2,
     true,
     false
   );
 
-  -- 3. Sıcak Mezeler
+  -- 3. Pizzaaa - Pizzalar
   INSERT INTO menu_categories (id, restaurant_id, name, description, sort_order, is_active, is_special)
   VALUES (
-    'a1000000-0000-0000-0000-000000000003',
+    'c1000000-0000-0000-0000-000000000003',
     rest_id,
-    'Sıcak Mezeler',
-    'Sıcak servis edilen özel lezzetler',
+    'Pizzaaa',
+    'Wood-fired artisan pizzas',
     3,
     true,
     false
   );
 
-  -- 4. Ana Yemekler
+  -- 4. Main Course - Ana Yemekler
   INSERT INTO menu_categories (id, restaurant_id, name, description, sort_order, is_active, is_special)
   VALUES (
-    'a1000000-0000-0000-0000-000000000004',
+    'c1000000-0000-0000-0000-000000000004',
     rest_id,
-    'Ana Yemekler',
-    'Şefimizin özenle hazırladığı ana yemekler',
+    'Main Course',
+    'Signature dishes and entrées',
     4,
     true,
     false
   );
 
-  -- 5. Izgara Çeşitleri
+  -- 5. Brunch
   INSERT INTO menu_categories (id, restaurant_id, name, description, sort_order, is_active, is_special)
   VALUES (
-    'a1000000-0000-0000-0000-000000000005',
+    'c1000000-0000-0000-0000-000000000005',
     rest_id,
-    'Izgara Çeşitleri',
-    'Kömür ateşinde pişirilen lezzetler',
+    'Brunch',
+    'Weekend brunch favorites',
     5,
     true,
     false
   );
 
-  -- 6. Salatalar
+  -- 6. Sweet - Tatlılar
   INSERT INTO menu_categories (id, restaurant_id, name, description, sort_order, is_active, is_special)
   VALUES (
-    'a1000000-0000-0000-0000-000000000006',
+    'c1000000-0000-0000-0000-000000000006',
     rest_id,
-    'Salatalar',
-    'Taze sebzelerle hazırlanan salatalar',
+    'Sweet',
+    'Desserts and sweet treats',
     6,
     true,
     false
   );
 
-  -- 7. Tatlılar
+  -- 7. Cocktails - Kokteyller
   INSERT INTO menu_categories (id, restaurant_id, name, description, sort_order, is_active, is_special)
   VALUES (
-    'a1000000-0000-0000-0000-000000000007',
+    'c1000000-0000-0000-0000-000000000007',
     rest_id,
-    'Tatlılar',
-    'Geleneksel ve modern tatlı çeşitleri',
+    'Cocktails',
+    'Signature cocktails and drinks',
     7,
     true,
     false
   );
 
-  -- 8. İçecekler
+  -- 8. Spirit Free - Alkolsüz
   INSERT INTO menu_categories (id, restaurant_id, name, description, sort_order, is_active, is_special)
   VALUES (
-    'a1000000-0000-0000-0000-000000000008',
+    'c1000000-0000-0000-0000-000000000008',
     rest_id,
-    'İçecekler',
-    'Soğuk ve sıcak içecek çeşitleri',
+    'Spirit Free',
+    'Refreshing non-alcoholic beverages',
     8,
     true,
     false
   );
 
-  -- 9. Özel Menü (Special)
+  -- 9. Chef's Special (Featured)
   INSERT INTO menu_categories (id, restaurant_id, name, description, sort_order, is_active, is_special)
   VALUES (
-    'a1000000-0000-0000-0000-000000000009',
+    'c1000000-0000-0000-0000-000000000009',
     rest_id,
-    'Şefin Önerileri',
-    'Bu hafta şefimizin özel olarak hazırladığı lezzetler',
+    'Chef''s Special',
+    'This week''s special creations by our chef',
     0,
     true,
     true
@@ -132,100 +136,101 @@ BEGIN
   -- MENU ITEMS
   -- ========================================
 
-  -- Başlangıçlar
-  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, calories, grams, prep_minutes, featured, is_new, sort_order)
-  VALUES
-  (rest_id, 'a1000000-0000-0000-0000-000000000001', 'Humus', 'Nohut ezmesi, tahin, zeytinyağı ve limon ile', 85.00, 180, 150, 5, false, false, 1),
-  (rest_id, 'a1000000-0000-0000-0000-000000000001', 'Babaganuş', 'Közlenmiş patlıcan ezmesi, tahin ve sarımsak ile', 95.00, 160, 150, 5, false, false, 2),
-  (rest_id, 'a1000000-0000-0000-0000-000000000001', 'Çiğ Köfte', 'Geleneksel usül acılı çiğ köfte, marul ve nar ekşisi ile', 110.00, 220, 200, 10, true, false, 3),
-  (rest_id, 'a1000000-0000-0000-0000-000000000001', 'Mücver', 'Kabak, havuç ve otlarla hazırlanan çıtır köfteler', 90.00, 240, 180, 15, false, false, 4);
+  -- COLD (Soğuk Mezeler)
+  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, currency, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions) VALUES
+  (rest_id, 'c1000000-0000-0000-0000-000000000001', 'Little Gem Salad', 'Baby gem lettuce, shaved parmesan, anchovy vinaigrette, garlic croutons', 12.50, 'USD', 180, 200, 10, false, false, 1, ARRAY['gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000001', 'Rainbow Beets', 'Roasted rainbow beets, goat cheese mousse, candied walnuts, micro greens, honey balsamic', 12.50, 'USD', 220, 180, 10, false, false, 2, ARRAY['vegetarian', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000001', 'Tuscan Kale', 'Lacinato kale, lemon caesar dressing, pecorino romano, toasted breadcrumbs', 12.50, 'USD', 190, 180, 8, false, false, 3, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000001', 'Burrata Caprese', 'Burrata di gioia, fresh basil, heirloom cherry tomato, basil walnut pesto, grey salt, baguette', 13.50, 'USD', 320, 220, 8, true, false, 4, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000001', 'Lettuce Cups', 'Butter lettuce, spiced chicken, pickled vegetables, thai basil, sweet chili sauce', 14.00, 'USD', 280, 200, 12, false, false, 5, ARRAY['gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000001', 'Tuna Tartare', 'Fresh ahi tuna, avocado, sesame soy dressing, crispy wonton chips', 16.00, 'USD', 240, 180, 10, false, true, 6, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000001', 'Mediterranean Mezze', 'Hummus, baba ganoush, tzatziki, marinated olives, warm pita bread', 15.00, 'USD', 380, 280, 10, false, false, 7, ARRAY['vegetarian']);
 
-  -- Soğuk Mezeler
-  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions)
-  VALUES
-  (rest_id, 'a1000000-0000-0000-0000-000000000002', 'Atom', 'Acılı domates ezmesi, ceviz ve biber ile', 75.00, 120, 120, 5, false, false, 1, ARRAY['vegan']),
-  (rest_id, 'a1000000-0000-0000-0000-000000000002', 'Haydari', 'Yoğurt, sarımsak ve dereotu ile hazırlanan meze', 70.00, 150, 130, 5, false, false, 2, ARRAY['vegetarian']),
-  (rest_id, 'a1000000-0000-0000-0000-000000000002', 'Patlıcan Salatası', 'Közlenmiş patlıcan, biber ve domates ile', 85.00, 140, 150, 10, false, false, 3, ARRAY['vegan']),
-  (rest_id, 'a1000000-0000-0000-0000-000000000002', 'Cacık', 'Yoğurt, salatalık, sarımsak ve nane ile', 65.00, 100, 150, 5, false, false, 4, ARRAY['vegetarian']),
-  (rest_id, 'a1000000-0000-0000-0000-000000000002', 'Zeytinyağlı Enginar', 'Taze enginar, bezelye ve havuç ile', 120.00, 180, 200, 30, false, true, 5, ARRAY['vegan']),
-  (rest_id, 'a1000000-0000-0000-0000-000000000002', 'Yaprak Sarma', 'Zeytinyağlı asma yaprağı dolması', 95.00, 200, 180, 20, false, false, 6, ARRAY['vegan']);
+  -- HOT (Sıcak Yemekler)
+  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, currency, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions) VALUES
+  (rest_id, 'c1000000-0000-0000-0000-000000000002', 'Scallop Medallions', 'Pan-seared sea scallops, cauliflower purée, brown butter, crispy capers', 17.00, 'USD', 320, 180, 15, true, false, 1, ARRAY['gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000002', 'Bacari Fries', 'Truffle parmesan fries, rosemary aioli, pecorino romano', 12.50, 'USD', 480, 250, 12, false, false, 2, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000002', 'Beef Cheek', 'Braised beef cheek, creamy polenta, gremolata, natural jus', 16.50, 'USD', 520, 280, 25, false, false, 3, ARRAY['gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000002', 'Crispy Calamari', 'Flash-fried calamari, cherry peppers, lemon aioli, fresh herbs', 14.50, 'USD', 380, 200, 12, false, false, 4, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000002', 'Meatballs Al Forno', 'Beef and pork meatballs, san marzano tomato, ricotta, fresh basil', 13.50, 'USD', 420, 220, 18, false, false, 5, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000002', 'Roasted Bone Marrow', 'Herb-crusted bone marrow, parsley salad, grilled sourdough', 15.00, 'USD', 380, 200, 20, false, true, 6, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000002', 'Mushroom Arancini', 'Crispy risotto balls, wild mushroom, truffle cream, parmesan', 12.00, 'USD', 340, 180, 15, false, false, 7, ARRAY['vegetarian']);
 
-  -- Sıcak Mezeler
-  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, calories, grams, prep_minutes, featured, is_new, sort_order)
-  VALUES
-  (rest_id, 'a1000000-0000-0000-0000-000000000003', 'Sigara Böreği', 'Çıtır yufka içinde beyaz peynir, 4 adet', 95.00, 320, 160, 10, false, false, 1),
-  (rest_id, 'a1000000-0000-0000-0000-000000000003', 'Midye Tava', 'Çıtır kaplamalı midye, tarator sos ile', 145.00, 380, 200, 15, true, false, 2),
-  (rest_id, 'a1000000-0000-0000-0000-000000000003', 'Kalamar Tava', 'Çıtır kaplamalı kalamar halkaları', 165.00, 350, 200, 15, false, false, 3),
-  (rest_id, 'a1000000-0000-0000-0000-000000000003', 'Karides Güveç', 'Tereyağlı karides, domates ve sarımsak ile', 195.00, 320, 250, 20, false, true, 4),
-  (rest_id, 'a1000000-0000-0000-0000-000000000003', 'Arnavut Ciğeri', 'Baharatlı dana ciğer, soğan ile', 135.00, 280, 200, 15, false, false, 5),
-  (rest_id, 'a1000000-0000-0000-0000-000000000003', 'Paçanga Böreği', 'Pastırmalı ve kaşarlı çıtır börek', 125.00, 400, 180, 15, false, false, 6);
+  -- PIZZAAA
+  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, currency, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions) VALUES
+  (rest_id, 'c1000000-0000-0000-0000-000000000003', 'Margherita', 'San marzano tomato, fresh mozzarella, basil, extra virgin olive oil', 15.00, 'USD', 680, 320, 15, false, false, 1, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000003', 'Smoked Mushroom', 'Smoked wild mushrooms, fontina, truffle oil, fresh thyme', 15.00, 'USD', 720, 320, 15, false, false, 2, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000003', 'Vegan Delight', 'Cashew ricotta, roasted vegetables, arugula, balsamic glaze', 15.00, 'USD', 580, 300, 15, false, false, 3, ARRAY['vegan']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000003', 'Asian Pear & Brie', 'Asian pear, double cream brie, guava fromage blanc, wild arugula, grey salt, frantoia olive oil', 15.00, 'USD', 640, 300, 15, true, false, 4, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000003', 'Bacon & Brie', 'Applewood bacon, double cream brie, organic tomato sauce, fresh jalapeño', 16.00, 'USD', 780, 340, 15, false, false, 5, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000003', 'Prosciutto', 'Prosciutto di parma, burrata, arugula, balsamic reduction', 17.00, 'USD', 720, 320, 15, false, false, 6, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000003', 'Pepperoni Classic', 'Cup and char pepperoni, mozzarella, san marzano tomato, oregano', 15.00, 'USD', 820, 340, 15, false, false, 7, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000003', 'Quattro Formaggi', 'Mozzarella, gorgonzola, fontina, parmesan, honey drizzle', 16.00, 'USD', 760, 320, 15, false, true, 8, ARRAY['vegetarian']);
 
-  -- Ana Yemekler
-  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, calories, grams, prep_minutes, featured, is_new, sort_order)
-  VALUES
-  (rest_id, 'a1000000-0000-0000-0000-000000000004', 'Kuzu Tandır', 'Fırında yavaş pişirilmiş kuzu eti, pilav ile', 385.00, 650, 350, 180, true, false, 1),
-  (rest_id, 'a1000000-0000-0000-0000-000000000004', 'Hünkar Beğendi', 'Dana eti, patlıcan püresi üzerinde', 295.00, 520, 320, 45, false, false, 2),
-  (rest_id, 'a1000000-0000-0000-0000-000000000004', 'Ali Nazik', 'Yoğurtlu patlıcan püresi üzerinde dana kavurma', 275.00, 480, 300, 35, false, false, 3),
-  (rest_id, 'a1000000-0000-0000-0000-000000000004', 'İskender Kebap', 'Döner, tereyağı, domates sosu ve yoğurt ile', 265.00, 580, 350, 20, true, false, 4),
-  (rest_id, 'a1000000-0000-0000-0000-000000000004', 'Karnıyarık', 'Patlıcan dolması, kıymalı, pilav ile', 195.00, 420, 300, 40, false, false, 5),
-  (rest_id, 'a1000000-0000-0000-0000-000000000004', 'Mantı', 'El açması mantı, yoğurt ve tereyağlı sos ile', 175.00, 380, 280, 25, false, false, 6),
-  (rest_id, 'a1000000-0000-0000-0000-000000000004', 'Levrek Buğulama', 'Buharda pişirilmiş levrek, sebzeler ile', 285.00, 320, 300, 25, false, true, 7);
+  -- MAIN COURSE (Ana Yemekler)
+  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, currency, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions) VALUES
+  (rest_id, 'c1000000-0000-0000-0000-000000000004', 'Grilled Ribeye', '12oz prime ribeye, roasted fingerlings, chimichurri, seasonal vegetables', 38.00, 'USD', 780, 450, 25, true, false, 1, ARRAY['gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000004', 'Pan-Roasted Salmon', 'Atlantic salmon, quinoa, roasted broccolini, lemon butter sauce', 28.00, 'USD', 520, 350, 20, false, false, 2, ARRAY['gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000004', 'Lamb Chops', 'New Zealand lamb chops, mint pesto, whipped potatoes, asparagus', 34.00, 'USD', 680, 380, 22, false, false, 3, ARRAY['gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000004', 'Chicken Milanese', 'Crispy chicken cutlet, arugula, cherry tomatoes, shaved parmesan, lemon', 24.00, 'USD', 620, 350, 18, false, false, 4, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000004', 'Seafood Linguine', 'Shrimp, mussels, clams, white wine garlic sauce, fresh herbs', 26.00, 'USD', 580, 380, 20, false, false, 5, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000004', 'Braised Short Rib', 'Red wine braised short rib, celery root purée, glazed carrots', 32.00, 'USD', 720, 400, 30, false, true, 6, ARRAY['gluten-free']);
 
-  -- Izgara Çeşitleri
-  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, calories, grams, prep_minutes, featured, is_new, sort_order)
-  VALUES
-  (rest_id, 'a1000000-0000-0000-0000-000000000005', 'Kuzu Pirzola', 'Izgara kuzu pirzola, 4 adet', 395.00, 580, 320, 20, true, false, 1),
-  (rest_id, 'a1000000-0000-0000-0000-000000000005', 'Adana Kebap', 'Acılı el yapımı kebap, lavaş ve közlenmiş sebze ile', 225.00, 450, 280, 15, false, false, 2),
-  (rest_id, 'a1000000-0000-0000-0000-000000000005', 'Urfa Kebap', 'Acısız el yapımı kebap, lavaş ve közlenmiş sebze ile', 225.00, 440, 280, 15, false, false, 3),
-  (rest_id, 'a1000000-0000-0000-0000-000000000005', 'Tavuk Şiş', 'Marine edilmiş tavuk göğsü şiş', 175.00, 320, 250, 15, false, false, 4),
-  (rest_id, 'a1000000-0000-0000-0000-000000000005', 'Köfte', 'Geleneksel ızgara köfte, pilav ile', 185.00, 420, 260, 15, false, false, 5),
-  (rest_id, 'a1000000-0000-0000-0000-000000000005', 'Karışık Izgara', 'Pirzola, Adana, köfte ve tavuk şiş (2 kişilik)', 595.00, 980, 500, 25, true, false, 6),
-  (rest_id, 'a1000000-0000-0000-0000-000000000005', 'Beyti Sarma', 'Adana kebap, lavaş sarma, yoğurt ve tereyağ ile', 265.00, 520, 320, 20, false, false, 7);
+  -- BRUNCH
+  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, currency, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions) VALUES
+  (rest_id, 'c1000000-0000-0000-0000-000000000005', 'Shakshouka', 'Baked eggs, spiced tomato, bell peppers, feta cheese, crusty bread', 12.50, 'USD', 380, 280, 18, false, false, 1, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000005', 'Avocado Toast', 'Smashed avocado, poached eggs, everything seasoning, microgreens, sourdough', 13.50, 'USD', 420, 250, 12, true, false, 2, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000005', 'Chef''s French Toast', 'Brioche french toast, mascarpone, fresh berries, maple syrup, candied pecans', 12.50, 'USD', 580, 280, 15, false, false, 3, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000005', 'Eggs Benedict', 'Poached eggs, canadian bacon, hollandaise, english muffin, breakfast potatoes', 14.00, 'USD', 620, 320, 15, false, false, 4, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000005', 'Açai Bowl', 'Açai blend, granola, fresh fruits, coconut, honey drizzle', 11.00, 'USD', 340, 300, 8, false, false, 5, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000005', 'Breakfast Burrito', 'Scrambled eggs, chorizo, black beans, cheddar, avocado, salsa verde', 13.00, 'USD', 680, 350, 12, false, false, 6, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000005', 'Greek Yogurt Parfait', 'Greek yogurt, house granola, seasonal fruits, honey', 9.00, 'USD', 280, 250, 5, false, false, 7, ARRAY['vegetarian', 'gluten-free']);
 
-  -- Salatalar
-  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions)
-  VALUES
-  (rest_id, 'a1000000-0000-0000-0000-000000000006', 'Çoban Salata', 'Domates, salatalık, biber, soğan ve maydanoz', 65.00, 80, 200, 5, false, false, 1, ARRAY['vegan']),
-  (rest_id, 'a1000000-0000-0000-0000-000000000006', 'Akdeniz Salata', 'Yeşillik, domates, zeytin, beyaz peynir', 95.00, 180, 250, 5, false, false, 2, ARRAY['vegetarian']),
-  (rest_id, 'a1000000-0000-0000-0000-000000000006', 'Sezar Salata', 'Marul, parmesan, kruton, özel sos ile', 115.00, 280, 280, 10, false, false, 3, ARRAY[]::text[]),
-  (rest_id, 'a1000000-0000-0000-0000-000000000006', 'Izgara Hellim Salata', 'Yeşillik, ızgara hellim peyniri, cherry domates', 135.00, 320, 300, 10, false, true, 4, ARRAY['vegetarian']),
-  (rest_id, 'a1000000-0000-0000-0000-000000000006', 'Roka Salata', 'Roka, parmesan, nar ve ceviz', 105.00, 220, 200, 5, false, false, 5, ARRAY['vegetarian']);
+  -- SWEET (Tatlılar)
+  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, currency, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions) VALUES
+  (rest_id, 'c1000000-0000-0000-0000-000000000006', 'Bread Pudding', 'Warm brioche bread pudding, bourbon caramel, vanilla ice cream', 9.00, 'USD', 520, 180, 10, false, false, 1, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000006', 'Double Chocolate Cake', 'Rich chocolate layer cake, chocolate ganache, fresh raspberries', 10.00, 'USD', 580, 160, 5, true, false, 2, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000006', 'The Best Tiramisu', 'Classic tiramisu, espresso-soaked ladyfingers, mascarpone cream', 9.00, 'USD', 480, 160, 5, false, false, 3, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000006', 'Bacari Ice Cream', 'Vanilla bean gelato, walnut, clover honey drizzle', 8.00, 'USD', 320, 140, 3, false, false, 4, ARRAY['vegetarian', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000006', 'Crème Brûlée', 'Classic vanilla custard, caramelized sugar, fresh berries', 9.00, 'USD', 380, 150, 5, false, false, 5, ARRAY['vegetarian', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000006', 'Affogato', 'Vanilla gelato, fresh espresso shot, biscotti', 7.00, 'USD', 280, 120, 3, false, false, 6, ARRAY['vegetarian']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000006', 'Seasonal Fruit Tart', 'Buttery pastry crust, vanilla pastry cream, fresh seasonal fruits', 10.00, 'USD', 420, 160, 5, false, true, 7, ARRAY['vegetarian']);
 
-  -- Tatlılar
-  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, calories, grams, prep_minutes, featured, is_new, sort_order)
-  VALUES
-  (rest_id, 'a1000000-0000-0000-0000-000000000007', 'Künefe', 'Sıcak servis, kadayıf ve peynir ile', 145.00, 480, 200, 15, true, false, 1),
-  (rest_id, 'a1000000-0000-0000-0000-000000000007', 'Baklava', 'Antep fıstıklı baklava, 4 dilim', 125.00, 520, 150, 5, false, false, 2),
-  (rest_id, 'a1000000-0000-0000-0000-000000000007', 'Sütlaç', 'Fırın sütlaç, tarçın ile', 75.00, 280, 180, 5, false, false, 3),
-  (rest_id, 'a1000000-0000-0000-0000-000000000007', 'Kazandibi', 'Geleneksel karamelize muhallebi', 85.00, 300, 180, 5, false, false, 4),
-  (rest_id, 'a1000000-0000-0000-0000-000000000007', 'Katmer', 'Antep usulü, fıstık ve kaymak ile', 155.00, 550, 180, 10, false, true, 5),
-  (rest_id, 'a1000000-0000-0000-0000-000000000007', 'Profiterol', 'Çikolata soslu, kremalı', 95.00, 420, 160, 5, false, false, 6),
-  (rest_id, 'a1000000-0000-0000-0000-000000000007', 'Dondurma (3 Top)', 'Vanilyalı, çikolatalı veya meyveli', 65.00, 240, 120, 2, false, false, 7);
+  -- COCKTAILS
+  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, currency, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions) VALUES
+  (rest_id, 'c1000000-0000-0000-0000-000000000007', 'Bacarita', 'Premium tequila, fresh lime, agave, triple sec, salted rim', 17.00, 'USD', 180, 200, 5, true, false, 1, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000007', 'Chill Pill', 'Vodka, elderflower liqueur, cucumber, mint, lime, soda', 17.00, 'USD', 160, 200, 5, false, false, 2, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000007', 'True Signature', 'Bourbon, amaretto, orange bitters, luxardo cherry', 17.00, 'USD', 200, 180, 5, false, false, 3, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000007', 'Espresso Martini', 'Vodka, kahlúa, fresh espresso, vanilla', 16.00, 'USD', 220, 180, 5, false, false, 4, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000007', 'Aperol Spritz', 'Aperol, prosecco, soda, fresh orange', 14.00, 'USD', 150, 220, 3, false, false, 5, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000007', 'Moscow Mule', 'Premium vodka, fresh lime, ginger beer, mint', 15.00, 'USD', 170, 200, 4, false, false, 6, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000007', 'Negroni', 'Gin, campari, sweet vermouth, orange peel', 16.00, 'USD', 190, 150, 3, false, false, 7, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000007', 'Passion Fruit Mojito', 'White rum, passion fruit, mint, lime, soda', 16.00, 'USD', 180, 220, 5, false, true, 8, ARRAY['vegan', 'gluten-free']);
 
-  -- İçecekler
-  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, calories, grams, prep_minutes, featured, is_new, sort_order)
-  VALUES
-  (rest_id, 'a1000000-0000-0000-0000-000000000008', 'Türk Kahvesi', 'Geleneksel usül pişirilmiş', 45.00, 10, 80, 5, false, false, 1),
-  (rest_id, 'a1000000-0000-0000-0000-000000000008', 'Çay', 'Demlik çay', 25.00, 0, 200, 2, false, false, 2),
-  (rest_id, 'a1000000-0000-0000-0000-000000000008', 'Ayran', 'Ev yapımı ayran', 35.00, 80, 300, 2, false, false, 3),
-  (rest_id, 'a1000000-0000-0000-0000-000000000008', 'Şalgam', 'Adana usulü şalgam suyu', 40.00, 30, 300, 2, false, false, 4),
-  (rest_id, 'a1000000-0000-0000-0000-000000000008', 'Limonata', 'Taze sıkılmış limonata', 55.00, 120, 350, 5, false, false, 5),
-  (rest_id, 'a1000000-0000-0000-0000-000000000008', 'Meyveli Soda', 'Elma, şeftali veya vişne', 45.00, 80, 330, 2, false, false, 6),
-  (rest_id, 'a1000000-0000-0000-0000-000000000008', 'Su (500ml)', 'Doğal kaynak suyu', 15.00, 0, 500, 1, false, false, 7),
-  (rest_id, 'a1000000-0000-0000-0000-000000000008', 'Gazlı İçecek', 'Cola, Fanta, Sprite', 35.00, 140, 330, 1, false, false, 8);
+  -- SPIRIT FREE (Alkolsüz)
+  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, currency, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions) VALUES
+  (rest_id, 'c1000000-0000-0000-0000-000000000008', 'Got It Goin'' On (G.I.G.O)', 'Grapefruit, lavender, honey, fresh lemon, soda water', 10.50, 'USD', 80, 250, 5, true, false, 1, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000008', 'Berry Bliss', 'Mixed berries, vanilla, lime, ginger ale', 9.50, 'USD', 90, 250, 5, false, false, 2, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000008', 'Cucumber Cooler', 'Fresh cucumber, mint, lime, simple syrup, soda', 9.00, 'USD', 60, 250, 4, false, false, 3, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000008', 'Fresh Lemonade', 'House-made lemonade, fresh mint', 7.00, 'USD', 120, 300, 3, false, false, 4, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000008', 'Sparkling Water', 'San Pellegrino or Acqua Panna (750ml)', 6.00, 'USD', 0, 750, 1, false, false, 5, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000008', 'Fresh Orange Juice', 'Freshly squeezed orange juice', 8.00, 'USD', 110, 300, 3, false, false, 6, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000008', 'Iced Coffee', 'Cold brew coffee, oat milk option available', 6.00, 'USD', 50, 350, 2, false, false, 7, ARRAY['vegan', 'gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000008', 'Matcha Latte', 'Premium matcha, steamed oat milk, honey', 7.50, 'USD', 140, 300, 4, false, true, 8, ARRAY['vegan', 'gluten-free']);
 
-  -- Şefin Önerileri (Special Category)
-  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, calories, grams, prep_minutes, featured, is_new, sort_order)
-  VALUES
-  (rest_id, 'a1000000-0000-0000-0000-000000000009', 'Özel Kuzu Incik', 'Fırında 6 saat pişirilmiş kuzu incik, sebze püresli', 425.00, 720, 400, 360, true, true, 1),
-  (rest_id, 'a1000000-0000-0000-0000-000000000009', 'Deniz Mahsulleri Güveci', 'Karides, kalamar, midye ve levrek, özel sos ile', 365.00, 480, 380, 30, true, true, 2),
-  (rest_id, 'a1000000-0000-0000-0000-000000000009', 'Mevsim Özel Tatlısı', 'Şefin günlük özel tatlı seçimi', 135.00, 380, 180, 15, false, true, 3);
+  -- CHEF'S SPECIAL (Özel Menü)
+  INSERT INTO menu_items (restaurant_id, category_id, name, description, price, currency, calories, grams, prep_minutes, featured, is_new, sort_order, dietary_restrictions) VALUES
+  (rest_id, 'c1000000-0000-0000-0000-000000000009', 'Wagyu Beef Tartare', 'A5 wagyu beef, quail egg yolk, truffle aioli, crostini', 28.00, 'USD', 380, 180, 12, true, true, 1, ARRAY[]::text[]),
+  (rest_id, 'c1000000-0000-0000-0000-000000000009', 'Lobster Risotto', 'Maine lobster, saffron arborio rice, mascarpone, chives', 36.00, 'USD', 620, 350, 25, true, true, 2, ARRAY['gluten-free']),
+  (rest_id, 'c1000000-0000-0000-0000-000000000009', 'Truffle Honey Pizza', 'Black truffle, burrata, wild honey, arugula, parmesan', 22.00, 'USD', 680, 300, 15, true, true, 3, ARRAY['vegetarian']);
 
   -- Update restaurant settings
   INSERT INTO restaurant_settings (restaurant_id, primary_language, supported_languages, theme)
-  VALUES (rest_id, 'tr', ARRAY['tr', 'en'], '{"primaryColor": "#8B4513", "backgroundColor": "#FDF5E6"}'::jsonb)
+  VALUES (rest_id, 'en', ARRAY['en', 'tr', 'es', 'fr', 'de', 'it', 'ru', 'ar', 'zh', 'ja', 'ko'],
+    '{"primaryColor": "#1a1a2e", "backgroundColor": "#16213e", "accentColor": "#e94560"}'::jsonb)
   ON CONFLICT (restaurant_id) DO UPDATE SET
-    supported_languages = ARRAY['tr', 'en'],
-    theme = '{"primaryColor": "#8B4513", "backgroundColor": "#FDF5E6"}'::jsonb;
+    primary_language = 'en',
+    supported_languages = ARRAY['en', 'tr', 'es', 'fr', 'de', 'it', 'ru', 'ar', 'zh', 'ja', 'ko'],
+    theme = '{"primaryColor": "#1a1a2e", "backgroundColor": "#16213e", "accentColor": "#e94560"}'::jsonb;
 
 END $$;
