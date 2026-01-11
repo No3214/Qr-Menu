@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,81 +18,37 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
-  const supabase = createClient()
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      // Sign up the user
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email,
-        password,
+      const slug = slugify(restaurantName) + '-' + Date.now().toString(36)
+
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          restaurantName,
+          slug,
+        }),
       })
 
-      if (authError) {
+      const data = await response.json()
+
+      if (!response.ok) {
         toast({
           title: 'Kayıt başarısız',
-          description: authError.message,
+          description: data.error || 'Bir hata oluştu',
           variant: 'destructive',
         })
         return
       }
-
-      if (!authData.user) {
-        toast({
-          title: 'Kayıt başarısız',
-          description: 'Kullanıcı oluşturulamadı',
-          variant: 'destructive',
-        })
-        return
-      }
-
-      // Create restaurant
-      const slug = slugify(restaurantName) + '-' + Date.now().toString(36)
-      const { data: restaurant, error: restaurantError } = await supabase
-        .from('restaurants')
-        .insert({
-          name: restaurantName,
-          slug,
-        })
-        .select()
-        .single()
-
-      if (restaurantError) {
-        toast({
-          title: 'Restoran oluşturulamadı',
-          description: restaurantError.message,
-          variant: 'destructive',
-        })
-        return
-      }
-
-      // Link user to restaurant
-      const { error: linkError } = await supabase
-        .from('restaurant_users')
-        .insert({
-          restaurant_id: restaurant.id,
-          auth_user_id: authData.user.id,
-          role: 'owner',
-        })
-
-      if (linkError) {
-        toast({
-          title: 'Kullanıcı bağlanamadı',
-          description: linkError.message,
-          variant: 'destructive',
-        })
-        return
-      }
-
-      // Create default settings
-      await supabase
-        .from('restaurant_settings')
-        .insert({
-          restaurant_id: restaurant.id,
-        })
 
       toast({
         title: 'Kayıt başarılı',
