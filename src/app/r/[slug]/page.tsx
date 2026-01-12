@@ -172,7 +172,7 @@ export default function PublicMenuPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Brand Header */}
       <div className="bg-white text-center py-2 border-b border-gray-100">
-        <span className="text-sm font-semibold tracking-[0.3em] text-gray-800">FOOST</span>
+        <span className="text-sm font-semibold tracking-[0.3em] text-gray-800">GRAIN</span>
       </div>
 
       {/* Main Header Card */}
@@ -524,7 +524,7 @@ export default function PublicMenuPage() {
       {/* Powered by Footer */}
       <div className="text-center py-6 text-gray-400 text-sm">
         <Zap className="w-4 h-4 inline mr-1" />
-        Powered by Foost
+        Powered by Grain
       </div>
 
       {/* Language Sidebar */}
