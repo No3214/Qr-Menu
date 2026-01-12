@@ -4,18 +4,18 @@ import { useEffect, useState, useRef } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import {
+  Menu,
+  Search,
   Globe,
   Star,
-  Clock,
-  Flame,
-  Leaf,
-  Wheat,
-  Info,
-  MessageSquare,
+  ChevronDown,
+  ChevronUp,
+  ArrowRight,
+  Zap,
   X,
   Volume2,
   VolumeX,
-  ChevronDown,
+  MessageSquare,
 } from 'lucide-react'
 import { formatPrice, cn } from '@/lib/utils'
 import type { Restaurant, MenuCategoryWithItems, MenuItem, RestaurantSettings } from '@/types'
@@ -28,6 +28,8 @@ interface MenuData {
   translations: Record<string, Record<string, string>>
 }
 
+type ViewMode = 'home' | 'category'
+
 export default function PublicMenuPage() {
   const params = useParams()
   const searchParams = useSearchParams()
@@ -37,11 +39,13 @@ export default function PublicMenuPage() {
   const [data, setData] = useState<MenuData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null)
-  const [language, setLanguage] = useState('en')
+  const [viewMode, setViewMode] = useState<ViewMode>('home')
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+  const [language, setLanguage] = useState('tr')
   const [showLanguageMenu, setShowLanguageMenu] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
+  const [showSidebar, setShowSidebar] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
   const videoRef = useRef<HTMLVideoElement>(null)
   const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
@@ -74,9 +78,6 @@ export default function PublicMenuPage() {
         if (!res.ok) throw new Error('Menu not found')
         const menuData = await res.json()
         setData(menuData)
-        if (menuData.categories?.[0]) {
-          setSelectedCategory(menuData.categories[0].id)
-        }
       } catch (e) {
         setError('Menu not found')
       } finally {
@@ -93,23 +94,41 @@ export default function PublicMenuPage() {
     }
   }, [data?.restaurant?.id])
 
-  // Scroll to category
-  const scrollToCategory = (categoryId: string) => {
-    setSelectedCategory(categoryId)
-    categoryRefs.current[categoryId]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    trackEvent('category_view', 'category', categoryId)
-  }
-
   // Get translated text
   const t = (entityType: string, entityId: string, field: string, fallback: string) => {
     const key = `${entityType}_${entityId}`
     return data?.translations?.[key]?.[field] || fallback
   }
 
+  const toggleItemExpand = (itemId: string) => {
+    setExpandedItems(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(itemId)) {
+        newSet.delete(itemId)
+      } else {
+        newSet.add(itemId)
+      }
+      return newSet
+    })
+  }
+
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategoryId(categoryId)
+    setViewMode('category')
+    trackEvent('category_view', 'category', categoryId)
+  }
+
+  const scrollToCategory = (categoryId: string) => {
+    setSelectedCategoryId(categoryId)
+    setTimeout(() => {
+      categoryRefs.current[categoryId]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 100)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-gray-800 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -118,369 +137,410 @@ export default function PublicMenuPage() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="text-center">
-          <p className="text-xl font-medium text-gray-900">Menu not available</p>
-          <p className="text-gray-500 mt-2">Please try again later</p>
+          <p className="text-xl font-medium text-gray-900">Menü bulunamadı</p>
+          <p className="text-gray-500 mt-2">Lütfen daha sonra tekrar deneyin</p>
         </div>
       </div>
     )
   }
 
   const { restaurant, settings, categories } = data
+  const selectedCategory = categories.find(c => c.id === selectedCategoryId)
+
+  // Dietary icon component
+  const DietaryIcons = ({ item }: { item: MenuItem }) => {
+    const icons: JSX.Element[] = []
+    item.dietary_restrictions?.forEach((diet, idx) => {
+      const d = diet.toLowerCase()
+      if (d.includes('vegan') || d.includes('vegetarian')) {
+        icons.push(<span key={idx} className="text-green-600">🥬</span>)
+      }
+      if (d.includes('gluten')) {
+        icons.push(<span key={idx} className="text-amber-600">🌾</span>)
+      }
+      if (d.includes('spicy') || d.includes('acı')) {
+        icons.push(<span key={idx}>🌶️</span>)
+      }
+    })
+    if (item.prep_minutes) {
+      icons.push(<span key="time" className="text-gray-400">⏱️</span>)
+    }
+    return icons.length > 0 ? <span className="inline-flex gap-1 ml-2">{icons}</span> : null
+  }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section - Full Width Video/Image */}
-      <div className="relative w-full h-[280px] bg-black">
-        {restaurant.video_url ? (
-          <>
-            <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted={isMuted}
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-            >
-              <source src={restaurant.video_url} type="video/mp4" />
-            </video>
-            <button
-              onClick={() => setIsMuted(!isMuted)}
-              className="absolute bottom-4 right-4 z-20 w-10 h-10 bg-black/60 rounded-full flex items-center justify-center"
-            >
-              {isMuted ? (
-                <VolumeX className="w-5 h-5 text-white" />
-              ) : (
-                <Volume2 className="w-5 h-5 text-white" />
-              )}
-            </button>
-          </>
-        ) : restaurant.cover_image_url ? (
-          <Image
-            src={restaurant.cover_image_url}
-            alt={restaurant.name}
-            fill
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-800 to-amber-950" />
+    <div className="min-h-screen bg-gray-50">
+      {/* Brand Header */}
+      <div className="bg-white text-center py-2 border-b border-gray-100">
+        <span className="text-sm font-semibold tracking-[0.3em] text-gray-800">FOOST</span>
+      </div>
+
+      {/* Main Header Card */}
+      <div className="bg-white mx-4 mt-4 rounded-2xl shadow-sm overflow-hidden">
+        {/* Navigation Bar */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+          <button
+            onClick={() => setShowSidebar(true)}
+            className="p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Menu className="w-5 h-5 text-gray-700" />
+          </button>
+
+          {restaurant.logo_url ? (
+            <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-100">
+              <Image
+                src={restaurant.logo_url}
+                alt={restaurant.name}
+                width={48}
+                height={48}
+                className="object-cover w-full h-full"
+              />
+            </div>
+          ) : (
+            <div className="text-center">
+              <p className="text-xs text-gray-500 font-medium">{restaurant.name}</p>
+            </div>
+          )}
+
+          <button
+            onClick={() => setShowLanguageMenu(true)}
+            className="p-2 -mr-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Search className="w-5 h-5 text-gray-700" />
+          </button>
+        </div>
+
+        {viewMode === 'category' && (
+          /* Category Tabs */
+          <div className="overflow-x-auto scrollbar-hide border-b border-gray-100">
+            <div className="flex px-4 py-3 gap-6 min-w-max">
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => scrollToCategory(category.id)}
+                  className={cn(
+                    'text-sm whitespace-nowrap transition-colors pb-1',
+                    selectedCategoryId === category.id
+                      ? 'text-gray-900 font-semibold border-b-2 border-gray-900'
+                      : 'text-gray-500 hover:text-gray-700'
+                  )}
+                >
+                  {t('category', category.id, 'name', category.name)}
+                </button>
+              ))}
+            </div>
+          </div>
         )}
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-        {/* Top Bar */}
-        <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4">
-          <div className="flex items-center gap-3">
-            {restaurant.logo_url && (
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-white shadow-lg">
+        {/* Content Area */}
+        {viewMode === 'home' ? (
+          /* HOME VIEW - Category Grid */
+          <div className="p-4">
+            {/* Hero Video/Image */}
+            <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden mb-4">
+              {restaurant.video_url ? (
+                <>
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    loop
+                    muted={isMuted}
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                  >
+                    <source src={restaurant.video_url} type="video/mp4" />
+                  </video>
+                  <button
+                    onClick={() => setIsMuted(!isMuted)}
+                    className="absolute bottom-3 right-3 z-20 w-8 h-8 bg-black/40 rounded-full flex items-center justify-center"
+                  >
+                    {isMuted ? (
+                      <VolumeX className="w-4 h-4 text-white" />
+                    ) : (
+                      <Volume2 className="w-4 h-4 text-white" />
+                    )}
+                  </button>
+                </>
+              ) : restaurant.cover_image_url ? (
                 <Image
-                  src={restaurant.logo_url}
+                  src={restaurant.cover_image_url}
                   alt={restaurant.name}
-                  width={48}
-                  height={48}
-                  className="object-cover w-full h-full"
+                  fill
+                  className="object-cover"
+                  priority
                 />
-              </div>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowLanguageMenu(true)}
-              className="w-10 h-10 bg-black/60 rounded-full flex items-center justify-center"
-            >
-              <Globe className="w-5 h-5 text-white" />
-            </button>
-          </div>
-        </div>
-
-        {/* Restaurant Name */}
-        <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
-          <h1 className="text-2xl font-bold text-white">{restaurant.name}</h1>
-          {restaurant.address && (
-            <p className="text-white/80 text-sm mt-1">{restaurant.address}</p>
-          )}
-        </div>
-      </div>
-
-      {/* Category Tabs - Sticky */}
-      <div className="sticky top-0 z-30 bg-white border-b border-gray-100">
-        <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex px-4 py-3 gap-2 min-w-max">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => scrollToCategory(category.id)}
-                className={cn(
-                  'px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all',
-                  selectedCategory === category.id
-                    ? 'bg-black text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                )}
-              >
-                {t('category', category.id, 'name', category.name)}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Menu Content */}
-      <div className="pb-24">
-        {categories.map((category) => (
-          <div
-            key={category.id}
-            ref={(el) => { categoryRefs.current[category.id] = el }}
-            className="scroll-mt-14"
-          >
-            {/* Category Header */}
-            <div className="px-4 pt-6 pb-3">
-              <h2 className="text-xl font-bold text-gray-900">
-                {t('category', category.id, 'name', category.name)}
-              </h2>
-              {category.description && (
-                <p className="text-gray-500 text-sm mt-1">
-                  {t('category', category.id, 'description', category.description)}
-                </p>
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-700 to-amber-900" />
               )}
+              <div className="absolute inset-0 bg-black/20" />
+
+              {/* View Menu Button */}
+              <button
+                onClick={() => {
+                  if (categories[0]) handleCategorySelect(categories[0].id)
+                }}
+                className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm text-gray-800 py-3 rounded-lg font-medium text-sm hover:bg-white transition-colors"
+              >
+                Menüyü Görüntüle
+              </button>
             </div>
 
-            {/* Menu Items */}
-            <div className="px-4 space-y-3">
-              {category.items?.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => {
-                    setSelectedItem(item)
-                    trackEvent('item_click', 'item', item.id)
-                  }}
-                  className="flex gap-3 p-3 bg-white rounded-xl border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+            {/* Category Grid */}
+            <div className="space-y-3">
+              {categories.map((category, index) => (
+                <button
+                  key={category.id}
+                  onClick={() => handleCategorySelect(category.id)}
+                  className={cn(
+                    'relative w-full rounded-xl overflow-hidden',
+                    index === 0 ? 'aspect-[16/9]' : 'aspect-[16/7]',
+                    index > 0 && index % 2 === 1 && categories[index + 1] ? 'hidden' : ''
+                  )}
                 >
-                  {/* Item Image */}
-                  <div className="relative w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-                    {item.video_url ? (
-                      <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover"
-                      >
-                        <source src={item.video_url} type="video/mp4" />
-                      </video>
-                    ) : item.image_url ? (
+                  {category.image_url ? (
+                    <Image
+                      src={category.image_url}
+                      alt={category.name}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-stone-600 to-stone-800" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 p-4">
+                    <h3 className="text-white font-bold text-lg">
+                      {t('category', category.id, 'name', category.name)}
+                    </h3>
+                    {category.description && (
+                      <p className="text-white/70 text-sm mt-0.5">
+                        {t('category', category.id, 'description', category.description)}
+                      </p>
+                    )}
+                  </div>
+                </button>
+              ))}
+
+              {/* 2-column grid for remaining categories */}
+              <div className="grid grid-cols-2 gap-3">
+                {categories.slice(1).map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => handleCategorySelect(category.id)}
+                    className="relative aspect-[4/3] rounded-xl overflow-hidden"
+                  >
+                    {category.image_url ? (
                       <Image
-                        src={item.image_url}
-                        alt={item.name}
+                        src={category.image_url}
+                        alt={category.name}
                         fill
                         className="object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100">
-                        <span className="text-3xl">🍽️</span>
-                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-stone-600 to-stone-800" />
                     )}
-                  </div>
-
-                  {/* Item Details */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-gray-900 text-[15px] leading-tight">
-                        {t('item', item.id, 'name', item.name)}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div className="absolute bottom-0 left-0 p-3">
+                      <h3 className="text-white font-bold text-sm leading-tight">
+                        {t('category', category.id, 'name', category.name)}
                       </h3>
-                      <span className="font-bold text-gray-900 text-[15px] whitespace-nowrap">
-                        {formatPrice(item.price, item.currency)}
-                      </span>
+                      {category.description && (
+                        <p className="text-white/70 text-xs mt-0.5 line-clamp-1">
+                          {t('category', category.id, 'description', category.description)}
+                        </p>
+                      )}
                     </div>
-
-                    {item.description && (
-                      <p className="text-gray-500 text-[13px] mt-1.5 line-clamp-2 leading-relaxed">
-                        {t('item', item.id, 'description', item.description)}
-                      </p>
-                    )}
-
-                    {/* Badges */}
-                    <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-                      {item.dietary_restrictions?.map((diet) => {
-                        const lowerDiet = diet.toLowerCase()
-                        let icon = null
-                        let bgColor = 'bg-gray-100'
-                        let textColor = 'text-gray-600'
-
-                        if (lowerDiet.includes('vegan')) {
-                          icon = <Leaf className="w-3 h-3" />
-                          bgColor = 'bg-green-50'
-                          textColor = 'text-green-700'
-                        } else if (lowerDiet.includes('vegetarian')) {
-                          icon = <Leaf className="w-3 h-3" />
-                          bgColor = 'bg-green-50'
-                          textColor = 'text-green-700'
-                        } else if (lowerDiet.includes('gluten')) {
-                          icon = <Wheat className="w-3 h-3" />
-                          bgColor = 'bg-amber-50'
-                          textColor = 'text-amber-700'
-                        }
-
-                        return (
-                          <span
-                            key={diet}
-                            className={cn(
-                              'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium',
-                              bgColor,
-                              textColor
-                            )}
-                          >
-                            {icon}
-                            {diet}
-                          </span>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        ))}
+        ) : (
+          /* CATEGORY VIEW - Menu Items */
+          <div className="p-4">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                ref={(el) => { categoryRefs.current[category.id] = el }}
+                className="scroll-mt-32"
+              >
+                {/* Featured Item Banner */}
+                {category.items?.[0]?.image_url && (
+                  <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-4">
+                    <Image
+                      src={category.items[0].image_url}
+                      alt={category.items[0].name}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 p-4">
+                      <p className="text-white font-semibold">
+                        {t('item', category.items[0].id, 'name', category.items[0].name)}
+                      </p>
+                      <p className="text-white/80 text-sm">
+                        ₺{category.items[0].price}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Category Title */}
+                <h2 className="text-lg font-bold text-gray-900 mb-4">
+                  {t('category', category.id, 'name', category.name)}
+                </h2>
+
+                {/* Menu Items */}
+                <div className="space-y-1">
+                  {category.items?.map((item) => {
+                    const isExpanded = expandedItems.has(item.id)
+
+                    return (
+                      <div key={item.id} className="border-b border-gray-100 last:border-0">
+                        {/* Item Header */}
+                        <div
+                          className="flex gap-3 py-4 cursor-pointer"
+                          onClick={() => {
+                            toggleItemExpand(item.id)
+                            trackEvent('item_click', 'item', item.id)
+                          }}
+                        >
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            {/* Title Row */}
+                            <div className="flex items-center gap-1">
+                              <h3 className="font-semibold text-gray-900 text-[15px]">
+                                {t('item', item.id, 'name', item.name)}
+                              </h3>
+                              {isExpanded ? (
+                                <ChevronUp className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                              ) : (
+                                <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                              )}
+                              <DietaryIcons item={item} />
+                            </div>
+
+                            {/* Description */}
+                            {item.description && (
+                              <p className={cn(
+                                'text-gray-500 text-sm mt-1.5 leading-relaxed',
+                                !isExpanded && 'line-clamp-2'
+                              )}>
+                                {t('item', item.id, 'description', item.description)}
+                              </p>
+                            )}
+
+                            {/* See More Link */}
+                            {item.description && item.description.length > 100 && !isExpanded && (
+                              <button className="text-teal-600 text-sm mt-1 hover:underline">
+                                Devamını Gör
+                              </button>
+                            )}
+
+                            {/* Price */}
+                            <p className="text-gray-900 font-semibold mt-2">
+                              ₺ {item.price}
+                            </p>
+
+                            {/* Explore Button (when expanded) */}
+                            {isExpanded && (
+                              <button className="mt-3 px-4 py-2 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-50 inline-flex items-center gap-1">
+                                Keşfet
+                                <ArrowRight className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+
+                          {/* Item Image */}
+                          {item.image_url && (
+                            <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                              <Image
+                                src={item.image_url}
+                                alt={item.name}
+                                width={96}
+                                height={96}
+                                className="object-cover w-full h-full"
+                              />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Recommendations (when expanded) */}
+                        {isExpanded && (
+                          <div className="pb-4">
+                            <h4 className="text-sm font-semibold text-gray-900 mb-3">Öneriler</h4>
+                            <div className="flex gap-3 overflow-x-auto scrollbar-hide -mx-4 px-4">
+                              {category.items?.slice(0, 3).filter(i => i.id !== item.id).map((recItem) => (
+                                <div
+                                  key={recItem.id}
+                                  className="flex-shrink-0 w-40 bg-gray-50 rounded-xl p-3"
+                                >
+                                  {recItem.image_url && (
+                                    <div className="w-full aspect-[4/3] rounded-lg overflow-hidden mb-2">
+                                      <Image
+                                        src={recItem.image_url}
+                                        alt={recItem.name}
+                                        width={160}
+                                        height={120}
+                                        className="object-cover w-full h-full"
+                                      />
+                                    </div>
+                                  )}
+                                  <h5 className="font-medium text-gray-900 text-sm">
+                                    {t('item', recItem.id, 'name', recItem.name)}
+                                  </h5>
+                                  <p className="text-gray-500 text-xs mt-1">
+                                    <span className="font-semibold text-gray-700">Neden?</span>{' '}
+                                    {recItem.description?.slice(0, 50)}...
+                                  </p>
+                                  <p className="text-gray-900 font-semibold text-sm mt-2">
+                                    ₺ {recItem.price}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <div className="h-6" />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Floating Feedback Button */}
+      {/* Fast Feedback Button */}
       <button
         onClick={() => setShowFeedback(true)}
-        className="fixed bottom-6 right-4 bg-black text-white px-5 py-3 rounded-full shadow-lg flex items-center gap-2 z-40 hover:bg-gray-800 transition-colors"
+        className="fixed bottom-20 left-4 bg-gray-900 text-white text-xs font-medium px-4 py-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors z-40"
       >
-        <MessageSquare className="w-4 h-4" />
-        <span className="text-sm font-medium">Feedback</span>
+        FAST FEEDBACK
       </button>
 
-      {/* Item Detail Modal */}
-      {selectedItem && (
-        <div className="fixed inset-0 z-50 bg-black/60" onClick={() => setSelectedItem(null)}>
+      {/* Powered by Footer */}
+      <div className="text-center py-6 text-gray-400 text-sm">
+        <Zap className="w-4 h-4 inline mr-1" />
+        Powered by Foost
+      </div>
+
+      {/* Language Sidebar */}
+      {showLanguageMenu && (
+        <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setShowLanguageMenu(false)}>
           <div
-            className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[85vh] overflow-y-auto animate-slide-up"
+            className="absolute right-0 top-0 bottom-0 w-72 bg-white p-6 animate-slide-in-right"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Handle */}
-            <div className="sticky top-0 bg-white pt-3 pb-2 flex justify-center z-10">
-              <div className="w-10 h-1 bg-gray-300 rounded-full" />
-            </div>
-
-            {/* Item Image */}
-            <div className="relative w-full h-56 bg-gray-100">
-              {selectedItem.video_url ? (
-                <video
-                  autoPlay
-                  loop
-                  controls
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover"
-                >
-                  <source src={selectedItem.video_url} type="video/mp4" />
-                </video>
-              ) : selectedItem.image_url ? (
-                <Image
-                  src={selectedItem.image_url}
-                  alt={selectedItem.name}
-                  fill
-                  className="object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100">
-                  <span className="text-6xl">🍽️</span>
-                </div>
-              )}
-
-              {/* Close Button */}
-              <button
-                onClick={() => setSelectedItem(null)}
-                className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md"
-              >
-                <X className="w-4 h-4 text-gray-600" />
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-bold text-gray-900">Dil Seçimi</h3>
+              <button onClick={() => setShowLanguageMenu(false)}>
+                <X className="w-5 h-5 text-gray-500" />
               </button>
             </div>
-
-            {/* Item Content */}
-            <div className="p-5">
-              <div className="flex items-start justify-between gap-3">
-                <h2 className="text-xl font-bold text-gray-900">
-                  {t('item', selectedItem.id, 'name', selectedItem.name)}
-                </h2>
-                <span className="text-xl font-bold text-gray-900 whitespace-nowrap">
-                  {formatPrice(selectedItem.price, selectedItem.currency)}
-                </span>
-              </div>
-
-              {selectedItem.description && (
-                <p className="text-gray-600 text-[15px] mt-3 leading-relaxed">
-                  {t('item', selectedItem.id, 'description', selectedItem.description)}
-                </p>
-              )}
-
-              {/* Quick Info */}
-              {(selectedItem.prep_minutes || selectedItem.calories) && (
-                <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
-                  {selectedItem.prep_minutes && (
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {selectedItem.prep_minutes} min
-                    </span>
-                  )}
-                  {selectedItem.calories && (
-                    <span className="flex items-center gap-1">
-                      <Flame className="w-4 h-4" />
-                      {selectedItem.calories} cal
-                    </span>
-                  )}
-                </div>
-              )}
-
-              {/* Dietary Tags */}
-              {selectedItem.dietary_restrictions && selectedItem.dietary_restrictions.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {selectedItem.dietary_restrictions.map((diet) => (
-                    <span
-                      key={diet}
-                      className="px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700 font-medium"
-                    >
-                      {diet}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {/* Allergen Warning */}
-              {selectedItem.allergen_warnings && selectedItem.allergen_warnings.length > 0 && (
-                <div className="mt-4 p-3 bg-red-50 rounded-xl">
-                  <p className="text-sm font-medium text-red-700 mb-2">Allergens</p>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedItem.allergen_warnings.map((allergen) => (
-                      <span
-                        key={allergen}
-                        className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-md font-medium"
-                      >
-                        {allergen}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Language Modal */}
-      {showLanguageMenu && (
-        <div className="fixed inset-0 z-50 bg-black/60" onClick={() => setShowLanguageMenu(false)}>
-          <div
-            className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-5 animate-slide-up"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-center mb-4">
-              <div className="w-10 h-1 bg-gray-300 rounded-full" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Select Language</h3>
-            <div className="space-y-2 max-h-[50vh] overflow-y-auto">
+            <div className="space-y-2">
               {SUPPORTED_LANGUAGES.filter(
                 l => settings?.supported_languages?.includes(l.code)
               ).map((lang) => (
@@ -493,8 +553,8 @@ export default function PublicMenuPage() {
                   className={cn(
                     'w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left',
                     language === lang.code
-                      ? 'bg-black text-white'
-                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                      ? 'bg-gray-900 text-white'
+                      : 'hover:bg-gray-100 text-gray-900'
                   )}
                 >
                   <span className="text-xl">{lang.flag}</span>
@@ -506,17 +566,57 @@ export default function PublicMenuPage() {
         </div>
       )}
 
+      {/* Sidebar Menu */}
+      {showSidebar && (
+        <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setShowSidebar(false)}>
+          <div
+            className="absolute left-0 top-0 bottom-0 w-72 bg-white p-6 animate-slide-in-left"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-bold text-gray-900">{restaurant.name}</h3>
+              <button onClick={() => setShowSidebar(false)}>
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+            <div className="space-y-1">
+              <button
+                onClick={() => {
+                  setViewMode('home')
+                  setShowSidebar(false)
+                }}
+                className="w-full text-left p-3 rounded-lg hover:bg-gray-100 font-medium"
+              >
+                Ana Sayfa
+              </button>
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => {
+                    handleCategorySelect(category.id)
+                    setShowSidebar(false)
+                  }}
+                  className="w-full text-left p-3 rounded-lg hover:bg-gray-100"
+                >
+                  {t('category', category.id, 'name', category.name)}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Feedback Modal */}
       {showFeedback && (
-        <div className="fixed inset-0 z-50 bg-black/60" onClick={() => setShowFeedback(false)}>
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end" onClick={() => setShowFeedback(false)}>
           <div
-            className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-5 animate-slide-up"
+            className="w-full bg-white rounded-t-3xl p-6 animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-center mb-4">
               <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Leave Feedback</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Geri Bildirim</h3>
             <FeedbackForm
               restaurantId={restaurant.id}
               onSuccess={() => setShowFeedback(false)}
@@ -535,15 +635,25 @@ export default function PublicMenuPage() {
           scrollbar-width: none;
         }
         @keyframes slide-up {
-          from {
-            transform: translateY(100%);
-          }
-          to {
-            transform: translateY(0);
-          }
+          from { transform: translateY(100%); }
+          to { transform: translateY(0); }
         }
         .animate-slide-up {
           animation: slide-up 0.3s ease-out;
+        }
+        @keyframes slide-in-right {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        .animate-slide-in-right {
+          animation: slide-in-right 0.3s ease-out;
+        }
+        @keyframes slide-in-left {
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
+        }
+        .animate-slide-in-left {
+          animation: slide-in-left 0.3s ease-out;
         }
       `}</style>
     </div>
@@ -588,7 +698,7 @@ function FeedbackForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="text-sm font-medium text-gray-700">Rating</label>
+        <label className="text-sm font-medium text-gray-700">Puanınız</label>
         <div className="flex gap-2 mt-2">
           {[1, 2, 3, 4, 5].map((value) => (
             <button
@@ -610,31 +720,31 @@ function FeedbackForm({
         </div>
       </div>
       <div>
-        <label className="text-sm font-medium text-gray-700">Name (Optional)</label>
+        <label className="text-sm font-medium text-gray-700">Adınız (Opsiyonel)</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full mt-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-          placeholder="Your name"
+          className="w-full mt-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900"
+          placeholder="Adınız"
         />
       </div>
       <div>
-        <label className="text-sm font-medium text-gray-700">Comment</label>
+        <label className="text-sm font-medium text-gray-700">Yorumunuz</label>
         <textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           rows={4}
-          className="w-full mt-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent resize-none"
-          placeholder="Tell us about your experience..."
+          className="w-full mt-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none"
+          placeholder="Deneyiminizi paylaşın..."
         />
       </div>
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-black text-white py-3 rounded-xl font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
+        className="w-full bg-gray-900 text-white py-3 rounded-xl font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
       >
-        {loading ? 'Submitting...' : 'Submit'}
+        {loading ? 'Gönderiliyor...' : 'Gönder'}
       </button>
     </form>
   )
