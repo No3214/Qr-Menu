@@ -3,12 +3,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import {
   Globe,
   Star,
@@ -18,10 +12,10 @@ import {
   Wheat,
   Info,
   MessageSquare,
-  ArrowLeft,
+  X,
   Volume2,
   VolumeX,
-  X,
+  ChevronDown,
 } from 'lucide-react'
 import { formatPrice, cn } from '@/lib/utils'
 import type { Restaurant, MenuCategoryWithItems, MenuItem, RestaurantSettings } from '@/types'
@@ -32,17 +26,7 @@ interface MenuData {
   settings: RestaurantSettings
   categories: MenuCategoryWithItems[]
   translations: Record<string, Record<string, string>>
-  events: Array<{
-    id: string
-    title: string
-    description: string
-    media_url: string
-    start_at: string
-    end_at: string
-  }>
 }
-
-type ViewMode = 'categories' | 'items'
 
 export default function PublicMenuPage() {
   const params = useParams()
@@ -53,17 +37,16 @@ export default function PublicMenuPage() {
   const [data, setData] = useState<MenuData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [viewMode, setViewMode] = useState<ViewMode>('categories')
-  const [selectedCategory, setSelectedCategory] = useState<MenuCategoryWithItems | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null)
   const [language, setLanguage] = useState('en')
   const [showLanguageMenu, setShowLanguageMenu] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
-  const [showGuestInfo, setShowGuestInfo] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
 
-  // Track page view
+  // Track event
   const trackEvent = async (eventType: string, entityType?: string, entityId?: string) => {
     if (!data?.restaurant?.id) return
     try {
@@ -88,11 +71,12 @@ export default function PublicMenuPage() {
     const fetchMenu = async () => {
       try {
         const res = await fetch(`/api/menu/public?slug=${slug}&lang=${language}`)
-        if (!res.ok) {
-          throw new Error('Menu not found')
-        }
+        if (!res.ok) throw new Error('Menu not found')
         const menuData = await res.json()
         setData(menuData)
+        if (menuData.categories?.[0]) {
+          setSelectedCategory(menuData.categories[0].id)
+        }
       } catch (e) {
         setError('Menu not found')
       } finally {
@@ -109,43 +93,33 @@ export default function PublicMenuPage() {
     }
   }, [data?.restaurant?.id])
 
+  // Scroll to category
+  const scrollToCategory = (categoryId: string) => {
+    setSelectedCategory(categoryId)
+    categoryRefs.current[categoryId]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    trackEvent('category_view', 'category', categoryId)
+  }
+
   // Get translated text
   const t = (entityType: string, entityId: string, field: string, fallback: string) => {
     const key = `${entityType}_${entityId}`
     return data?.translations?.[key]?.[field] || fallback
   }
 
-  const handleCategoryClick = (category: MenuCategoryWithItems) => {
-    setSelectedCategory(category)
-    setViewMode('items')
-    trackEvent('category_view', 'category', category.id)
-  }
-
-  const handleBackToCategories = () => {
-    setViewMode('categories')
-    setSelectedCategory(null)
-  }
-
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#faf9f6]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#2d2d2d] mx-auto"></div>
-          <p className="mt-4 text-[#666] font-medium">Loading menu...</p>
-        </div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   if (error || !data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#faf9f6]">
-        <div className="text-center px-6">
-          <div className="w-20 h-20 bg-[#f0f0f0] rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-4xl">🍽️</span>
-          </div>
-          <h1 className="text-2xl font-bold text-[#2d2d2d] mb-2">Menu Not Found</h1>
-          <p className="text-[#666]">This restaurant menu is not available.</p>
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <div className="text-center">
+          <p className="text-xl font-medium text-gray-900">Menu not available</p>
+          <p className="text-gray-500 mt-2">Please try again later</p>
         </div>
       </div>
     )
@@ -153,471 +127,425 @@ export default function PublicMenuPage() {
 
   const { restaurant, settings, categories } = data
 
-  // Dietary icon helper
-  const getDietaryIcon = (diet: string) => {
-    const lowerDiet = diet.toLowerCase()
-    if (lowerDiet.includes('vegan')) return <Leaf className="h-3.5 w-3.5" />
-    if (lowerDiet.includes('vegetarian')) return <Leaf className="h-3.5 w-3.5" />
-    if (lowerDiet.includes('gluten')) return <Wheat className="h-3.5 w-3.5" />
-    return null
-  }
-
   return (
-    <div className="min-h-screen bg-[#faf9f6]">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#faf9f6]/95 backdrop-blur-sm border-b border-[#e8e8e8]">
-        <div className="flex items-center justify-between px-4 py-3">
-          {viewMode === 'items' ? (
-            <button
-              onClick={handleBackToCategories}
-              className="flex items-center gap-2 text-[#2d2d2d] font-medium"
+    <div className="min-h-screen bg-white">
+      {/* Hero Section - Full Width Video/Image */}
+      <div className="relative w-full h-[280px] bg-black">
+        {restaurant.video_url ? (
+          <>
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted={isMuted}
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
             >
-              <ArrowLeft className="h-5 w-5" />
-              <span>Back</span>
-            </button>
-          ) : (
-            <div className="flex items-center gap-3">
-              {restaurant.logo_url && (
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-white shadow-sm">
-                  <Image
-                    src={restaurant.logo_url}
-                    alt={restaurant.name}
-                    width={40}
-                    height={40}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
+              <source src={restaurant.video_url} type="video/mp4" />
+            </video>
+            <button
+              onClick={() => setIsMuted(!isMuted)}
+              className="absolute bottom-4 right-4 z-20 w-10 h-10 bg-black/60 rounded-full flex items-center justify-center"
+            >
+              {isMuted ? (
+                <VolumeX className="w-5 h-5 text-white" />
+              ) : (
+                <Volume2 className="w-5 h-5 text-white" />
               )}
-              <h1 className="text-lg font-bold text-[#2d2d2d] truncate max-w-[200px]">
-                {restaurant.name}
-              </h1>
-            </div>
-          )}
+            </button>
+          </>
+        ) : restaurant.cover_image_url ? (
+          <Image
+            src={restaurant.cover_image_url}
+            alt={restaurant.name}
+            fill
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-800 to-amber-950" />
+        )}
 
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+        {/* Top Bar */}
+        <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4">
+          <div className="flex items-center gap-3">
+            {restaurant.logo_url && (
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-white shadow-lg">
+                <Image
+                  src={restaurant.logo_url}
+                  alt={restaurant.name}
+                  width={48}
+                  height={48}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowLanguageMenu(true)}
-              className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center hover:bg-gray-50 transition-colors"
+              className="w-10 h-10 bg-black/60 rounded-full flex items-center justify-center"
             >
-              <Globe className="h-4 w-4 text-[#2d2d2d]" />
-            </button>
-            <button
-              onClick={() => setShowGuestInfo(true)}
-              className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center hover:bg-gray-50 transition-colors"
-            >
-              <Info className="h-4 w-4 text-[#2d2d2d]" />
+              <Globe className="w-5 h-5 text-white" />
             </button>
           </div>
         </div>
 
-        {/* Category Title when viewing items */}
-        {viewMode === 'items' && selectedCategory && (
-          <div className="px-4 pb-3">
-            <h2 className="text-2xl font-bold text-[#2d2d2d]">
-              {t('category', selectedCategory.id, 'name', selectedCategory.name)}
-            </h2>
-            {selectedCategory.description && (
-              <p className="text-[#666] text-sm mt-1">
-                {t('category', selectedCategory.id, 'description', selectedCategory.description)}
-              </p>
-            )}
-          </div>
-        )}
-      </header>
+        {/* Restaurant Name */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
+          <h1 className="text-2xl font-bold text-white">{restaurant.name}</h1>
+          {restaurant.address && (
+            <p className="text-white/80 text-sm mt-1">{restaurant.address}</p>
+          )}
+        </div>
+      </div>
 
-      {/* Main Content */}
-      <main className="pb-24">
-        {viewMode === 'categories' ? (
-          /* Category Grid View */
-          <div className="p-4">
-            {/* Hero Video/Image */}
-            {(restaurant.video_url || restaurant.cover_image_url) && (
-              <div className="relative w-full h-48 rounded-2xl overflow-hidden mb-6 shadow-lg">
-                {restaurant.video_url ? (
-                  <>
-                    <video
-                      ref={videoRef}
-                      autoPlay
-                      loop
-                      muted={isMuted}
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-cover"
-                    >
-                      <source src={restaurant.video_url} type="video/mp4" />
-                    </video>
-                    <button
-                      onClick={() => setIsMuted(!isMuted)}
-                      className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white"
-                    >
-                      {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-                    </button>
-                  </>
-                ) : (
-                  <Image
-                    src={restaurant.cover_image_url!}
-                    alt={restaurant.name}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
+      {/* Category Tabs - Sticky */}
+      <div className="sticky top-0 z-30 bg-white border-b border-gray-100">
+        <div className="overflow-x-auto scrollbar-hide">
+          <div className="flex px-4 py-3 gap-2 min-w-max">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => scrollToCategory(category.id)}
+                className={cn(
+                  'px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all',
+                  selectedCategory === category.id
+                    ? 'bg-black text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h2 className="text-xl font-bold">{restaurant.name}</h2>
-                  {restaurant.address && (
-                    <p className="text-sm text-white/80 mt-1">{restaurant.address}</p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Category Cards Grid */}
-            <div className="grid grid-cols-2 gap-3">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => handleCategoryClick(category)}
-                  className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-md group"
-                >
-                  {/* Category Image */}
-                  {category.image_url ? (
-                    <Image
-                      src={category.image_url}
-                      alt={category.name}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#8b7355] to-[#5c4d3d]" />
-                  )}
-
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-                  {/* Category Name */}
-                  <div className="absolute inset-0 flex flex-col justify-end p-3">
-                    <h3 className="text-white font-bold text-base leading-tight">
-                      {t('category', category.id, 'name', category.name)}
-                    </h3>
-                    <p className="text-white/70 text-xs mt-0.5">
-                      {category.items?.length || 0} items
-                    </p>
-                    {category.is_special && (
-                      <Badge className="absolute top-2 right-2 bg-amber-500 text-white text-xs">
-                        Special
-                      </Badge>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
+              >
+                {t('category', category.id, 'name', category.name)}
+              </button>
+            ))}
           </div>
-        ) : (
-          /* Menu Items View */
-          <div className="p-4">
-            <div className="space-y-3">
-              {selectedCategory?.items?.map((item) => (
-                <button
+        </div>
+      </div>
+
+      {/* Menu Content */}
+      <div className="pb-24">
+        {categories.map((category) => (
+          <div
+            key={category.id}
+            ref={(el) => { categoryRefs.current[category.id] = el }}
+            className="scroll-mt-14"
+          >
+            {/* Category Header */}
+            <div className="px-4 pt-6 pb-3">
+              <h2 className="text-xl font-bold text-gray-900">
+                {t('category', category.id, 'name', category.name)}
+              </h2>
+              {category.description && (
+                <p className="text-gray-500 text-sm mt-1">
+                  {t('category', category.id, 'description', category.description)}
+                </p>
+              )}
+            </div>
+
+            {/* Menu Items */}
+            <div className="px-4 space-y-3">
+              {category.items?.map((item) => (
+                <div
                   key={item.id}
                   onClick={() => {
                     setSelectedItem(item)
                     trackEvent('item_click', 'item', item.id)
                   }}
-                  className="w-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                  className="flex gap-3 p-3 bg-white rounded-xl border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
                 >
-                  <div className="flex">
-                    {/* Item Image */}
-                    <div className="relative w-28 h-28 flex-shrink-0">
-                      {item.video_url ? (
-                        <video
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
-                          className="absolute inset-0 w-full h-full object-cover"
-                        >
-                          <source src={item.video_url} type="video/mp4" />
-                        </video>
-                      ) : item.image_url ? (
-                        <Image
-                          src={item.image_url}
-                          alt={item.name}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#f0ebe3] to-[#e8e3db] flex items-center justify-center">
-                          <span className="text-3xl">🍽️</span>
-                        </div>
-                      )}
-                      {/* Price Badge on Image */}
-                      <div className="absolute bottom-2 right-2 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                        <span className="text-sm font-bold text-[#2d2d2d]">
-                          {formatPrice(item.price, item.currency)}
-                        </span>
+                  {/* Item Image */}
+                  <div className="relative w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
+                    {item.video_url ? (
+                      <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover"
+                      >
+                        <source src={item.video_url} type="video/mp4" />
+                      </video>
+                    ) : item.image_url ? (
+                      <Image
+                        src={item.image_url}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100">
+                        <span className="text-3xl">🍽️</span>
                       </div>
-                      {item.is_new && (
-                        <Badge className="absolute top-2 left-2 bg-emerald-500 text-white text-[10px] px-1.5 py-0.5">
-                          NEW
-                        </Badge>
-                      )}
+                    )}
+                  </div>
+
+                  {/* Item Details */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-semibold text-gray-900 text-[15px] leading-tight">
+                        {t('item', item.id, 'name', item.name)}
+                      </h3>
+                      <span className="font-bold text-gray-900 text-[15px] whitespace-nowrap">
+                        {formatPrice(item.price, item.currency)}
+                      </span>
                     </div>
 
-                    {/* Item Info */}
-                    <div className="flex-1 p-3 text-left">
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-semibold text-[#2d2d2d] text-sm leading-tight">
-                          {t('item', item.id, 'name', item.name)}
-                        </h3>
-                        {item.featured && (
-                          <Star className="h-4 w-4 text-amber-500 flex-shrink-0 fill-amber-500" />
-                        )}
-                      </div>
+                    {item.description && (
+                      <p className="text-gray-500 text-[13px] mt-1.5 line-clamp-2 leading-relaxed">
+                        {t('item', item.id, 'description', item.description)}
+                      </p>
+                    )}
 
-                      {item.description && (
-                        <p className="text-[#888] text-xs mt-1.5 line-clamp-2 leading-relaxed">
-                          {t('item', item.id, 'description', item.description)}
-                        </p>
-                      )}
+                    {/* Badges */}
+                    <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                      {item.dietary_restrictions?.map((diet) => {
+                        const lowerDiet = diet.toLowerCase()
+                        let icon = null
+                        let bgColor = 'bg-gray-100'
+                        let textColor = 'text-gray-600'
 
-                      {/* Dietary & Info Badges */}
-                      <div className="flex items-center gap-2 mt-2 flex-wrap">
-                        {item.dietary_restrictions?.map((diet) => (
+                        if (lowerDiet.includes('vegan')) {
+                          icon = <Leaf className="w-3 h-3" />
+                          bgColor = 'bg-green-50'
+                          textColor = 'text-green-700'
+                        } else if (lowerDiet.includes('vegetarian')) {
+                          icon = <Leaf className="w-3 h-3" />
+                          bgColor = 'bg-green-50'
+                          textColor = 'text-green-700'
+                        } else if (lowerDiet.includes('gluten')) {
+                          icon = <Wheat className="w-3 h-3" />
+                          bgColor = 'bg-amber-50'
+                          textColor = 'text-amber-700'
+                        }
+
+                        return (
                           <span
                             key={diet}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#f0f0f0] text-[#666] text-[10px] font-medium"
+                            className={cn(
+                              'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium',
+                              bgColor,
+                              textColor
+                            )}
                           >
-                            {getDietaryIcon(diet)}
+                            {icon}
                             {diet}
                           </span>
-                        ))}
-                        {item.prep_minutes && (
-                          <span className="inline-flex items-center gap-1 text-[#888] text-[10px]">
-                            <Clock className="h-3 w-3" />
-                            {item.prep_minutes}m
-                          </span>
-                        )}
-                        {item.calories && (
-                          <span className="inline-flex items-center gap-1 text-[#888] text-[10px]">
-                            <Flame className="h-3 w-3" />
-                            {item.calories}
-                          </span>
-                        )}
-                      </div>
+                        )
+                      })}
                     </div>
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           </div>
-        )}
-      </main>
+        ))}
+      </div>
 
       {/* Floating Feedback Button */}
       <button
         onClick={() => setShowFeedback(true)}
-        className="fixed bottom-6 right-6 bg-[#2d2d2d] text-white px-5 py-3 rounded-full shadow-lg flex items-center gap-2 hover:bg-[#3d3d3d] transition-colors z-40"
+        className="fixed bottom-6 right-4 bg-black text-white px-5 py-3 rounded-full shadow-lg flex items-center gap-2 z-40 hover:bg-gray-800 transition-colors"
       >
-        <MessageSquare className="h-4 w-4" />
-        <span className="font-medium text-sm">Feedback</span>
+        <MessageSquare className="w-4 h-4" />
+        <span className="text-sm font-medium">Feedback</span>
       </button>
 
       {/* Item Detail Modal */}
-      <Dialog open={!!selectedItem} onOpenChange={() => setSelectedItem(null)}>
-        <DialogContent className="max-w-md bg-white border-0 p-0 rounded-3xl overflow-hidden max-h-[90vh] overflow-y-auto">
-          {selectedItem && (
-            <>
-              {/* Item Image/Video */}
-              <div className="relative h-64 bg-[#f5f5f5]">
-                {selectedItem.video_url ? (
-                  <video
-                    autoPlay
-                    loop
-                    controls
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover"
-                  >
-                    <source src={selectedItem.video_url} type="video/mp4" />
-                  </video>
-                ) : selectedItem.image_url ? (
-                  <Image
-                    src={selectedItem.image_url}
-                    alt={selectedItem.name}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-[#f0ebe3] to-[#e8e3db] flex items-center justify-center">
-                    <span className="text-7xl">🍽️</span>
-                  </div>
-                )}
+      {selectedItem && (
+        <div className="fixed inset-0 z-50 bg-black/60" onClick={() => setSelectedItem(null)}>
+          <div
+            className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[85vh] overflow-y-auto animate-slide-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Handle */}
+            <div className="sticky top-0 bg-white pt-3 pb-2 flex justify-center z-10">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+            </div>
 
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedItem(null)}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+            {/* Item Image */}
+            <div className="relative w-full h-56 bg-gray-100">
+              {selectedItem.video_url ? (
+                <video
+                  autoPlay
+                  loop
+                  controls
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover"
                 >
-                  <X className="h-4 w-4" />
-                </button>
-
-                {/* Badges */}
-                <div className="absolute top-4 left-4 flex gap-2">
-                  {selectedItem.is_new && (
-                    <Badge className="bg-emerald-500 text-white">NEW</Badge>
-                  )}
-                  {selectedItem.featured && (
-                    <Badge className="bg-amber-500 text-white">
-                      <Star className="h-3 w-3 mr-1 fill-white" />
-                      Featured
-                    </Badge>
-                  )}
+                  <source src={selectedItem.video_url} type="video/mp4" />
+                </video>
+              ) : selectedItem.image_url ? (
+                <Image
+                  src={selectedItem.image_url}
+                  alt={selectedItem.name}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100">
+                  <span className="text-6xl">🍽️</span>
                 </div>
+              )}
+
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedItem(null)}
+                className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md"
+              >
+                <X className="w-4 h-4 text-gray-600" />
+              </button>
+            </div>
+
+            {/* Item Content */}
+            <div className="p-5">
+              <div className="flex items-start justify-between gap-3">
+                <h2 className="text-xl font-bold text-gray-900">
+                  {t('item', selectedItem.id, 'name', selectedItem.name)}
+                </h2>
+                <span className="text-xl font-bold text-gray-900 whitespace-nowrap">
+                  {formatPrice(selectedItem.price, selectedItem.currency)}
+                </span>
               </div>
 
-              {/* Item Details */}
-              <div className="p-6 space-y-4">
-                <div className="flex items-start justify-between">
-                  <h2 className="text-2xl font-bold text-[#2d2d2d]">
-                    {t('item', selectedItem.id, 'name', selectedItem.name)}
-                  </h2>
-                  <span className="text-2xl font-bold text-[#2d2d2d]">
-                    {formatPrice(selectedItem.price, selectedItem.currency)}
-                  </span>
-                </div>
+              {selectedItem.description && (
+                <p className="text-gray-600 text-[15px] mt-3 leading-relaxed">
+                  {t('item', selectedItem.id, 'description', selectedItem.description)}
+                </p>
+              )}
 
-                {selectedItem.description && (
-                  <p className="text-[#666] leading-relaxed">
-                    {t('item', selectedItem.id, 'description', selectedItem.description)}
-                  </p>
-                )}
-
-                {/* Quick Info */}
-                <div className="flex items-center gap-4 text-sm text-[#888]">
+              {/* Quick Info */}
+              {(selectedItem.prep_minutes || selectedItem.calories) && (
+                <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
                   {selectedItem.prep_minutes && (
                     <span className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
+                      <Clock className="w-4 h-4" />
                       {selectedItem.prep_minutes} min
                     </span>
                   )}
                   {selectedItem.calories && (
                     <span className="flex items-center gap-1">
-                      <Flame className="h-4 w-4" />
+                      <Flame className="w-4 h-4" />
                       {selectedItem.calories} cal
                     </span>
                   )}
-                  {selectedItem.grams && (
-                    <span>{selectedItem.grams}g</span>
-                  )}
                 </div>
+              )}
 
-                {/* Dietary Restrictions */}
-                {selectedItem.dietary_restrictions && selectedItem.dietary_restrictions.length > 0 && (
+              {/* Dietary Tags */}
+              {selectedItem.dietary_restrictions && selectedItem.dietary_restrictions.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {selectedItem.dietary_restrictions.map((diet) => (
+                    <span
+                      key={diet}
+                      className="px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700 font-medium"
+                    >
+                      {diet}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Allergen Warning */}
+              {selectedItem.allergen_warnings && selectedItem.allergen_warnings.length > 0 && (
+                <div className="mt-4 p-3 bg-red-50 rounded-xl">
+                  <p className="text-sm font-medium text-red-700 mb-2">Allergens</p>
                   <div className="flex flex-wrap gap-2">
-                    {selectedItem.dietary_restrictions.map((diet) => (
+                    {selectedItem.allergen_warnings.map((allergen) => (
                       <span
-                        key={diet}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#f0f0f0] text-[#555] text-sm font-medium"
+                        key={allergen}
+                        className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-md font-medium"
                       >
-                        {getDietaryIcon(diet)}
-                        {diet}
+                        {allergen}
                       </span>
                     ))}
                   </div>
-                )}
-
-                {/* Allergen Warnings */}
-                {selectedItem.allergen_warnings && selectedItem.allergen_warnings.length > 0 && (
-                  <div className="p-3 bg-red-50 rounded-xl">
-                    <p className="text-sm font-medium text-red-700 mb-2">Allergen Warning</p>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedItem.allergen_warnings.map((allergen) => (
-                        <span
-                          key={allergen}
-                          className="px-2 py-1 rounded-md bg-red-100 text-red-700 text-xs font-medium"
-                        >
-                          {allergen}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Spice Level */}
-                {selectedItem.spice_level && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Flame className="h-4 w-4 text-red-500" />
-                    <span className="text-[#666]">Spice Level: {selectedItem.spice_level}</span>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Language Modal */}
-      <Dialog open={showLanguageMenu} onOpenChange={setShowLanguageMenu}>
-        <DialogContent className="max-w-sm bg-white border-0 rounded-3xl p-6">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-[#2d2d2d]">Select Language</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-2 mt-4">
-            {SUPPORTED_LANGUAGES.filter(
-              l => settings?.supported_languages?.includes(l.code)
-            ).map((lang) => (
-              <button
-                key={lang.code}
-                onClick={() => {
-                  setLanguage(lang.code)
-                  setShowLanguageMenu(false)
-                }}
-                className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-left',
-                  language === lang.code
-                    ? 'bg-[#2d2d2d] text-white'
-                    : 'bg-[#f5f5f5] text-[#2d2d2d] hover:bg-[#e8e8e8]'
-                )}
-              >
-                <span className="text-xl">{lang.flag}</span>
-                <span className="font-medium">{lang.name}</span>
-              </button>
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Guest Info Modal */}
-      <Dialog open={showGuestInfo} onOpenChange={setShowGuestInfo}>
-        <DialogContent className="max-w-sm bg-white border-0 rounded-3xl p-6">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-[#2d2d2d]">Guest Information</DialogTitle>
-          </DialogHeader>
-          {settings?.guest_info_html ? (
-            <div
-              className="prose max-w-none mt-4 text-[#555]"
-              dangerouslySetInnerHTML={{ __html: settings.guest_info_html }}
-            />
-          ) : (
-            <div className="text-center py-8 text-[#888]">
-              <Info className="h-12 w-12 mx-auto mb-4 text-[#ccc]" />
-              <p>No guest information available.</p>
+      {showLanguageMenu && (
+        <div className="fixed inset-0 z-50 bg-black/60" onClick={() => setShowLanguageMenu(false)}>
+          <div
+            className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-5 animate-slide-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-center mb-4">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Select Language</h3>
+            <div className="space-y-2 max-h-[50vh] overflow-y-auto">
+              {SUPPORTED_LANGUAGES.filter(
+                l => settings?.supported_languages?.includes(l.code)
+              ).map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => {
+                    setLanguage(lang.code)
+                    setShowLanguageMenu(false)
+                  }}
+                  className={cn(
+                    'w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left',
+                    language === lang.code
+                      ? 'bg-black text-white'
+                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                  )}
+                >
+                  <span className="text-xl">{lang.flag}</span>
+                  <span className="font-medium">{lang.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Feedback Modal */}
-      <Dialog open={showFeedback} onOpenChange={setShowFeedback}>
-        <DialogContent className="max-w-sm bg-white border-0 rounded-3xl p-6">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-[#2d2d2d]">Leave Feedback</DialogTitle>
-          </DialogHeader>
-          <FeedbackForm
-            restaurantId={restaurant.id}
-            onSuccess={() => setShowFeedback(false)}
-          />
-        </DialogContent>
-      </Dialog>
+      {showFeedback && (
+        <div className="fixed inset-0 z-50 bg-black/60" onClick={() => setShowFeedback(false)}>
+          <div
+            className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-5 animate-slide-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-center mb-4">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Leave Feedback</h3>
+            <FeedbackForm
+              restaurantId={restaurant.id}
+              onSuccess={() => setShowFeedback(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Custom Styles */}
+      <style jsx global>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        @keyframes slide-up {
+          from {
+            transform: translateY(100%);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+        .animate-slide-up {
+          animation: slide-up 0.3s ease-out;
+        }
+      `}</style>
     </div>
   )
 }
@@ -658,9 +586,9 @@ function FeedbackForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <Label className="text-[#555] font-medium">Your Rating</Label>
+        <label className="text-sm font-medium text-gray-700">Rating</label>
         <div className="flex gap-2 mt-2">
           {[1, 2, 3, 4, 5].map((value) => (
             <button
@@ -671,9 +599,9 @@ function FeedbackForm({
             >
               <Star
                 className={cn(
-                  'h-8 w-8 transition-colors',
+                  'w-8 h-8',
                   rating >= value
-                    ? 'text-amber-400 fill-amber-400'
+                    ? 'text-yellow-400 fill-yellow-400'
                     : 'text-gray-300'
                 )}
               />
@@ -682,33 +610,32 @@ function FeedbackForm({
         </div>
       </div>
       <div>
-        <Label htmlFor="name" className="text-[#555] font-medium">Your Name (Optional)</Label>
-        <Input
-          id="name"
+        <label className="text-sm font-medium text-gray-700">Name (Optional)</label>
+        <input
+          type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="mt-1 rounded-xl border-[#e8e8e8] focus:border-[#2d2d2d] focus:ring-[#2d2d2d]"
-          placeholder="John Doe"
+          className="w-full mt-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+          placeholder="Your name"
         />
       </div>
       <div>
-        <Label htmlFor="comment" className="text-[#555] font-medium">Your Comment</Label>
-        <Textarea
-          id="comment"
+        <label className="text-sm font-medium text-gray-700">Comment</label>
+        <textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          className="mt-1 rounded-xl border-[#e8e8e8] focus:border-[#2d2d2d] focus:ring-[#2d2d2d]"
           rows={4}
+          className="w-full mt-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent resize-none"
           placeholder="Tell us about your experience..."
         />
       </div>
-      <Button
+      <button
         type="submit"
-        className="w-full bg-[#2d2d2d] hover:bg-[#3d3d3d] text-white rounded-xl py-3 font-medium"
         disabled={loading}
+        className="w-full bg-black text-white py-3 rounded-xl font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
       >
-        {loading ? 'Submitting...' : 'Submit Feedback'}
-      </Button>
+        {loading ? 'Submitting...' : 'Submit'}
+      </button>
     </form>
   )
 }
