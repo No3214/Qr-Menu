@@ -171,7 +171,7 @@ export default function HomePage() {
                   <ArrowRight className="h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/r/kozbeyli-konagi">
+              <Link href="/demo">
                 <Button size="lg" variant="outline" className="gap-2 h-14 px-8 text-lg border-2">
                   <Play className="h-5 w-5" />
                   Demo Menüyü Gör
@@ -213,7 +213,7 @@ export default function HomePage() {
                     </div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">Premium Menü Önizleme</h3>
                     <p className="text-gray-600 mb-4">Demo menüyü görmek için tıklayın</p>
-                    <Link href="/r/kozbeyli-konagi">
+                    <Link href="/demo">
                       <Button className="bg-gray-900 hover:bg-gray-800">
                         Menüyü Aç
                         <ChevronRight className="w-4 h-4 ml-1" />
@@ -383,7 +383,7 @@ export default function HomePage() {
                 Ücretsiz Başla
               </Button>
             </Link>
-            <Link href="/r/kozbeyli-konagi">
+            <Link href="/demo">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 gap-2 h-14 px-8 text-lg">
                 Demo Menüyü İncele
               </Button>
