@@ -273,8 +273,8 @@ export default function PublicMenuPage() {
         {viewMode === 'home' ? (
           /* HOME VIEW - Category Grid */
           <div className="p-4">
-            {/* Hero Video/Image */}
-            <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden mb-4">
+            {/* Hero Video/Image with Ken Burns Effect */}
+            <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden mb-4 animate-scale-in">
               {restaurant.video_url ? (
                 <>
                   <video
@@ -287,11 +287,11 @@ export default function PublicMenuPage() {
                   >
                     <source src={restaurant.video_url} type="video/mp4" />
                   </video>
-                  {/* Video Controls */}
+                  {/* Video Controls with animation */}
                   <div className="absolute bottom-3 right-3 z-20 flex gap-2">
                     <button
                       onClick={() => setIsMuted(!isMuted)}
-                      className="w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center transition-colors"
+                      className="w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 btn-press"
                     >
                       {isMuted ? (
                         <VolumeX className="w-4 h-4 text-white" />
@@ -301,14 +301,14 @@ export default function PublicMenuPage() {
                     </button>
                     <button
                       onClick={() => setVideoModal({ url: restaurant.video_url!, title: restaurant.name })}
-                      className="w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center transition-colors"
+                      className="w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 btn-press"
                     >
                       <Maximize2 className="w-4 h-4 text-white" />
                     </button>
                   </div>
-                  {/* 4K Badge */}
+                  {/* 4K Badge with pulse */}
                   <div className="absolute top-3 right-3 z-20">
-                    <span className="px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded">4K</span>
+                    <span className="px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded animate-pulse-glow">4K</span>
                   </div>
                 </>
               ) : restaurant.cover_image_url ? (
@@ -316,7 +316,7 @@ export default function PublicMenuPage() {
                   src={restaurant.cover_image_url}
                   alt={restaurant.name}
                   fill
-                  className="object-cover"
+                  className="object-cover animate-ken-burns"
                   priority
                 />
               ) : (
@@ -324,42 +324,42 @@ export default function PublicMenuPage() {
               )}
               <div className="absolute inset-0 bg-black/20" />
 
-              {/* View Menu Button */}
+              {/* View Menu Button with premium hover */}
               <button
                 onClick={() => {
                   if (categories[0]) handleCategorySelect(categories[0].id)
                 }}
-                className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm text-gray-800 py-3 rounded-lg font-medium text-sm hover:bg-white transition-colors"
+                className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm text-gray-800 py-3 rounded-lg font-medium text-sm transition-all duration-300 hover:bg-white hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] btn-press"
               >
                 Menüyü Görüntüle
               </button>
             </div>
 
-            {/* Category Grid - Foost Style */}
+            {/* Category Grid - Foost Style with Premium Animations */}
             <div className="space-y-3">
               {/* First category - Full width hero */}
               {categories[0] && (
                 <button
                   onClick={() => handleCategorySelect(categories[0].id)}
-                  className="relative w-full aspect-[16/9] rounded-xl overflow-hidden"
+                  className="relative w-full aspect-[16/9] rounded-xl overflow-hidden card-hover img-zoom animate-fade-in-up stagger-1"
                 >
                   {categories[0].image_url ? (
                     <Image
                       src={categories[0].image_url}
                       alt={categories[0].name}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-500"
                     />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-stone-600 to-stone-800" />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 p-4">
-                    <h3 className="text-white font-bold text-lg">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-opacity duration-300 hover:from-black/70" />
+                  <div className="absolute bottom-0 left-0 p-4 transform transition-transform duration-300 group-hover:translate-y-[-4px]">
+                    <h3 className="text-white font-bold text-lg drop-shadow-lg">
                       {t('category', categories[0].id, 'name', categories[0].name)}
                     </h3>
                     {categories[0].description && (
-                      <p className="text-white/70 text-sm mt-0.5">
+                      <p className="text-white/70 text-sm mt-0.5 drop-shadow">
                         {t('category', categories[0].id, 'description', categories[0].description)}
                       </p>
                     )}
@@ -367,32 +367,35 @@ export default function PublicMenuPage() {
                 </button>
               )}
 
-              {/* Remaining categories - 2-column grid */}
+              {/* Remaining categories - 2-column grid with staggered animations */}
               {categories.length > 1 && (
                 <div className="grid grid-cols-2 gap-3">
-                  {categories.slice(1).map((category) => (
+                  {categories.slice(1).map((category, index) => (
                     <button
                       key={category.id}
                       onClick={() => handleCategorySelect(category.id)}
-                      className="relative aspect-[4/3] rounded-xl overflow-hidden"
+                      className={cn(
+                        "relative aspect-[4/3] rounded-xl overflow-hidden card-hover img-zoom animate-fade-in-up",
+                        `stagger-${Math.min(index + 2, 8)}`
+                      )}
                     >
                       {category.image_url ? (
                         <Image
                           src={category.image_url}
                           alt={category.name}
                           fill
-                          className="object-cover"
+                          className="object-cover transition-transform duration-500"
                         />
                       ) : (
                         <div className="absolute inset-0 bg-gradient-to-br from-stone-600 to-stone-800" />
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-opacity duration-300" />
                       <div className="absolute bottom-0 left-0 p-3">
-                        <h3 className="text-white font-bold text-sm leading-tight">
+                        <h3 className="text-white font-bold text-sm leading-tight drop-shadow-lg">
                           {t('category', category.id, 'name', category.name)}
                         </h3>
                         {category.description && (
-                          <p className="text-white/70 text-xs mt-0.5 line-clamp-1">
+                          <p className="text-white/70 text-xs mt-0.5 line-clamp-1 drop-shadow">
                             {t('category', category.id, 'description', category.description)}
                           </p>
                         )}
@@ -461,16 +464,22 @@ export default function PublicMenuPage() {
                   {t('category', category.id, 'name', category.name)}
                 </h2>
 
-                {/* Menu Items */}
+                {/* Menu Items with Staggered Animation */}
                 <div className="space-y-1">
-                  {category.items?.map((item) => {
+                  {category.items?.map((item, itemIndex) => {
                     const isExpanded = expandedItems.has(item.id)
 
                     return (
-                      <div key={item.id} className="border-b border-gray-100 last:border-0">
+                      <div
+                        key={item.id}
+                        className={cn(
+                          "border-b border-gray-100 last:border-0 animate-fade-in-up",
+                          `stagger-${Math.min(itemIndex + 1, 8)}`
+                        )}
+                      >
                         {/* Item Header */}
                         <div
-                          className="flex gap-3 py-4 cursor-pointer"
+                          className="flex gap-3 py-4 cursor-pointer transition-all duration-200 hover:bg-gray-50/50 rounded-lg -mx-2 px-2"
                           onClick={() => {
                             toggleItemExpand(item.id)
                             trackEvent('item_click', 'item', item.id)
@@ -513,11 +522,11 @@ export default function PublicMenuPage() {
                               ₺ {item.price}
                             </p>
 
-                            {/* Explore Button (when expanded) */}
+                            {/* Explore Button (when expanded) with animation */}
                             {isExpanded && (
-                              <button className="mt-3 px-4 py-2 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-50 inline-flex items-center gap-1">
+                              <button className="mt-3 px-4 py-2 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-50 inline-flex items-center gap-1 transition-all duration-300 hover:gap-2 hover:border-gray-400 btn-press animate-fade-in">
                                 Keşfet
-                                <ArrowRight className="w-4 h-4" />
+                                <ArrowRight className="w-4 h-4 transition-transform duration-300" />
                               </button>
                             )}
                           </div>
@@ -571,32 +580,35 @@ export default function PublicMenuPage() {
                           )}
                         </div>
 
-                        {/* Recommendations (when expanded) */}
+                        {/* Recommendations (when expanded) with premium animations */}
                         {isExpanded && (
-                          <div className="pb-4">
-                            <h4 className="text-sm font-semibold text-gray-900 mb-3">Öneriler</h4>
+                          <div className="pb-4 animate-expand">
+                            <h4 className="text-sm font-semibold text-gray-900 mb-3 animate-fade-in">Öneriler</h4>
                             <div className="flex gap-3 overflow-x-auto scrollbar-hide -mx-4 px-4">
                               {/* Use API recommendations if available, otherwise fallback to category items */}
                               {(item.recommendations?.length > 0
                                 ? item.recommendations.map(rec => ({ ...rec.item, reason: rec.reason }))
                                 : category.items?.slice(0, 3).filter(i => i.id !== item.id).map(i => ({ ...i, reason: i.description?.slice(0, 50) || 'Harika bir seçim!' }))
-                              )?.map((recItem) => (
+                              )?.map((recItem, recIndex) => (
                                 <div
                                   key={recItem.id}
                                   onClick={() => {
                                     toggleItemExpand(recItem.id)
                                     trackEvent('recommendation_click', 'item', recItem.id)
                                   }}
-                                  className="flex-shrink-0 w-40 bg-gray-50 rounded-xl p-3 cursor-pointer hover:bg-gray-100 transition-colors"
+                                  className={cn(
+                                    "flex-shrink-0 w-40 bg-gray-50 rounded-xl p-3 cursor-pointer transition-all duration-300 hover:bg-gray-100 hover:shadow-md hover:-translate-y-1 card-hover animate-fade-in-up",
+                                    `stagger-${recIndex + 1}`
+                                  )}
                                 >
                                   {recItem.image_url && (
-                                    <div className="w-full aspect-[4/3] rounded-lg overflow-hidden mb-2">
+                                    <div className="w-full aspect-[4/3] rounded-lg overflow-hidden mb-2 img-zoom">
                                       <Image
                                         src={recItem.image_url}
                                         alt={recItem.name}
                                         width={160}
                                         height={120}
-                                        className="object-cover w-full h-full"
+                                        className="object-cover w-full h-full transition-transform duration-500"
                                       />
                                     </div>
                                   )}
@@ -627,10 +639,11 @@ export default function PublicMenuPage() {
         )}
       </div>
 
-      {/* Fast Feedback Button */}
+      {/* Fast Feedback Button with premium animation */}
       <button
         onClick={() => setShowFeedback(true)}
-        className="fixed bottom-20 left-4 bg-gray-900 text-white text-xs font-medium px-4 py-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors z-40"
+        className="fixed bottom-20 left-4 bg-gray-900 text-white text-xs font-medium px-4 py-2 rounded-full shadow-lg hover:bg-gray-800 transition-all duration-300 z-40 hover:scale-105 active:scale-95 btn-press animate-bounce-in"
+        style={{ animationDelay: '0.5s' }}
       >
         FAST FEEDBACK
       </button>
@@ -641,23 +654,27 @@ export default function PublicMenuPage() {
         Powered by Grain
       </div>
 
-      {/* Language Sidebar */}
+      {/* Language Sidebar with glass effect */}
       {showLanguageMenu && (
-        <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setShowLanguageMenu(false)}>
+        <div className="fixed inset-0 z-50 animate-backdrop-in" onClick={() => setShowLanguageMenu(false)}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
           <div
-            className="absolute right-0 top-0 bottom-0 w-72 bg-white p-6 animate-slide-in-right"
+            className="absolute right-0 top-0 bottom-0 w-72 bg-white p-6 animate-slide-in-right shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-bold text-gray-900">Dil Seçimi</h3>
-              <button onClick={() => setShowLanguageMenu(false)}>
+              <button
+                onClick={() => setShowLanguageMenu(false)}
+                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              >
                 <X className="w-5 h-5 text-gray-500" />
               </button>
             </div>
             <div className="space-y-2">
               {SUPPORTED_LANGUAGES.filter(
                 l => settings?.supported_languages?.includes(l.code)
-              ).map((lang) => (
+              ).map((lang, index) => (
                 <button
                   key={lang.code}
                   onClick={() => {
@@ -665,10 +682,11 @@ export default function PublicMenuPage() {
                     setShowLanguageMenu(false)
                   }}
                   className={cn(
-                    'w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left',
+                    'w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-left animate-fade-in-up',
+                    `stagger-${index + 1}`,
                     language === lang.code
                       ? 'bg-gray-900 text-white'
-                      : 'hover:bg-gray-100 text-gray-900'
+                      : 'hover:bg-gray-100 text-gray-900 hover:translate-x-1'
                   )}
                 >
                   <span className="text-xl">{lang.flag}</span>
@@ -680,16 +698,20 @@ export default function PublicMenuPage() {
         </div>
       )}
 
-      {/* Sidebar Menu */}
+      {/* Sidebar Menu with glass effect */}
       {showSidebar && (
-        <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setShowSidebar(false)}>
+        <div className="fixed inset-0 z-50 animate-backdrop-in" onClick={() => setShowSidebar(false)}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
           <div
-            className="absolute left-0 top-0 bottom-0 w-72 bg-white p-6 animate-slide-in-left"
+            className="absolute left-0 top-0 bottom-0 w-72 bg-white p-6 animate-slide-in-left shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-bold text-gray-900">{restaurant.name}</h3>
-              <button onClick={() => setShowSidebar(false)}>
+              <button
+                onClick={() => setShowSidebar(false)}
+                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              >
                 <X className="w-5 h-5 text-gray-500" />
               </button>
             </div>
@@ -699,18 +721,21 @@ export default function PublicMenuPage() {
                   setViewMode('home')
                   setShowSidebar(false)
                 }}
-                className="w-full text-left p-3 rounded-lg hover:bg-gray-100 font-medium"
+                className="w-full text-left p-3 rounded-lg hover:bg-gray-100 font-medium transition-all duration-200 hover:translate-x-1 animate-fade-in-up stagger-1"
               >
                 Ana Sayfa
               </button>
-              {categories.map((category) => (
+              {categories.map((category, index) => (
                 <button
                   key={category.id}
                   onClick={() => {
                     handleCategorySelect(category.id)
                     setShowSidebar(false)
                   }}
-                  className="w-full text-left p-3 rounded-lg hover:bg-gray-100"
+                  className={cn(
+                    "w-full text-left p-3 rounded-lg hover:bg-gray-100 transition-all duration-200 hover:translate-x-1 animate-fade-in-up",
+                    `stagger-${Math.min(index + 2, 8)}`
+                  )}
                 >
                   {t('category', category.id, 'name', category.name)}
                 </button>
@@ -720,17 +745,18 @@ export default function PublicMenuPage() {
         </div>
       )}
 
-      {/* Feedback Modal */}
+      {/* Feedback Modal with glass effect */}
       {showFeedback && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end" onClick={() => setShowFeedback(false)}>
+        <div className="fixed inset-0 z-50 flex items-end animate-backdrop-in" onClick={() => setShowFeedback(false)}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
           <div
-            className="w-full bg-white rounded-t-3xl p-6 animate-slide-up"
+            className="relative w-full bg-white rounded-t-3xl p-6 animate-slide-up shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-center mb-4">
               <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Geri Bildirim</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4 animate-fade-in">Geri Bildirim</h3>
             <FeedbackForm
               restaurantId={restaurant.id}
               onSuccess={() => setShowFeedback(false)}
@@ -739,34 +765,34 @@ export default function PublicMenuPage() {
         </div>
       )}
 
-      {/* 4K Video Modal */}
+      {/* 4K Video Modal with premium animations */}
       {videoModal && (
         <div
-          className="fixed inset-0 z-[60] bg-black flex items-center justify-center"
+          className="fixed inset-0 z-[60] bg-black flex items-center justify-center animate-backdrop-in"
           onClick={() => setVideoModal(null)}
         >
           {/* Close Button */}
           <button
             onClick={() => setVideoModal(null)}
-            className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
+            className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 animate-fade-in"
           >
             <X className="w-6 h-6 text-white" />
           </button>
 
           {/* Video Title */}
-          <div className="absolute top-4 left-4 z-10">
-            <p className="text-white font-semibold text-lg">{videoModal.title}</p>
+          <div className="absolute top-4 left-4 z-10 animate-fade-in-up stagger-1">
+            <p className="text-white font-semibold text-lg drop-shadow-lg">{videoModal.title}</p>
           </div>
 
           {/* Video Player */}
           <div
-            className="relative w-full h-full max-w-4xl max-h-[80vh] mx-4"
+            className="relative w-full h-full max-w-4xl max-h-[80vh] mx-4 animate-scale-in"
             onClick={(e) => e.stopPropagation()}
           >
             <video
               ref={modalVideoRef}
               src={videoModal.url}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain rounded-lg shadow-2xl"
               controls
               autoPlay
               playsInline
@@ -778,43 +804,13 @@ export default function PublicMenuPage() {
           </div>
 
           {/* Video Quality Badge */}
-          <div className="absolute bottom-4 right-4 z-10">
-            <span className="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded">4K</span>
+          <div className="absolute bottom-4 right-4 z-10 animate-bounce-in">
+            <span className="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded shadow-lg">4K</span>
           </div>
         </div>
       )}
 
-      {/* Custom Styles */}
-      <style jsx global>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        @keyframes slide-up {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
-        }
-        .animate-slide-up {
-          animation: slide-up 0.3s ease-out;
-        }
-        @keyframes slide-in-right {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
-        }
-        .animate-slide-in-right {
-          animation: slide-in-right 0.3s ease-out;
-        }
-        @keyframes slide-in-left {
-          from { transform: translateX(-100%); }
-          to { transform: translateX(0); }
-        }
-        .animate-slide-in-left {
-          animation: slide-in-left 0.3s ease-out;
-        }
-      `}</style>
+      {/* All animations are now in globals.css for better performance */}
     </div>
   )
 }
@@ -859,19 +855,22 @@ function FeedbackForm({
       <div>
         <label className="text-sm font-medium text-gray-700">Puanınız</label>
         <div className="flex gap-2 mt-2">
-          {[1, 2, 3, 4, 5].map((value) => (
+          {[1, 2, 3, 4, 5].map((value, index) => (
             <button
               key={value}
               type="button"
               onClick={() => setRating(value)}
-              className="transition-transform hover:scale-110"
+              className={cn(
+                "transition-all duration-200 hover:scale-125 active:scale-95 animate-fade-in-up",
+                `stagger-${index + 1}`
+              )}
             >
               <Star
                 className={cn(
-                  'w-8 h-8',
+                  'w-8 h-8 transition-colors duration-200',
                   rating >= value
-                    ? 'text-yellow-400 fill-yellow-400'
-                    : 'text-gray-300'
+                    ? 'text-yellow-400 fill-yellow-400 drop-shadow-md'
+                    : 'text-gray-300 hover:text-yellow-300'
                 )}
               />
             </button>
