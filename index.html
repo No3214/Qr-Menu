@@ -93,6 +93,17 @@
 
 <body class="bg-white text-gray-900">
   <div id="root"></div>
+
+  <!-- Global Error Handler for Debugging -->
+  <script>
+    window.onerror = function (message, source, lineno, colno, error) {
+      document.body.innerHTML += '<div style="color:red; background:white; padding:20px; z-index:9999; position:relative; border:2px solid red;"><h3>CRITICAL ERROR</h3><p>' + message + '</p><p>' + source + ':' + lineno + '</p><pre>' + (error ? error.stack : '') + '</pre></div>';
+    };
+    window.onunhandledrejection = function (event) {
+      document.body.innerHTML += '<div style="color:red; background:white; padding:20px; z-index:9999; position:relative; border:2px solid red;"><h3>UNHANDLED PROMISE REJECTION</h3><p>' + event.reason + '</p></div>';
+    };
+  </script>
+
   <script type="module" src="/index.tsx"></script>
 </body>
 
