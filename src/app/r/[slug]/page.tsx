@@ -5,7 +5,6 @@ import { useParams, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import {
   Menu,
-  Search,
   Globe,
   Star,
   ChevronDown,
@@ -15,7 +14,9 @@ import {
   X,
   Volume2,
   VolumeX,
-  MessageSquare,
+  Play,
+  Pause,
+  Maximize2,
 } from 'lucide-react'
 import { formatPrice, cn } from '@/lib/utils'
 import type { Restaurant, MenuCategoryWithItems, MenuItem, RestaurantSettings } from '@/types'
@@ -47,7 +48,9 @@ export default function PublicMenuPage() {
   const [showFeedback, setShowFeedback] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
+  const [videoModal, setVideoModal] = useState<{ url: string; title: string } | null>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const modalVideoRef = useRef<HTMLVideoElement>(null)
   const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
 
   // Track event
@@ -127,8 +130,42 @@ export default function PublicMenuPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-gray-800 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-gray-50">
+        {/* Skeleton Brand Header */}
+        <div className="bg-white text-center py-2 border-b border-gray-100">
+          <div className="h-4 w-16 bg-gray-200 rounded mx-auto animate-pulse" />
+        </div>
+
+        {/* Skeleton Main Card */}
+        <div className="bg-white mx-4 mt-4 rounded-2xl shadow-sm overflow-hidden">
+          {/* Skeleton Nav */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+            <div className="w-9 h-9 bg-gray-200 rounded-lg animate-pulse" />
+            <div className="w-12 h-12 bg-gray-200 rounded-full animate-pulse" />
+            <div className="w-9 h-9 bg-gray-200 rounded-lg animate-pulse" />
+          </div>
+
+          {/* Skeleton Content */}
+          <div className="p-4 space-y-4">
+            {/* Hero Skeleton */}
+            <div className="w-full aspect-[16/10] bg-gray-200 rounded-xl animate-pulse" />
+
+            {/* Category Grid Skeleton */}
+            <div className="space-y-3">
+              <div className="w-full aspect-[16/9] bg-gray-200 rounded-xl animate-pulse" />
+              <div className="grid grid-cols-2 gap-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="aspect-[4/3] bg-gray-200 rounded-xl animate-pulse" />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Skeleton Footer */}
+        <div className="text-center py-6">
+          <div className="h-4 w-32 bg-gray-200 rounded mx-auto animate-pulse" />
+        </div>
       </div>
     )
   }
@@ -206,7 +243,7 @@ export default function PublicMenuPage() {
             onClick={() => setShowLanguageMenu(true)}
             className="p-2 -mr-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <Search className="w-5 h-5 text-gray-700" />
+            <Globe className="w-5 h-5 text-gray-700" />
           </button>
         </div>
 
@@ -250,16 +287,29 @@ export default function PublicMenuPage() {
                   >
                     <source src={restaurant.video_url} type="video/mp4" />
                   </video>
-                  <button
-                    onClick={() => setIsMuted(!isMuted)}
-                    className="absolute bottom-3 right-3 z-20 w-8 h-8 bg-black/40 rounded-full flex items-center justify-center"
-                  >
-                    {isMuted ? (
-                      <VolumeX className="w-4 h-4 text-white" />
-                    ) : (
-                      <Volume2 className="w-4 h-4 text-white" />
-                    )}
-                  </button>
+                  {/* Video Controls */}
+                  <div className="absolute bottom-3 right-3 z-20 flex gap-2">
+                    <button
+                      onClick={() => setIsMuted(!isMuted)}
+                      className="w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center transition-colors"
+                    >
+                      {isMuted ? (
+                        <VolumeX className="w-4 h-4 text-white" />
+                      ) : (
+                        <Volume2 className="w-4 h-4 text-white" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setVideoModal({ url: restaurant.video_url!, title: restaurant.name })}
+                      className="w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center transition-colors"
+                    >
+                      <Maximize2 className="w-4 h-4 text-white" />
+                    </button>
+                  </div>
+                  {/* 4K Badge */}
+                  <div className="absolute top-3 right-3 z-20">
+                    <span className="px-2 py-0.5 bg-red-600 text-white text-[10px] font-bold rounded">4K</span>
+                  </div>
                 </>
               ) : restaurant.cover_image_url ? (
                 <Image
@@ -285,22 +335,18 @@ export default function PublicMenuPage() {
               </button>
             </div>
 
-            {/* Category Grid */}
+            {/* Category Grid - Foost Style */}
             <div className="space-y-3">
-              {categories.map((category, index) => (
+              {/* First category - Full width hero */}
+              {categories[0] && (
                 <button
-                  key={category.id}
-                  onClick={() => handleCategorySelect(category.id)}
-                  className={cn(
-                    'relative w-full rounded-xl overflow-hidden',
-                    index === 0 ? 'aspect-[16/9]' : 'aspect-[16/7]',
-                    index > 0 && index % 2 === 1 && categories[index + 1] ? 'hidden' : ''
-                  )}
+                  onClick={() => handleCategorySelect(categories[0].id)}
+                  className="relative w-full aspect-[16/9] rounded-xl overflow-hidden"
                 >
-                  {category.image_url ? (
+                  {categories[0].image_url ? (
                     <Image
-                      src={category.image_url}
-                      alt={category.name}
+                      src={categories[0].image_url}
+                      alt={categories[0].name}
                       fill
                       className="object-cover"
                     />
@@ -310,49 +356,51 @@ export default function PublicMenuPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-4">
                     <h3 className="text-white font-bold text-lg">
-                      {t('category', category.id, 'name', category.name)}
+                      {t('category', categories[0].id, 'name', categories[0].name)}
                     </h3>
-                    {category.description && (
+                    {categories[0].description && (
                       <p className="text-white/70 text-sm mt-0.5">
-                        {t('category', category.id, 'description', category.description)}
+                        {t('category', categories[0].id, 'description', categories[0].description)}
                       </p>
                     )}
                   </div>
                 </button>
-              ))}
+              )}
 
-              {/* 2-column grid for remaining categories */}
-              <div className="grid grid-cols-2 gap-3">
-                {categories.slice(1).map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => handleCategorySelect(category.id)}
-                    className="relative aspect-[4/3] rounded-xl overflow-hidden"
-                  >
-                    {category.image_url ? (
-                      <Image
-                        src={category.image_url}
-                        alt={category.name}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-stone-600 to-stone-800" />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                    <div className="absolute bottom-0 left-0 p-3">
-                      <h3 className="text-white font-bold text-sm leading-tight">
-                        {t('category', category.id, 'name', category.name)}
-                      </h3>
-                      {category.description && (
-                        <p className="text-white/70 text-xs mt-0.5 line-clamp-1">
-                          {t('category', category.id, 'description', category.description)}
-                        </p>
+              {/* Remaining categories - 2-column grid */}
+              {categories.length > 1 && (
+                <div className="grid grid-cols-2 gap-3">
+                  {categories.slice(1).map((category) => (
+                    <button
+                      key={category.id}
+                      onClick={() => handleCategorySelect(category.id)}
+                      className="relative aspect-[4/3] rounded-xl overflow-hidden"
+                    >
+                      {category.image_url ? (
+                        <Image
+                          src={category.image_url}
+                          alt={category.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-stone-600 to-stone-800" />
                       )}
-                    </div>
-                  </button>
-                ))}
-              </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                      <div className="absolute bottom-0 left-0 p-3">
+                        <h3 className="text-white font-bold text-sm leading-tight">
+                          {t('category', category.id, 'name', category.name)}
+                        </h3>
+                        {category.description && (
+                          <p className="text-white/70 text-xs mt-0.5 line-clamp-1">
+                            {t('category', category.id, 'description', category.description)}
+                          </p>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ) : (
@@ -364,22 +412,45 @@ export default function PublicMenuPage() {
                 ref={(el) => { categoryRefs.current[category.id] = el }}
                 className="scroll-mt-32"
               >
-                {/* Featured Item Banner */}
-                {category.items?.[0]?.image_url && (
+                {/* Featured Item Banner with Video Support */}
+                {(category.items?.[0]?.image_url || category.items?.[0]?.video_url) && (
                   <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-4">
-                    <Image
-                      src={category.items[0].image_url}
-                      alt={category.items[0].name}
-                      fill
-                      className="object-cover"
-                    />
+                    {category.items[0].video_url ? (
+                      <>
+                        <video
+                          src={category.items[0].video_url}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                        />
+                        {/* Play Full Video Button */}
+                        <button
+                          onClick={() => setVideoModal({
+                            url: category.items[0].video_url!,
+                            title: category.items[0].name
+                          })}
+                          className="absolute top-3 right-3 z-10 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"
+                        >
+                          <Maximize2 className="w-5 h-5 text-gray-900" />
+                        </button>
+                      </>
+                    ) : category.items[0].image_url ? (
+                      <Image
+                        src={category.items[0].image_url}
+                        alt={category.items[0].name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : null}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     <div className="absolute bottom-0 left-0 p-4">
                       <p className="text-white font-semibold">
                         {t('item', category.items[0].id, 'name', category.items[0].name)}
                       </p>
                       <p className="text-white/80 text-sm">
-                        ₺{category.items[0].price}
+                        ₺ {category.items[0].price}
                       </p>
                     </div>
                   </div>
@@ -451,16 +522,51 @@ export default function PublicMenuPage() {
                             )}
                           </div>
 
-                          {/* Item Image */}
-                          {item.image_url && (
-                            <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                              <Image
-                                src={item.image_url}
-                                alt={item.name}
-                                width={96}
-                                height={96}
-                                className="object-cover w-full h-full"
-                              />
+                          {/* Item Image/Video */}
+                          {(item.image_url || item.video_url) && (
+                            <div className="relative w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                              {item.video_url ? (
+                                <>
+                                  {/* Video thumbnail or first frame */}
+                                  {item.image_url ? (
+                                    <Image
+                                      src={item.image_url}
+                                      alt={item.name}
+                                      width={96}
+                                      height={96}
+                                      className="object-cover w-full h-full"
+                                    />
+                                  ) : (
+                                    <video
+                                      src={item.video_url}
+                                      className="object-cover w-full h-full"
+                                      muted
+                                      preload="metadata"
+                                    />
+                                  )}
+                                  {/* Video Play Button */}
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      setVideoModal({ url: item.video_url!, title: item.name })
+                                      trackEvent('video_view', 'item', item.id)
+                                    }}
+                                    className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-colors"
+                                  >
+                                    <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center">
+                                      <Play className="w-5 h-5 text-gray-900 ml-0.5" />
+                                    </div>
+                                  </button>
+                                </>
+                              ) : item.image_url ? (
+                                <Image
+                                  src={item.image_url}
+                                  alt={item.name}
+                                  width={96}
+                                  height={96}
+                                  className="object-cover w-full h-full"
+                                />
+                              ) : null}
                             </div>
                           )}
                         </div>
@@ -621,6 +727,51 @@ export default function PublicMenuPage() {
               restaurantId={restaurant.id}
               onSuccess={() => setShowFeedback(false)}
             />
+          </div>
+        </div>
+      )}
+
+      {/* 4K Video Modal */}
+      {videoModal && (
+        <div
+          className="fixed inset-0 z-[60] bg-black flex items-center justify-center"
+          onClick={() => setVideoModal(null)}
+        >
+          {/* Close Button */}
+          <button
+            onClick={() => setVideoModal(null)}
+            className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
+          >
+            <X className="w-6 h-6 text-white" />
+          </button>
+
+          {/* Video Title */}
+          <div className="absolute top-4 left-4 z-10">
+            <p className="text-white font-semibold text-lg">{videoModal.title}</p>
+          </div>
+
+          {/* Video Player */}
+          <div
+            className="relative w-full h-full max-w-4xl max-h-[80vh] mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <video
+              ref={modalVideoRef}
+              src={videoModal.url}
+              className="w-full h-full object-contain"
+              controls
+              autoPlay
+              playsInline
+              controlsList="nodownload"
+            >
+              <source src={videoModal.url} type="video/mp4" />
+              Tarayıcınız video oynatmayı desteklemiyor.
+            </video>
+          </div>
+
+          {/* Video Quality Badge */}
+          <div className="absolute bottom-4 right-4 z-10">
+            <span className="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded">4K</span>
           </div>
         </div>
       )}
