@@ -2,16 +2,19 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { CATEGORIES, PRODUCTS, Category, Product } from '../services/MenuData';
 import { CategoryNav } from './CategoryNav';
 import { ProductCard } from './ProductCard';
+import { ProductModal } from './ProductModal';
 import { Search, X, ChevronUp } from 'lucide-react';
 
 /**
  * DigitalMenu - Mobile-first ana menü bileşeni
+ * Includes Product Details Modal
  */
 export const DigitalMenu: React.FC = () => {
     const [activeCategory, setActiveCategory] = useState<string>(CATEGORIES[0]?.id || '');
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
     const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
     const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const observerRef = useRef<IntersectionObserver | null>(null);
@@ -78,7 +81,7 @@ export const DigitalMenu: React.FC = () => {
 
     return (
         <div className="flex flex-col min-h-screen bg-white">
-            {/* Search Bar - Compact mobile design */}
+            {/* Search Bar */}
             <div className="px-3 py-2 sticky top-14 z-30 bg-white border-b border-gray-100">
                 <div className={`relative ${isSearchFocused ? 'scale-[1.01]' : ''} transition-transform`}>
                     <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${isSearchFocused ? 'text-[#C5A059]' : 'text-gray-400'}`} />
@@ -104,7 +107,7 @@ export const DigitalMenu: React.FC = () => {
             {/* Category Navigation */}
             <CategoryNav categories={CATEGORIES} activeCategoryId={activeCategory} onCategoryClick={handleCategoryClick} />
 
-            {/* Menu Content - Mobile optimized */}
+            {/* Menu Content */}
             <div className="flex-1 px-3 py-4">
                 {CATEGORIES.map((category: Category) => {
                     const categoryProducts = getProductsForCategory(category.id);
@@ -118,24 +121,23 @@ export const DigitalMenu: React.FC = () => {
                             ref={(el) => (categoryRefs.current[category.id] = el)}
                             className="mb-6 scroll-mt-28"
                         >
-                            {/* Category Header - Compact */}
                             <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
                                 <span className="w-1 h-5 bg-[#C5A059] rounded-full" />
                                 <h2 className="text-base font-bold text-gray-900">{category.title}</h2>
                                 <span className="text-xs text-gray-400 ml-auto">{categoryProducts.length}</span>
                             </div>
 
-                            {/* Products */}
                             <div className="space-y-0">
                                 {categoryProducts.map((product: Product) => (
-                                    <ProductCard key={product.id} product={product} />
+                                    <div key={product.id} onClick={() => setSelectedProduct(product)}>
+                                        <ProductCard product={product} />
+                                    </div>
                                 ))}
                             </div>
                         </section>
                     );
                 })}
 
-                {/* No Results */}
                 {!hasResults && (
                     <div className="flex flex-col items-center justify-center py-16 text-center">
                         <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center mb-4">
@@ -150,7 +152,7 @@ export const DigitalMenu: React.FC = () => {
                 )}
             </div>
 
-            {/* Footer - Compact mobile */}
+            {/* Footer */}
             <footer className="py-8 bg-gray-900 text-white mt-auto">
                 <div className="px-4 text-center">
                     <div className="inline-flex items-center justify-center w-12 h-12 bg-[#C5A059] rounded-xl mb-4">
@@ -172,7 +174,7 @@ export const DigitalMenu: React.FC = () => {
                 </div>
             </footer>
 
-            {/* Back to Top - Mobile friendly */}
+            {/* Back to Top */}
             <button
                 onClick={scrollToTop}
                 className={`fixed bottom-4 right-4 w-10 h-10 bg-[#C5A059] text-white rounded-full shadow-lg
@@ -181,6 +183,12 @@ export const DigitalMenu: React.FC = () => {
             >
                 <ChevronUp className="w-5 h-5" />
             </button>
+
+            {/* Product Details Modal */}
+            <ProductModal
+                product={selectedProduct}
+                onClose={() => setSelectedProduct(null)}
+            />
         </div>
     );
 };

@@ -50,6 +50,45 @@
       overflow: hidden;
     }
   </style>
+
+  <!-- SEO Schema -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Kozbeyli Konağı",
+      "image": "https://via.placeholder.com/1200x600",
+      "description": "Ege'nin eşsiz lezzet durağı. Serpme kahvaltı, taş fırın pizza ve özel şarap menüsü.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Kozbeyli Küme Evleri No:188",
+        "addressLocality": "Foça",
+        "addressRegion": "İzmir",
+        "postalCode": "35680",
+        "addressCountry": "TR"
+      },
+      "telephone": "+905322342686",
+      "priceRange": "₺₺",
+      "servesCuisine": "Turkish, Breakfast, Pizza",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "09:00",
+          "closes": "22:00"
+        }
+      ],
+      "menu": "https://qr-menu-yunuscan-oruks-projects.vercel.app"
+    }
+  </script>
 </head>
 
 <body class="bg-white text-gray-900">

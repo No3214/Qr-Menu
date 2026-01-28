@@ -8,6 +8,7 @@ if (!rootElement) {
 }
 
 const root = ReactDOM.createRoot(rootElement);
+console.log("GrainQR Digital Menu v1.0.1 Loaded");
 root.render(
   <React.StrictMode>
     <App />
