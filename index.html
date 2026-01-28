@@ -1,55 +1,198 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GrainQR Generator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              serif: ['Playfair Display', 'serif'],
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#C5A059" />
+  <meta name="description" content="Kozbeyli Konağı - Dijital Menü. Ege'nin eşsiz lezzet durağı." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <title>Kozbeyli Konağı | Dijital Menü</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23C5A059' width='100' height='100' rx='20'/><text y='.9em' x='50%' text-anchor='middle' font-size='70' fill='white' font-family='serif' font-weight='bold'>K</text></svg>" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          colors: {
+            gold: {
+              50: '#FDFAF3',
+              100: '#FAF3E1',
+              200: '#F5E7C3',
+              300: '#EDD49A',
+              400: '#D4AF37',
+              500: '#C5A059',
+              600: '#B08D22',
+              700: '#8A6F1B',
+              800: '#6B5615',
+              900: '#4A3D10',
             },
-            colors: {
-              gold: {
-                400: '#D4AF37',
-                500: '#C5A028',
-                600: '#B08D22',
-              },
-              luxury: {
-                900: '#0F172A',
-                800: '#1E293B',
-              }
+            luxury: {
+              900: '#0F172A',
+              800: '#1E293B',
+              700: '#334155',
             }
-          }
+          },
+          animation: {
+            'fadeIn': 'fadeIn 0.5s ease-out forwards',
+            'slideUp': 'slideUp 0.4s ease-out forwards',
+            'slideDown': 'slideDown 0.3s ease-out forwards',
+            'scaleIn': 'scaleIn 0.3s ease-out forwards',
+            'pulse-slow': 'pulse 3s infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            slideDown: {
+              '0%': { opacity: '0', transform: 'translateY(-10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            scaleIn: {
+              '0%': { opacity: '0', transform: 'scale(0.95)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            },
+          },
         }
       }
-    </script>
-    <style>
-      body {
-        background-color: #0F172A;
-        color: #F8FAFC;
+    }
+  </script>
+
+  <style>
+    /* Base Styles */
+    html {
+      scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #FFFFFF;
+      color: #0F172A;
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior-y: none;
+    }
+
+    /* Hide scrollbar for category nav */
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Custom selection color */
+    ::selection {
+      background-color: rgba(197, 160, 89, 0.2);
+      color: #B08D22;
+    }
+
+    /* Line clamp utility */
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Smooth image loading */
+    img {
+      transition: opacity 0.3s ease;
+    }
+
+    img[loading] {
+      opacity: 0;
+    }
+
+    img.loaded {
+      opacity: 1;
+    }
+
+    /* Focus styles for accessibility */
+    :focus-visible {
+      outline: 2px solid #C5A059;
+      outline-offset: 2px;
+    }
+
+    /* Touch device optimizations */
+    @media (hover: none) and (pointer: coarse) {
+      .hover\:bg-slate-50:hover {
+        background-color: transparent;
       }
-    </style>
+    }
+
+    /* Print styles */
+    @media print {
+
+      header,
+      footer,
+      nav {
+        display: none !important;
+      }
+    }
+
+    /* Safe area for notched devices */
+    @supports(padding: max(0px)) {
+      body {
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+        padding-bottom: max(0px, env(safe-area-inset-bottom));
+      }
+    }
+  </style>
+
+  <!-- Import Map for React -->
   <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "qrcode": "https://aistudiocdn.com/qrcode@^1.5.3",
-    "react-hot-toast": "https://aistudiocdn.com/react-hot-toast@^2.6.0"
-  }
-}
-</script>
+    {
+      "imports": {
+        "react/": "https://aistudiocdn.com/react@^19.2.0/",
+        "react": "https://aistudiocdn.com/react@^19.2.0",
+        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+        "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+        "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+        "qrcode": "https://aistudiocdn.com/qrcode@^1.5.3",
+        "react-hot-toast": "https://aistudiocdn.com/react-hot-toast@^2.6.0"
+      }
+    }
+    </script>
 </head>
-  <body>
-    <div id="root"></div>
-  </body>
+
+<body>
+  <div id="root"></div>
+
+  <!-- Noscript fallback -->
+  <noscript>
+    <div style="text-align: center; padding: 40px; font-family: sans-serif;">
+      <h1>Kozbeyli Konağı</h1>
+      <p>Bu dijital menüyü görüntülemek için JavaScript'i etkinleştirin.</p>
+    </div>
+  </noscript>
+</body>
+
 </html>

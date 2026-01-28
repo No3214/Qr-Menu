@@ -1,23 +1,42 @@
-import React, { useState } from 'react';
-import { QRCodeEditor } from './components/QRCodeEditor';
+import React from 'react';
 import { Header } from './components/Header';
+import { DigitalMenu } from './components/DigitalMenu';
 import { Toaster } from 'react-hot-toast';
 
+/**
+ * App - Ana uygulama bileşeni
+ * Kozbeyli Konağı Dijital Menü Sistemi
+ */
 export default function App() {
   return (
-    <div className="min-h-screen bg-luxury-900 text-slate-200 selection:bg-gold-500 selection:text-white">
-      <Toaster position="top-right" toastOptions={{
-        style: {
-          background: '#1E293B',
-          color: '#fff',
-          border: '1px solid #334155'
-        }
-      }} />
+    <div className="min-h-screen bg-white text-slate-900 selection:bg-gold-500/20 selection:text-gold-600">
+      {/* Toast Notifications */}
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#1E293B',
+            color: '#fff',
+            borderRadius: '12px',
+            fontSize: '14px',
+            fontWeight: '500',
+          },
+          success: {
+            iconTheme: {
+              primary: '#C5A059',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
+
+      {/* Header */}
       <Header />
-      <main className="container mx-auto px-4 py-8 pb-20">
-        <div className="max-w-6xl mx-auto">
-           <QRCodeEditor />
-        </div>
+
+      {/* Main Content */}
+      <main>
+        <DigitalMenu />
       </main>
     </div>
   );
