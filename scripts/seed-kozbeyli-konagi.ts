@@ -131,6 +131,14 @@ async function seedKozbeyliKonagi() {
 
       // Create items for this category
       for (const item of category.items) {
+        // Type assertion for optional fields
+        const itemWithOptional = item as typeof item & {
+          image_url?: string
+          video_url?: string
+          dietary_restrictions?: string[]
+          prep_minutes?: number
+        }
+
         const { data: newItem, error: itemError } = await supabase
           .from('menu_items')
           .insert({
@@ -140,10 +148,10 @@ async function seedKozbeyliKonagi() {
             description: item.description,
             price: item.price,
             sort_order: item.sort_order,
-            image_url: item.image_url || null,
-            video_url: item.video_url || null,
-            dietary_restrictions: item.dietary_restrictions || [],
-            prep_minutes: item.prep_minutes || null,
+            image_url: itemWithOptional.image_url ?? null,
+            video_url: itemWithOptional.video_url ?? null,
+            dietary_restrictions: itemWithOptional.dietary_restrictions ?? [],
+            prep_minutes: itemWithOptional.prep_minutes ?? null,
             is_available: true,
           })
           .select()

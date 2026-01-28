@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 import { QueryProvider } from '@/components/providers/query-provider'
 
-const inter = Inter({ subsets: ['latin'] })
+// System font stack for better performance and offline support
+const fontClassName = 'font-sans'
 
 export const metadata: Metadata = {
   title: 'QR Menu - Dijital Restoran Menüsü',
@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr">
-      <body className={inter.className}>
+      <body className={fontClassName}>
         <QueryProvider>
           {children}
           <Toaster />

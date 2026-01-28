@@ -69,8 +69,9 @@ export async function GET(request: NextRequest) {
     .order('sort_order')
 
   // Build recommendations map: item_id -> [recommended items]
+  type MenuItem = NonNullable<typeof allItems>[number]
   const recommendationsMap: Record<string, Array<{
-    item: typeof allItems extends (infer T)[] ? T : never
+    item: MenuItem
     reason: string
   }>> = {}
 

@@ -3,7 +3,42 @@
  * Use this file to seed the database with the restaurant's menu
  */
 
-export const KOZBEYLI_KONAGI_DATA = {
+// Type definitions for the menu data
+interface MenuItemData {
+  name: string
+  name_en: string
+  description: string
+  description_en: string
+  price: number
+  sort_order: number
+  image_url?: string
+  video_url?: string
+  dietary_restrictions?: string[]
+  prep_minutes?: number
+}
+
+interface MenuCategory {
+  name: string
+  name_en: string
+  sort_order: number
+  items: MenuItemData[]
+}
+
+interface MenuData {
+  restaurant: {
+    name: string
+    slug: string
+    description: string
+  }
+  settings: {
+    supported_languages: string[]
+    currency: string
+    primary_color: string
+  }
+  categories: MenuCategory[]
+}
+
+export const KOZBEYLI_KONAGI_DATA: MenuData = {
   restaurant: {
     name: 'Kozbeyli Konağı',
     slug: 'kozbeyli-konagi',
@@ -850,25 +885,7 @@ export const KOZBEYLI_KONAGI_DATA = {
   ],
 }
 
-// Type definitions for the menu data
-export interface MenuCategory {
-  name: string
-  name_en: string
-  sort_order: number
-  items: MenuItemData[]
-}
-
-export interface MenuItemData {
-  name: string
-  name_en: string
-  description: string
-  description_en: string
-  price: number
-  sort_order: number
-  image_url?: string
-  video_url?: string
-  dietary_restrictions?: string[]
-  prep_minutes?: number
-}
+// Re-export types for external use
+export type { MenuItemData, MenuCategory, MenuData }
 
 export default KOZBEYLI_KONAGI_DATA
