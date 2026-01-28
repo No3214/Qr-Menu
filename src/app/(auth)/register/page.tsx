@@ -113,11 +113,11 @@ export default function RegisterPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                minLength={6}
+                minLength={8}
                 required
               />
               <p className="text-xs text-muted-foreground">
-                En az 6 karakter olmalıdır
+                En az 8 karakter, bir büyük harf, bir küçük harf ve bir rakam içermelidir
               </p>
             </div>
           </CardContent>
