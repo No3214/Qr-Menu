@@ -576,10 +576,18 @@ export default function PublicMenuPage() {
                           <div className="pb-4">
                             <h4 className="text-sm font-semibold text-gray-900 mb-3">Öneriler</h4>
                             <div className="flex gap-3 overflow-x-auto scrollbar-hide -mx-4 px-4">
-                              {category.items?.slice(0, 3).filter(i => i.id !== item.id).map((recItem) => (
+                              {/* Use API recommendations if available, otherwise fallback to category items */}
+                              {(item.recommendations?.length > 0
+                                ? item.recommendations.map(rec => ({ ...rec.item, reason: rec.reason }))
+                                : category.items?.slice(0, 3).filter(i => i.id !== item.id).map(i => ({ ...i, reason: i.description?.slice(0, 50) || 'Harika bir seçim!' }))
+                              )?.map((recItem) => (
                                 <div
                                   key={recItem.id}
-                                  className="flex-shrink-0 w-40 bg-gray-50 rounded-xl p-3"
+                                  onClick={() => {
+                                    toggleItemExpand(recItem.id)
+                                    trackEvent('recommendation_click', 'item', recItem.id)
+                                  }}
+                                  className="flex-shrink-0 w-40 bg-gray-50 rounded-xl p-3 cursor-pointer hover:bg-gray-100 transition-colors"
                                 >
                                   {recItem.image_url && (
                                     <div className="w-full aspect-[4/3] rounded-lg overflow-hidden mb-2">
@@ -597,7 +605,7 @@ export default function PublicMenuPage() {
                                   </h5>
                                   <p className="text-gray-500 text-xs mt-1">
                                     <span className="font-semibold text-gray-700">Neden?</span>{' '}
-                                    {recItem.description?.slice(0, 50)}...
+                                    {recItem.reason}...
                                   </p>
                                   <p className="text-gray-900 font-semibold text-sm mt-2">
                                     ₺ {recItem.price}

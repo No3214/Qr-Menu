@@ -181,8 +181,17 @@ export interface RestaurantSettings {
   updated_at: string
 }
 
+export interface MenuItemRecommendation {
+  item: MenuItem
+  reason: string
+}
+
+export interface MenuItemWithRecommendations extends MenuItem {
+  recommendations: MenuItemRecommendation[]
+}
+
 export interface MenuCategoryWithItems extends MenuCategory {
-  items: MenuItem[]
+  items: MenuItemWithRecommendations[]
   subcategories?: MenuSubcategory[]
 }
 

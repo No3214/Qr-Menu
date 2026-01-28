@@ -56,10 +56,46 @@ export async function GET(request: NextRequest) {
     .eq('is_available', true)
     .order('sort_order')
 
-  // Attach items to categories
+  // Get recommendations
+  const { data: recommendations } = await supabase
+    .from('recommendations')
+    .select(`
+      id,
+      item_id,
+      recommended_item_id,
+      reason,
+      sort_order
+    `)
+    .order('sort_order')
+
+  // Build recommendations map: item_id -> [recommended items]
+  const recommendationsMap: Record<string, Array<{
+    item: typeof allItems extends (infer T)[] ? T : never
+    reason: string
+  }>> = {}
+
+  if (recommendations && allItems) {
+    recommendations.forEach(rec => {
+      const recommendedItem = allItems.find(item => item.id === rec.recommended_item_id)
+      if (recommendedItem) {
+        if (!recommendationsMap[rec.item_id]) {
+          recommendationsMap[rec.item_id] = []
+        }
+        recommendationsMap[rec.item_id].push({
+          item: recommendedItem,
+          reason: rec.reason || 'Birlikte harika!'
+        })
+      }
+    })
+  }
+
+  // Attach items and recommendations to categories
   const processedCategories = categories?.map(category => ({
     ...category,
-    items: allItems?.filter(item => item.category_id === category.id) || [],
+    items: allItems?.filter(item => item.category_id === category.id).map(item => ({
+      ...item,
+      recommendations: recommendationsMap[item.id] || []
+    })) || [],
   })) || []
 
   // Get translations if language is not primary
@@ -82,11 +118,16 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  return NextResponse.json({
+  // Add cache headers for performance
+  const response = NextResponse.json({
     restaurant,
     settings,
     categories: processedCategories,
     translations,
     events: [],
   })
+
+  response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
+
+  return response
 }
