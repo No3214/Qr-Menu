@@ -9,6 +9,28 @@ import {
   getSecurityHeaders,
   slugify,
 } from '@/lib/utils'
+import { mockAuth } from '@/lib/mock-auth'
+
+// Check if Supabase is available
+async function isSupabaseAvailable(): Promise<boolean> {
+  try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    if (!url) return false
+
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 3000)
+
+    const response = await fetch(`${url}/rest/v1/`, {
+      method: 'HEAD',
+      signal: controller.signal,
+    }).catch(() => null)
+
+    clearTimeout(timeoutId)
+    return response !== null
+  } catch {
+    return false
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -78,7 +100,69 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Use service role to bypass RLS
+    // Check if Supabase is available
+    const supabaseAvailable = await isSupabaseAvailable()
+
+    if (!supabaseAvailable) {
+      // Use mock auth for local development
+      console.log('Supabase unavailable, using mock auth')
+
+      // Check if slug exists
+      const existingRestaurant = mockAuth.getRestaurantBySlug(slug)
+      if (existingRestaurant) {
+        return NextResponse.json(
+          { error: 'Bu URL zaten kullanılıyor. Başka bir URL deneyin.' },
+          { status: 400, headers: getSecurityHeaders() }
+        )
+      }
+
+      // Create user
+      const { user, error: userError } = await mockAuth.createUser(email, password)
+      if (userError || !user) {
+        const errorMessage = userError?.includes('already registered')
+          ? 'Bu e-posta adresi zaten kayıtlı'
+          : 'Hesap oluşturulamadı'
+        return NextResponse.json(
+          { error: errorMessage },
+          { status: 400, headers: getSecurityHeaders() }
+        )
+      }
+
+      // Create restaurant
+      const { restaurant, error: restaurantError } = await mockAuth.createRestaurant(
+        restaurantName,
+        slug,
+        user.id
+      )
+
+      if (restaurantError || !restaurant) {
+        mockAuth.deleteUser(user.id)
+        return NextResponse.json(
+          { error: 'Restoran oluşturulamadı. Lütfen tekrar deneyin.' },
+          { status: 500, headers: getSecurityHeaders() }
+        )
+      }
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: 'Hesap başarıyla oluşturuldu! Giriş yapabilirsiniz.',
+          user: {
+            id: user.id,
+            email: user.email,
+          },
+          restaurant: {
+            id: restaurant.id,
+            name: restaurant.name,
+            slug: restaurant.slug,
+          },
+          mode: 'development', // Indicate this is mock mode
+        },
+        { headers: getSecurityHeaders() }
+      )
+    }
+
+    // Use Supabase for production
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,

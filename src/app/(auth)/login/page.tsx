@@ -3,49 +3,53 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/hooks/use-toast'
-import { QrCode, Loader2, Eye, EyeOff } from 'lucide-react'
+import { QrCode, Loader2, Eye, EyeOff, Info } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [isDemoMode, setIsDemoMode] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
-  const supabase = createClient()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       })
 
-      if (error) {
-        let errorMessage = 'Giriş başarısız'
-        if (error.message.includes('Invalid login credentials')) {
-          errorMessage = 'E-posta veya şifre hatalı'
-        } else if (error.message.includes('fetch failed') || error.message.includes('network')) {
-          errorMessage = 'Sunucuya bağlanılamıyor. İnternet bağlantınızı kontrol edin.'
-        } else if (error.message.includes('Email not confirmed')) {
-          errorMessage = 'E-posta adresiniz henüz doğrulanmamış'
-        }
+      const data = await response.json()
 
+      if (!response.ok) {
         toast({
           title: 'Giriş başarısız',
-          description: errorMessage,
+          description: data.error || 'Bir hata oluştu',
           variant: 'destructive',
         })
         return
+      }
+
+      // Check if this is development mode
+      if (data.mode === 'development') {
+        setIsDemoMode(true)
+        // Store session in localStorage for mock auth
+        localStorage.setItem('mock_session', JSON.stringify(data.session))
+        localStorage.setItem('mock_user', JSON.stringify(data.user))
+        localStorage.setItem('mock_restaurant', JSON.stringify(data.restaurant))
       }
 
       toast({
@@ -66,6 +70,11 @@ export default function LoginPage() {
     }
   }
 
+  const fillDemoCredentials = () => {
+    setEmail('demo@grain.com')
+    setPassword('Demo1234')
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <Card className="w-full max-w-md">
@@ -82,6 +91,24 @@ export default function LoginPage() {
         </CardHeader>
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">
+            {/* Demo credentials hint */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="flex items-start gap-2">
+                <Info className="h-4 w-4 text-blue-600 mt-0.5" />
+                <div className="text-sm">
+                  <p className="font-medium text-blue-800">Demo Hesabı</p>
+                  <p className="text-blue-600">Test için demo hesabını kullanabilirsiniz.</p>
+                  <button
+                    type="button"
+                    onClick={fillDemoCredentials}
+                    className="text-blue-700 underline hover:text-blue-900 mt-1"
+                  >
+                    Demo bilgilerini doldur
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email">E-posta</Label>
               <Input
