@@ -116,13 +116,21 @@ export async function POST(request: NextRequest) {
 
       // User-friendly error messages
       let errorMessage = 'Hesap oluşturulamadı'
+      let statusCode = 400
+
       if (authError.message.includes('already registered')) {
         errorMessage = 'Bu e-posta adresi zaten kayıtlı'
+      } else if (authError.message.includes('fetch failed') || authError.message.includes('network')) {
+        errorMessage = 'Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin veya daha sonra tekrar deneyin.'
+        statusCode = 503
+      } else if (authError.message.includes('Invalid API key')) {
+        errorMessage = 'Sistem yapılandırma hatası. Lütfen yönetici ile iletişime geçin.'
+        statusCode = 500
       }
 
       return NextResponse.json(
         { error: errorMessage },
-        { status: 400, headers: getSecurityHeaders() }
+        { status: statusCode, headers: getSecurityHeaders() }
       )
     }
 

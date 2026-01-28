@@ -9,11 +9,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/hooks/use-toast'
-import { QrCode, Loader2 } from 'lucide-react'
+import { QrCode, Loader2, Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
@@ -30,9 +31,18 @@ export default function LoginPage() {
       })
 
       if (error) {
+        let errorMessage = 'Giriş başarısız'
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = 'E-posta veya şifre hatalı'
+        } else if (error.message.includes('fetch failed') || error.message.includes('network')) {
+          errorMessage = 'Sunucuya bağlanılamıyor. İnternet bağlantınızı kontrol edin.'
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = 'E-posta adresiniz henüz doğrulanmamış'
+        }
+
         toast({
           title: 'Giriş başarısız',
-          description: error.message,
+          description: errorMessage,
           variant: 'destructive',
         })
         return
@@ -47,8 +57,8 @@ export default function LoginPage() {
       router.refresh()
     } catch (error) {
       toast({
-        title: 'Bir hata oluştu',
-        description: 'Lütfen tekrar deneyin',
+        title: 'Bağlantı hatası',
+        description: 'Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.',
         variant: 'destructive',
       })
     } finally {
@@ -81,22 +91,34 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoComplete="email"
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Şifre</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading || !email || !password}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Giriş Yap
             </Button>
