@@ -7,9 +7,6 @@ interface CategoryNavProps {
     onCategoryClick: (id: string) => void;
 }
 
-/**
- * CategoryNav - Mobile-first yatay kategori navigasyonu
- */
 export const CategoryNav: React.FC<CategoryNavProps> = memo(({
     categories,
     activeCategoryId,
@@ -27,10 +24,10 @@ export const CategoryNav: React.FC<CategoryNavProps> = memo(({
     }, [activeCategoryId]);
 
     return (
-        <nav className="sticky top-14 z-40 bg-white border-b border-gray-100">
+        <nav className="sticky top-16 z-40 bg-white/95 backdrop-blur-sm border-b border-stone-100 shadow-sm transition-all">
             <div
                 ref={scrollRef}
-                className="flex items-center gap-1.5 px-3 py-2 overflow-x-auto scrollbar-hide"
+                className="flex items-center gap-2 px-4 py-3 overflow-x-auto scrollbar-hide"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
                 {categories.map((category) => {
@@ -40,10 +37,10 @@ export const CategoryNav: React.FC<CategoryNavProps> = memo(({
                             key={category.id}
                             data-id={category.id}
                             onClick={() => onCategoryClick(category.id)}
-                            className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-medium transition-all
-                ${isActive
-                                    ? 'bg-[#C5A059] text-white shadow-sm'
-                                    : 'text-gray-600 bg-gray-100 active:bg-gray-200'
+                            className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 ease-out flex-shrink-0
+                                ${isActive
+                                    ? 'bg-stone-900 text-white shadow-md scale-105'
+                                    : 'text-stone-500 bg-stone-50 hover:bg-stone-100 border border-stone-200/50'
                                 }`}
                         >
                             {category.title}
