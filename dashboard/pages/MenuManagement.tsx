@@ -14,6 +14,7 @@ import {
   Star,
 } from 'lucide-react';
 import { CATEGORIES, PRODUCTS, type Product, type Category } from '../../services/MenuData';
+import toast from 'react-hot-toast';
 
 type Tab = 'products' | 'recommendations' | 'display';
 
@@ -312,6 +313,15 @@ function ProductEditModal({
   const [calories, setCalories] = useState('');
   const [grams, setGrams] = useState('');
   const [servingTime, setServingTime] = useState('');
+  const [selectedDietary, setSelectedDietary] = useState<Set<string>>(new Set());
+  const [selectedAllergens, setSelectedAllergens] = useState<Set<string>>(new Set());
+  const [currency, setCurrency] = useState('TRY (₺)');
+
+  const toggleSet = (set: Set<string>, setFn: (s: Set<string>) => void, value: string) => {
+    const next = new Set(set);
+    if (next.has(value)) next.delete(value); else next.add(value);
+    setFn(next);
+  };
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
@@ -321,6 +331,7 @@ function ProductEditModal({
           <h2 className="text-lg font-semibold text-text">Ürün Düzenle</h2>
           <button
             onClick={onClose}
+            aria-label="Kapat"
             className="p-1.5 rounded-lg hover:bg-gray-100 text-text-muted"
           >
             <X size={20} />
@@ -359,7 +370,7 @@ function ProductEditModal({
               <label className="block text-sm font-medium text-text mb-1.5">
                 Para Birimi
               </label>
-              <select className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary bg-white">
+              <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary bg-white">
                 <option>TRY (₺)</option>
                 <option>USD ($)</option>
                 <option>EUR (€)</option>
@@ -446,7 +457,12 @@ function ProductEditModal({
                 (tag) => (
                   <button
                     key={tag}
-                    className="px-3 py-1.5 rounded-full text-xs font-medium border border-border text-text-muted hover:border-primary hover:text-primary transition-colors"
+                    onClick={() => toggleSet(selectedDietary, setSelectedDietary, tag)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                      selectedDietary.has(tag)
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-border text-text-muted hover:border-primary hover:text-primary'
+                    }`}
                   >
                     {tag}
                   </button>
@@ -467,7 +483,12 @@ function ProductEditModal({
               ].map((allergen) => (
                 <button
                   key={allergen}
-                  className="px-3 py-1.5 rounded-full text-xs font-medium border border-border text-text-muted hover:border-warning hover:text-warning transition-colors"
+                  onClick={() => toggleSet(selectedAllergens, setSelectedAllergens, allergen)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                    selectedAllergens.has(allergen)
+                      ? 'border-warning bg-warning/10 text-warning'
+                      : 'border-border text-text-muted hover:border-warning hover:text-warning'
+                  }`}
                 >
                   {allergen}
                 </button>
@@ -506,7 +527,13 @@ function ProductEditModal({
           >
             İptal
           </button>
-          <button className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
+          <button
+            onClick={() => {
+              toast.success('Ürün kaydedildi');
+              onClose();
+            }}
+            className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
+          >
             <Save size={16} />
             Kaydet
           </button>

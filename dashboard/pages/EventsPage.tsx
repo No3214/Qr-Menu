@@ -28,7 +28,7 @@ const sampleEvents: Event[] = [
   {
     id: '1',
     title: 'Canlı Müzik Gecesi',
-    date: '2025-02-15',
+    date: '2026-02-15',
     time: '20:00',
     location: 'Ana Salon',
     category: 'Müzik',
@@ -38,7 +38,7 @@ const sampleEvents: Event[] = [
   {
     id: '2',
     title: 'Şef ile Yemek Atölyesi',
-    date: '2025-02-20',
+    date: '2026-02-20',
     time: '14:00',
     location: 'Mutfak Stüdyo',
     category: 'Atölye',
@@ -48,7 +48,7 @@ const sampleEvents: Event[] = [
   {
     id: '3',
     title: 'Tadım Gecesi - İtalyan Şarapları',
-    date: '2025-03-01',
+    date: '2026-03-01',
     time: '19:00',
     location: 'Şarap Mahzeni',
     category: 'Tadım',
@@ -58,7 +58,7 @@ const sampleEvents: Event[] = [
   {
     id: '4',
     title: 'Kahvaltı Festivali',
-    date: '2025-01-10',
+    date: '2025-12-10',
     time: '09:00',
     location: 'Bahçe',
     category: 'Festival',
@@ -194,6 +194,7 @@ function CreateEventModal({ onClose }: { onClose: () => void }) {
           <h2 className="text-lg font-semibold text-text">Etkinlik Oluştur</h2>
           <button
             onClick={onClose}
+            aria-label="Kapat"
             className="p-1.5 rounded-lg hover:bg-gray-100 text-text-muted"
           >
             <X size={20} />

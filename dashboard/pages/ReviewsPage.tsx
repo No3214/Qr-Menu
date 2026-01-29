@@ -22,7 +22,7 @@ const sampleReviews: Review[] = [
     rating: 5,
     comment:
       'Harika bir deneyimdi! Menü çok zengin ve sunumlar muhteşem. Özellikle mantı tavsiye ederim.',
-    date: '2025-01-20',
+    date: '2026-01-20',
     reply: 'Teşekkür ederiz Ahmet Bey, tekrar bekleriz!',
   },
   {
@@ -31,7 +31,7 @@ const sampleReviews: Review[] = [
     rating: 4,
     comment:
       'Yemekler lezzetli, ortam çok güzel. Servis biraz yavaş olabilir ama genel olarak memnunum.',
-    date: '2025-01-18',
+    date: '2026-01-18',
   },
   {
     id: '3',
@@ -39,7 +39,7 @@ const sampleReviews: Review[] = [
     rating: 5,
     comment:
       'Kozbeyli Konağı her zamanki gibi harika. QR menü sistemi çok kullanışlı, kolay sipariş verdik.',
-    date: '2025-01-15',
+    date: '2026-01-15',
     reply: 'Değerli yorumunuz için teşekkürler!',
   },
   {
@@ -48,7 +48,7 @@ const sampleReviews: Review[] = [
     rating: 3,
     comment:
       'Kahvaltı menüsü daha çeşitli olabilir. Ancak manzara ve ortam çok güzel.',
-    date: '2025-01-12',
+    date: '2026-01-12',
   },
   {
     id: '5',
@@ -56,14 +56,14 @@ const sampleReviews: Review[] = [
     rating: 5,
     comment:
       'Özel günümüzü burada kutladık, ekip çok ilgili ve yardımcıydı. Kesinlikle tekrar geleceğiz!',
-    date: '2025-01-10',
+    date: '2026-01-10',
   },
   {
     id: '6',
     author: 'Zeynep A.',
     rating: 4,
     comment: 'Lezzetli yemekler, uygun fiyatlar. Porsiyon boyutları ideal.',
-    date: '2025-01-08',
+    date: '2026-01-08',
   },
 ];
 

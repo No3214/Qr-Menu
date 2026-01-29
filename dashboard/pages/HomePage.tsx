@@ -51,7 +51,7 @@ const quickActions = [
     icon: GraduationCap,
     title: 'Hızlı Eğitim',
     description: 'Platform kullanım rehberini inceleyin',
-    to: '#',
+    to: '/dashboard/settings',
     color: 'bg-pink-50 text-pink-600',
   },
 ];

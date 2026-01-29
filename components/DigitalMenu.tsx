@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CATEGORIES, PRODUCTS, Category, Product } from '../services/MenuData';
+import { CATEGORIES, PRODUCTS, Product } from '../services/MenuData';
 import { CategoryNav } from './CategoryNav';
 import { ProductCard } from './ProductCard';
 import { ProductModal } from './ProductModal';
