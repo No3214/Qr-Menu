@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CATEGORIES, PRODUCTS, Category, Product } from '../services/MenuData';
 import { CategoryNav } from './CategoryNav';
 import { ProductCard } from './ProductCard';
 import { ProductModal } from './ProductModal';
 import { VideoLanding } from './VideoLanding';
 import { CategoryGrid } from './CategoryGrid';
-import { Search, ChevronLeft } from 'lucide-react';
+import { Search, ChevronLeft, X } from 'lucide-react';
 
 type ViewState = 'LANDING' | 'GRID' | 'LIST';
 
@@ -14,6 +14,7 @@ export const DigitalMenu: React.FC = () => {
     const [activeCategory, setActiveCategory] = useState<string>(CATEGORIES[0]?.id || '');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     // Handle Category Selection from Grid
     const handleCategorySelect = (id: string) => {
@@ -39,21 +40,45 @@ export const DigitalMenu: React.FC = () => {
                 >
                     <ChevronLeft className="w-6 h-6" />
                 </button>
-                <div className="flex-1">
-                    <h2 className="text-lg font-bold text-text">
-                        {CATEGORIES.find(c => c.id === activeCategory)?.title || 'Menü'}
-                    </h2>
-                </div>
-                <button className="p-2 text-primary bg-primary/10 rounded-full">
-                    <Search className="w-5 h-5" />
-                </button>
+
+                {isSearchOpen ? (
+                    <div className="flex-1 flex items-center gap-2 animate-fade-in">
+                        <input
+                            autoFocus
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Ara..."
+                            className="flex-1 h-9 px-3 bg-gray-100 rounded-lg text-sm outline-none"
+                        />
+                        <button onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} className="p-1">
+                            <X className="w-5 h-5 text-gray-500" />
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        <div className="flex-1">
+                            <h2 className="text-lg font-bold text-text">
+                                {CATEGORIES.find(c => c.id === activeCategory)?.title || 'Menü'}
+                            </h2>
+                        </div>
+                        <button
+                            onClick={() => setIsSearchOpen(true)}
+                            className={`p-2 rounded-full ${searchQuery ? 'bg-primary text-white' : 'text-primary bg-primary/10'}`}
+                        >
+                            <Search className="w-5 h-5" />
+                        </button>
+                    </>
+                )}
             </div>
             {/* Sticky Category Pills */}
-            <CategoryNav
-                categories={CATEGORIES}
-                activeCategoryId={activeCategory}
-                onCategoryClick={(id) => setActiveCategory(id)}
-            />
+            {!isSearchOpen && (
+                <CategoryNav
+                    categories={CATEGORIES}
+                    activeCategoryId={activeCategory}
+                    onCategoryClick={(id) => setActiveCategory(id)}
+                />
+            )}
         </div>
     );
 
@@ -83,6 +108,8 @@ export const DigitalMenu: React.FC = () => {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                             <input
                                 type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Ne yemek istersiniz?"
                                 className="w-full h-11 pl-10 pr-4 bg-gray-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                             />
@@ -106,6 +133,11 @@ export const DigitalMenu: React.FC = () => {
                                 <ProductCard product={product} />
                             </div>
                         ))}
+                        {filteredProducts.length === 0 && (
+                            <div className="text-center py-10 text-gray-400">
+                                <p>Ürün bulunamadı.</p>
+                            </div>
+                        )}
                     </div>
                 </>
             )}
