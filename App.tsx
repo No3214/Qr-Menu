@@ -1,6 +1,5 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Header } from './components/Header';
 import { DigitalMenu } from './components/DigitalMenu';
 import { DashboardLayout } from './dashboard/DashboardLayout';
 import { HomePage } from './dashboard/pages/HomePage';
@@ -45,7 +44,6 @@ export default function App() {
           path="/"
           element={
             <div className="min-h-screen bg-white text-slate-900 selection:bg-gold-500/20 selection:text-gold-600">
-              <Header />
               <main>
                 <DigitalMenu />
               </main>

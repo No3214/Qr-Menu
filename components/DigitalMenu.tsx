@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { CATEGORIES, PRODUCTS, Product } from '../services/MenuData';
+import React, { useState, useEffect } from 'react';
+import { Category, Product } from '../services/MenuData';
+import { MenuService } from '../services/MenuService';
 import { CategoryNav } from './CategoryNav';
 import { ProductCard } from './ProductCard';
 import { ProductModal } from './ProductModal';
@@ -11,10 +12,35 @@ type ViewState = 'LANDING' | 'GRID' | 'LIST';
 
 export const DigitalMenu: React.FC = () => {
     const [viewState, setViewState] = useState<ViewState>('LANDING');
-    const [activeCategory, setActiveCategory] = useState<string>(CATEGORIES[0]?.id || '');
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [activeCategory, setActiveCategory] = useState<string>('');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    // Initial Data Fetch
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const [cats, prods] = await Promise.all([
+                    MenuService.getCategories(),
+                    MenuService.getProducts()
+                ]);
+                setCategories(cats);
+                setProducts(prods);
+                if (cats.length > 0) {
+                    setActiveCategory(cats[0].id);
+                }
+            } catch (error) {
+                console.error("Failed to load menu data", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, []);
 
     // Handle Category Selection from Grid
     const handleCategorySelect = (id: string) => {
@@ -24,7 +50,7 @@ export const DigitalMenu: React.FC = () => {
     };
 
     // Filter Products
-    const filteredProducts = PRODUCTS.filter((p) => {
+    const filteredProducts = products.filter((p) => {
         const matchesCategory = viewState === 'LIST' ? p.category === activeCategory : true;
         const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
@@ -59,7 +85,7 @@ export const DigitalMenu: React.FC = () => {
                     <>
                         <div className="flex-1">
                             <h2 className="text-lg font-bold text-text">
-                                {CATEGORIES.find(c => c.id === activeCategory)?.title || 'Menü'}
+                                {categories.find(c => c.id === activeCategory)?.title || 'Menü'}
                             </h2>
                         </div>
                         <button
@@ -74,7 +100,7 @@ export const DigitalMenu: React.FC = () => {
             {/* Sticky Category Pills */}
             {!isSearchOpen && (
                 <CategoryNav
-                    categories={CATEGORIES}
+                    categories={categories}
                     activeCategoryId={activeCategory}
                     onCategoryClick={(id) => setActiveCategory(id)}
                 />
@@ -83,6 +109,8 @@ export const DigitalMenu: React.FC = () => {
     );
 
     // RENDER
+    if (loading) return <div className="h-screen flex items-center justify-center bg-bg"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
+
     if (viewState === 'LANDING') {
         return <VideoLanding onEnter={() => setViewState('GRID')} />;
     }
@@ -118,7 +146,7 @@ export const DigitalMenu: React.FC = () => {
 
                     {/* Category Mosaic */}
                     <CategoryGrid
-                        categories={CATEGORIES}
+                        categories={categories}
                         onCategorySelect={handleCategorySelect}
                     />
                 </>
