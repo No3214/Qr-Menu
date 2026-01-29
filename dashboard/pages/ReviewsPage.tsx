@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import {
   Star,
-  ThumbsUp,
   MessageCircle,
-  Filter,
   Search,
   User,
 } from 'lucide-react';
@@ -127,7 +125,7 @@ export function ReviewsPage() {
       </div>
 
       {/* Filter bar */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         <div className="flex-1 relative">
           <Search
             size={16}
@@ -141,7 +139,7 @@ export function ReviewsPage() {
             className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
           />
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-1 overflow-x-auto scrollbar-hide shrink-0">
           <button
             onClick={() => setFilterRating(null)}
             className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${

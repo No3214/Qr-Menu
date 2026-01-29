@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import {
-  Globe,
   Search,
-  Plus,
   Check,
-  X,
   Languages,
-  ChevronDown,
   Edit3,
 } from 'lucide-react';
 import { PRODUCTS, CATEGORIES } from '../../services/MenuData';
@@ -56,7 +52,7 @@ export function TranslationsPage() {
         ar: { name: '', description: '' },
       },
     })),
-    ...PRODUCTS.slice(0, 20).map((p) => ({
+    ...PRODUCTS.map((p) => ({
       id: `prod-${p.id}`,
       type: 'product' as const,
       originalName: p.name,
@@ -96,6 +92,8 @@ export function TranslationsPage() {
             className={`border rounded-xl p-3.5 text-center transition-colors ${
               lang.code === 'tr'
                 ? 'border-primary/30 bg-primary/5'
+                : lang.code === selectedLang
+                ? 'border-primary bg-primary/5 ring-1 ring-primary/20 cursor-pointer'
                 : lang.enabled
                 ? 'border-border bg-white hover:border-primary/20 cursor-pointer'
                 : 'border-border bg-gray-50 opacity-60'

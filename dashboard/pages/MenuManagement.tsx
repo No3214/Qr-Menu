@@ -6,7 +6,6 @@ import {
   Edit3,
   Trash2,
   GripVertical,
-  ChevronRight,
   Eye,
   EyeOff,
   ImageIcon,
@@ -118,12 +117,12 @@ function ProductsTab({
   onEditProduct: (p: Product | null) => void;
 }) {
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col lg:flex-row gap-6">
       {/* Category sidebar */}
-      <div className="w-60 shrink-0 space-y-2">
+      <div className="lg:w-60 shrink-0 space-y-2 flex lg:flex-col overflow-x-auto lg:overflow-visible gap-2 lg:gap-0 scrollbar-hide">
         <button
           onClick={() => onSelectCategory(null)}
-          className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+          className={`w-full shrink-0 text-left px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
             !selectedCategory
               ? 'bg-primary text-white'
               : 'text-text-muted hover:bg-gray-50'
@@ -137,7 +136,7 @@ function ProductsTab({
             <button
               key={cat.id}
               onClick={() => onSelectCategory(cat.id)}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+              className={`w-full shrink-0 flex items-center justify-between px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
                 selectedCategory === cat.id
                   ? 'bg-primary text-white'
                   : 'text-text-muted hover:bg-gray-50'

@@ -25,7 +25,7 @@ export const Header: React.FC = () => {
               }`}>
               <span className="font-serif font-bold text-xl">K</span>
             </div>
-            <div className={`transition-all duration-300 ${scrolled ? 'opacity-100' : 'opacity-100'}`}>
+            <div className="transition-all duration-300">
               <h1 className="text-base font-bold text-stone-900 leading-none tracking-tight">Kozbeyli Konağı</h1>
               <p className="text-[10px] text-stone-500 font-medium uppercase tracking-widest mt-0.5">EST. 2024</p>
             </div>
@@ -33,11 +33,12 @@ export const Header: React.FC = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <button className="p-2.5 text-stone-600 hover:bg-stone-100 active:scale-95 transition-all rounded-full">
+            <button aria-label="Dil değiştir" className="p-2.5 text-stone-600 hover:bg-stone-100 active:scale-95 transition-all rounded-full">
               <Languages className="w-5 h-5" />
             </button>
             <button
               onClick={() => setIsSidebarOpen(true)}
+              aria-label="Menü aç"
               className="p-2.5 text-stone-900 bg-stone-50 hover:bg-stone-100 active:scale-95 transition-all rounded-full shadow-sm"
             >
               <Menu className="w-5 h-5" />
@@ -59,7 +60,7 @@ export const Header: React.FC = () => {
       <aside className={`fixed top-0 right-0 h-full w-80 bg-white z-[70] shadow-2xl transform transition-transform duration-300 ease-out ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex items-center justify-between p-6 border-b border-stone-100">
           <span className="text-lg font-serif font-bold text-stone-900">Menü</span>
-          <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-stone-400 hover:text-stone-900 bg-stone-50 rounded-full transition-colors">
+          <button onClick={() => setIsSidebarOpen(false)} aria-label="Menü kapat" className="p-2 text-stone-400 hover:text-stone-900 bg-stone-50 rounded-full transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>

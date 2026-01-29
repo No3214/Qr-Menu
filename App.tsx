@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { DigitalMenu } from './components/DigitalMenu';
 import { DashboardLayout } from './dashboard/DashboardLayout';
@@ -63,6 +63,9 @@ export default function App() {
           <Route path="settings" element={<SettingsPage />} />
           <Route path="translations" element={<TranslationsPage />} />
         </Route>
+
+        {/* 404 catch-all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

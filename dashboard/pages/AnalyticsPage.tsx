@@ -9,7 +9,6 @@ import {
   Clock,
   Smartphone,
   Monitor,
-  Globe,
 } from 'lucide-react';
 import { PRODUCTS, CATEGORIES } from '../../services/MenuData';
 
@@ -303,18 +302,11 @@ export function AnalyticsPage() {
                 {item.sessions}
               </span>
               <div
-                className="w-full bg-primary/20 rounded-t-md relative group"
+                className="w-full bg-primary rounded-t-md transition-all group hover:bg-primary-hover"
                 style={{
                   height: `${(item.sessions / maxSessions) * 100}%`,
                 }}
-              >
-                <div
-                  className="absolute bottom-0 w-full bg-primary rounded-t-md transition-all"
-                  style={{
-                    height: `${(item.sessions / maxSessions) * 100}%`,
-                  }}
-                />
-              </div>
+              />
               <span className="text-[10px] text-text-muted">{item.hour}</span>
             </div>
           ))}

@@ -53,12 +53,13 @@ export function DashboardLayout() {
         <div className="h-16 flex items-center justify-between px-5 border-b border-border">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-sm">F</span>
+              <span className="text-white font-bold text-sm">G</span>
             </div>
-            <span className="font-semibold text-[17px] text-text">FOOST</span>
+            <span className="font-semibold text-[17px] text-text">GrainQR</span>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
+            aria-label="Menü kapat"
             className="lg:hidden p-1 rounded hover:bg-gray-100"
           >
             <X size={20} />
@@ -115,6 +116,7 @@ export function DashboardLayout() {
         <header className="h-16 bg-white border-b border-border flex items-center px-5 gap-4 shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
+            aria-label="Menü aç"
             className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100"
           >
             <Menu size={22} />
