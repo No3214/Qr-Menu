@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { CATEGORIES, PRODUCTS, Category, Product } from '../services/MenuData';
+import { CATEGORIES, PRODUCTS, Product } from '../services/MenuData';
 import { CategoryNav } from './CategoryNav';
 import { ProductCard } from './ProductCard';
 import { ProductModal } from './ProductModal';
@@ -111,6 +110,8 @@ export const DigitalMenu: React.FC = () => {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Ne yemek istersiniz?"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full h-11 pl-10 pr-4 bg-gray-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                             />
                         </div>
