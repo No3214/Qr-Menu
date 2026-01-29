@@ -39,8 +39,8 @@ export const CategoryNav: React.FC<CategoryNavProps> = memo(({
                             onClick={() => onCategoryClick(category.id)}
                             className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 ease-out flex-shrink-0
                                 ${isActive
-                                    ? 'bg-stone-900 text-white shadow-md scale-105'
-                                    : 'text-stone-500 bg-stone-50 hover:bg-stone-100 border border-stone-200/50'
+                                    ? 'bg-primary text-white shadow-md shadow-primary/30 scale-105'
+                                    : 'text-text-muted bg-gray-100 hover:bg-gray-200 border border-transparent'
                                 }`}
                         >
                             {category.title}
