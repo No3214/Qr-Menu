@@ -96,12 +96,26 @@
 
   <!-- Global Error Handler for Debugging -->
   <script>
-    window.onerror = function (message, source, lineno, colno, error) {
-      document.body.innerHTML += '<div style="color:red; background:white; padding:20px; z-index:9999; position:relative; border:2px solid red;"><h3>CRITICAL ERROR</h3><p>' + message + '</p><p>' + source + ':' + lineno + '</p><pre>' + (error ? error.stack : '') + '</pre></div>';
-    };
-    window.onunhandledrejection = function (event) {
-      document.body.innerHTML += '<div style="color:red; background:white; padding:20px; z-index:9999; position:relative; border:2px solid red;"><h3>UNHANDLED PROMISE REJECTION</h3><p>' + event.reason + '</p></div>';
-    };
+    window.addEventListener('error', function (event) {
+      var msg = '';
+      if (event.target && (event.target instanceof HTMLScriptElement || event.target instanceof HTMLLinkElement)) {
+        msg = 'Resource Load Error: ' + (event.target.src || event.target.href);
+      } else {
+        msg = event.message || JSON.stringify(event);
+      }
+
+      document.body.innerHTML += '<div style="color:white; background:red; padding:20px; z-index:9999; position:fixed; top:0; left:0; width:100%; border-bottom:2px solid white; font-family:monospace;">' +
+        '<h3>⚠️ CRITICAL ERROR</h3>' +
+        '<p>' + msg + '</p>' +
+        '</div>';
+    }, true); // Capture phase to catch resource errors
+
+    window.addEventListener('unhandledrejection', function (event) {
+      document.body.innerHTML += '<div style="color:white; background:darkred; padding:20px; z-index:9999; position:fixed; top:50px; left:0; width:100%; border-bottom:2px solid white; font-family:monospace;">' +
+        '<h3>⚠️ PROMISE REJECTION</h3>' +
+        '<p>' + event.reason + '</p>' +
+        '</div>';
+    });
   </script>
 
   <script type="module" src="/index.tsx"></script>
