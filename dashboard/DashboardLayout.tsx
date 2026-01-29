@@ -79,10 +79,9 @@ export function DashboardLayout() {
               end={item.end}
               onClick={() => setSidebarOpen(false)}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors ${
-                  isActive
-                    ? 'bg-primary text-white'
-                    : 'text-text-muted hover:bg-gray-50 hover:text-text'
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors ${isActive
+                  ? 'bg-primary text-white'
+                  : 'text-text-muted hover:bg-gray-50 hover:text-text'
                 }`
               }
             >
@@ -107,17 +106,28 @@ export function DashboardLayout() {
           <button
             onClick={() => navigate('/')}
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-[14px] font-medium text-text-muted hover:bg-gray-50 hover:text-text transition-colors"
-          >
-            <LogOut size={19} />
             Çıkış Yap
           </button>
-        </div>
-      </aside>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
-        <header className="h-16 bg-white border-b border-border flex items-center px-5 gap-4 shrink-0">
+        {/* Connection Status */}
+        <div className="pt-2">
+          <div className={`
+              text-xs px-2 py-1.5 rounded-md flex items-center justify-center gap-2 font-medium border
+              ${import.meta.env.VITE_SUPABASE_URL
+              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+              : 'bg-amber-50 text-amber-700 border-amber-200'}
+            `}>
+            <div className={`w-2 h-2 rounded-full ${import.meta.env.VITE_SUPABASE_URL ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+            {import.meta.env.VITE_SUPABASE_URL ? 'Veritabanı: Aktif' : 'Veritabanı: Demo'}
+          </div>
+        </div>
+    </div>
+      </aside >
+
+    {/* Main content */ }
+    < div className = "flex-1 flex flex-col min-w-0" >
+      {/* Top bar */ }
+      < header className = "h-16 bg-white border-b border-border flex items-center px-5 gap-4 shrink-0" >
           <button
             onClick={() => setSidebarOpen(true)}
             aria-label="Menü aç"
@@ -139,13 +149,13 @@ export function DashboardLayout() {
               <span className="text-primary font-semibold text-xs">KK</span>
             </div>
           </div>
-        </header>
+        </header >
 
-        {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          <Outlet />
-        </main>
-      </div>
-    </div>
+    {/* Page content */ }
+    < main className = "flex-1 overflow-y-auto p-6" >
+      <Outlet />
+        </main >
+      </div >
+    </div >
   );
 }
