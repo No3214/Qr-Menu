@@ -22,7 +22,7 @@ INSERT INTO categories (id, title, slug, description, "order", image) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- Products
-INSERT INTO products (id, title, description, price, category_id, is_active, image) VALUES
+INSERT INTO products (id, name, description, price, category_id, is_available, image) VALUES
 -- Kahvalti
 ('k1', 'Gurme Serpme Kahvaltı', 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', 650, 'kahvalti', true, 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80'),
 -- Ekstralar

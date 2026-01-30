@@ -43,11 +43,14 @@ export const MenuService = {
             return MOCK_PRODUCTS;
         }
 
-        // Map DB response to Product interface if needed 
-        // (Assuming DB columns match Interface keys for simplicity, else map here)
         return data.map((item: any) => ({
-            ...item,
-            category: item.category_id, // Map FK to 'category' prop used in frontend
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            price: Number(item.price),
+            category: item.category_id,
+            isAvailable: item.is_available ?? true,
+            image: item.image,
         })) as Product[];
     },
 
@@ -69,8 +72,13 @@ export const MenuService = {
         if (error) return [];
 
         return data.map((item: any) => ({
-            ...item,
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            price: Number(item.price),
             category: item.category_id,
+            isAvailable: item.is_available ?? true,
+            image: item.image,
         })) as Product[];
     }
 };
