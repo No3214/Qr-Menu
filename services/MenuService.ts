@@ -28,10 +28,9 @@ export const MenuService = {
     /**
      * Fetch all products
      */
+    // Fetch products
     getProducts: async (): Promise<Product[]> => {
-        if (!isSupabaseConfigured()) {
-            return MOCK_PRODUCTS;
-        }
+        if (!isSupabaseConfigured()) return MOCK_PRODUCTS;
 
         const { data, error } = await supabase
             .from('products')
@@ -43,34 +42,42 @@ export const MenuService = {
             return MOCK_PRODUCTS;
         }
 
-        // Map DB response to Product interface if needed 
-        // (Assuming DB columns match Interface keys for simplicity, else map here)
         return data.map((item: any) => ({
-            ...item,
-            category: item.category_id, // Map FK to 'category' prop used in frontend
+            id: item.id,
+            name: item.title, // Map DB 'title' to UI 'name'
+            description: item.description,
+            price: item.price,
+            category: item.category_id, // Map DB 'category_id' to UI 'category'
+            isAvailable: item.is_active, // Map DB 'is_active' to UI 'isAvailable'
+            image: item.image
         })) as Product[];
     },
 
-    /**
-     * Fetch products by category
-     */
+    // Fetch products by category
     getProductsByCategory: async (categoryId: string): Promise<Product[]> => {
         if (!isSupabaseConfigured()) {
             return MOCK_PRODUCTS.filter(p => p.category === categoryId);
         }
 
-        // If using Supabase, we can filter query directly
         const { data, error } = await supabase
             .from('products')
             .select('*')
             .eq('category_id', categoryId)
             .eq('is_active', true);
 
-        if (error) return [];
+        if (error) {
+            console.error('Error fetching products by category:', error);
+            return [];
+        }
 
         return data.map((item: any) => ({
-            ...item,
+            id: item.id,
+            name: item.title,
+            description: item.description,
+            price: item.price,
             category: item.category_id,
+            isAvailable: item.is_active,
+            image: item.image
         })) as Product[];
     }
 };
