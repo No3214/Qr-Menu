@@ -8,7 +8,7 @@ import {
   Wifi, Link as LinkIcon, Check, Eye, Smartphone, Zap, Ruler, ArrowRightLeft, ShieldCheck, Wrench,
   Circle, Grid3X3, Maximize, Minimize, Layers
 } from 'lucide-react';
-// import { generateTaglines } from '../services/geminiService';
+import { generateTaglines } from '../services/geminiService';
 import toast from 'react-hot-toast';
 
 // --- TYPES & INTERFACES ---
@@ -449,8 +449,6 @@ export const QRCodeEditor: React.FC = () => {
   };
 
   const handleAIGenerate = async () => {
-    // Mock AI generation for now as service is missing
-    /*
     if (!restaurantName) {
       toast.error('Please enter a restaurant name first');
       return;
@@ -465,8 +463,6 @@ export const QRCodeEditor: React.FC = () => {
     } finally {
       setIsGeneratingAI(false);
     }
-    */
-    toast.success("AI Generation Placeholder");
   };
 
   const handleDownload = () => {

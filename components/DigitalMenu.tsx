@@ -92,7 +92,7 @@ export const DigitalMenu: React.FC = () => {
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Ara..."
+                            placeholder={t('search')}
                             className="flex-1 h-9 px-3 bg-gray-100 rounded-lg text-sm outline-none"
                         />
                         <button onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} className="p-1">
@@ -103,7 +103,7 @@ export const DigitalMenu: React.FC = () => {
                     <>
                         <div className="flex-1">
                             <h2 className="text-lg font-bold text-text">
-                                {categories.find(c => c.id === activeCategory)?.title || 'Menü'}
+                                {categories.find(c => c.id === activeCategory)?.title || t('menu')}
                             </h2>
                         </div>
                         <button
