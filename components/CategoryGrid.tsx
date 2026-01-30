@@ -30,10 +30,9 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
             `}
                     >
                         {/* Background Image */}
-                        <img // Use a placeholder if no specific category image
-                            src={`https://source.unsplash.com/random/400x400/?food,${category.title}`}
-                            // Note: In production we would use category.image if available
-                            // For now using a reliable placeholder source or solid color fallback
+                        <img
+                            src={category.image || `https://source.unsplash.com/random/400x400/?food,${category.title}`}
+                            loading="lazy"
                             onError={(e) => {
                                 e.currentTarget.style.display = 'none'; // Hide if fails
                             }}
@@ -66,6 +65,15 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
                     </div>
                 );
             })}
+
+
+            {/* Footer */}
+            <div className="col-span-2 text-center py-6">
+                <div className="flex items-center justify-center gap-2 opacity-50">
+                    <span className="text-[10px] font-medium tracking-widest uppercase">Powered by</span>
+                    <span className="text-[10px] font-bold tracking-widest uppercase">Kozbeyli Konağı</span>
+                </div>
+            </div>
         </div>
     );
 };

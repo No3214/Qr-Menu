@@ -22,8 +22,8 @@ export default {
                 },
                 border: "#E5E7EB",
                 primary: {
-                    DEFAULT: "#4F6EF7", // Foost Blue
-                    hover: "#3E5CE6",
+                    DEFAULT: "#008FAC", // "Modern Fisherman Blue" (Deep Cyan/Teal)
+                    hover: "#007A94",
                     foreground: "#FFFFFF"
                 },
                 success: "#16A34A",

@@ -6,19 +6,33 @@ import { ProductCard } from './ProductCard';
 import { ProductModal } from './ProductModal';
 import { VideoLanding } from './VideoLanding';
 import { CategoryGrid } from './CategoryGrid';
-import { Search, ChevronLeft, X } from 'lucide-react';
+import { Search, ChevronLeft, X, Globe } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { ReviewModal } from './ReviewModal';
+import { MenuAssistant } from './MenuAssistant';
 
 type ViewState = 'LANDING' | 'GRID' | 'LIST';
 
 export const DigitalMenu: React.FC = () => {
+    const { t, language, setLanguage } = useLanguage();
     const [viewState, setViewState] = useState<ViewState>('LANDING');
+    const [showReviewModal, setShowReviewModal] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [activeCategory, setActiveCategory] = useState<string>('');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [debouncedQuery, setDebouncedQuery] = useState<string>('');
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+
+    // Debounce search query
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedQuery(searchQuery);
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
 
     // Initial Data Fetch
     useEffect(() => {
@@ -50,11 +64,15 @@ export const DigitalMenu: React.FC = () => {
     };
 
     // Filter Products
-    const filteredProducts = products.filter((p) => {
-        const matchesCategory = viewState === 'LIST' ? p.category === activeCategory : true;
-        const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
-    });
+    const filteredProducts = React.useMemo(() => {
+        return products.filter((p) => {
+            const q = debouncedQuery.toLowerCase();
+            const matchesCategory = (viewState === 'LIST' && !debouncedQuery) ? p.category === activeCategory : true;
+            const matchesSearch = p.name.toLowerCase().includes(q) ||
+                p.description.toLowerCase().includes(q);
+            return matchesCategory && matchesSearch;
+        });
+    }, [products, debouncedQuery, viewState, activeCategory]);
 
     // LIST VIEW: Header Component
     const ListHeader = () => (
@@ -97,7 +115,6 @@ export const DigitalMenu: React.FC = () => {
                     </>
                 )}
             </div>
-            {/* Sticky Category Pills */}
             {!isSearchOpen && (
                 <CategoryNav
                     categories={categories}
@@ -108,7 +125,6 @@ export const DigitalMenu: React.FC = () => {
         </div>
     );
 
-    // RENDER
     if (loading) return <div className="h-screen flex items-center justify-center bg-bg"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
 
     if (viewState === 'LANDING') {
@@ -117,34 +133,49 @@ export const DigitalMenu: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-bg">
-
             {viewState === 'GRID' && (
                 <>
-                    {/* Grid Header */}
                     <header className="px-6 pt-8 pb-4 bg-surface sticky top-0 z-20 shadow-sm">
                         <div className="flex items-center justify-between mb-4">
                             <div>
-                                <h1 className="text-2xl font-bold text-text">Hoş Geldiniz</h1>
-                                <p className="text-sm text-text-muted">Kozbeyli Konağı</p>
+                                <h1 className="text-2xl font-bold text-text">{t('menu.welcome')}</h1>
+                                <p className="text-sm text-text-muted">{t('menu.restaurant')}</p>
                             </div>
-                            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
-                                K
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
+                                    className="h-12 px-3 bg-white/50 border border-border/50 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all"
+                                >
+                                    <Globe className="w-5 h-5 text-text-muted" />
+                                    <span className="text-sm font-semibold text-text uppercase">{language}</span>
+                                </button>
+                                <div
+                                    onClick={() => setShowReviewModal(true)}
+                                    className="w-12 h-12 bg-white shadow-md border border-gray-50 rounded-2xl flex items-center justify-center p-0.5 overflow-hidden active:scale-95 transition-transform"
+                                >
+                                    <img
+                                        src="/assets/logo-dark.jpg"
+                                        alt="Kozbeyli Konağı"
+                                        className="w-full h-full object-contain"
+                                        onError={(e) => {
+                                            e.currentTarget.style.display = 'none';
+                                            e.currentTarget.parentElement!.innerHTML = '<span class="text-primary font-bold text-xl">K</span>';
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </div>
-                        {/* Search Input */}
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Ne yemek istersiniz?"
+                                placeholder={t('menu.search')}
                                 className="w-full h-11 pl-10 pr-4 bg-gray-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                             />
                         </div>
                     </header>
-
-                    {/* Category Mosaic */}
                     <CategoryGrid
                         categories={categories}
                         onCategorySelect={handleCategorySelect}
@@ -163,18 +194,21 @@ export const DigitalMenu: React.FC = () => {
                         ))}
                         {filteredProducts.length === 0 && (
                             <div className="text-center py-10 text-gray-400">
-                                <p>Ürün bulunamadı.</p>
+                                <p>{t('product.notFound')}</p>
                             </div>
                         )}
                     </div>
                 </>
             )}
 
-            {/* Product Modal */}
             <ProductModal
                 product={selectedProduct}
                 onClose={() => setSelectedProduct(null)}
             />
+
+            {showReviewModal && <ReviewModal onClose={() => setShowReviewModal(false)} />}
+
+            <MenuAssistant />
         </div>
     );
 };

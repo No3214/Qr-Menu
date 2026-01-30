@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Product } from '../services/MenuData';
-import { X, Share2, Info } from 'lucide-react';
+import { X, Share2, Info, Sparkles } from 'lucide-react';
+import { getProductPairing } from '../services/geminiService';
 
 interface ProductModalProps {
     product: Product | null;
@@ -37,8 +38,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                 className="relative w-full max-w-lg bg-white rounded-t-[32px] sm:rounded-[32px] overflow-hidden shadow-2xl transform transition-transform animate-slide-up"
                 style={{ maxHeight: '92vh', height: 'auto' }}
             >
-                {/* Close Button / Actions */}
-                <div className="absolute top-4 right-4 z-20 flex gap-2">
+                {/* Close Button */}
+                <div className="absolute top-4 right-4 z-20">
                     <button
                         onClick={onClose}
                         className="p-2.5 bg-black/10 hover:bg-black/20 text-white rounded-full backdrop-blur-md transition-colors"
@@ -60,13 +61,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                             <span className="text-6xl">🍽️</span>
                         </div>
                     )}
-                    {/* Subtle gradient for text readability if needed */}
                     <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
 
                 {/* Content Body */}
                 <div className="px-6 py-8 -mt-6 relative bg-white rounded-t-[32px]">
-                    {/* Drag Handle (Visual cue) */}
                     <div className="w-12 h-1 bg-stone-200 rounded-full mx-auto mb-6" />
 
                     <div className="flex items-start justify-between gap-4 mb-3">
@@ -92,24 +91,67 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                         </p>
                     </div>
 
+                    {/* AI Product Pairing */}
+                    <AIPairing productName={product.name} category={product.category} />
+
                     <div className="mt-10 pt-6 border-t border-stone-100 flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm font-medium text-stone-500 bg-stone-50 px-3 py-1.5 rounded-full">
                             <Info className="w-4 h-4" />
                             <span>{product.category}</span>
                         </div>
 
-                        {/* Share or Action Button */}
                         <button className="p-2 text-stone-400 hover:text-stone-900 transition-colors">
                             <Share2 className="w-5 h-5" />
                         </button>
                     </div>
 
-                    {/* Add to Order Button (Visual only for now) */}
                     <button className="w-full mt-6 bg-stone-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-stone-900/20 active:scale-[0.98] transition-all">
                         Siparişe Ekle
                     </button>
                 </div>
             </div>
+        </div>
+    );
+};
+
+const AIPairing: React.FC<{ productName: string, category: string }> = ({ productName, category }) => {
+    const [pairing, setPairing] = React.useState<{ pairing: string, reason: string } | null>(null);
+    const [loading, setLoading] = React.useState(true);
+
+    useEffect(() => {
+        const loadPairing = async () => {
+            setLoading(true);
+            try {
+                const data = await getProductPairing(productName, category);
+                setPairing(data);
+            } catch (error) {
+                console.error("Failed to load pairing", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadPairing();
+    }, [productName, category]);
+
+    if (loading) return (
+        <div className="mt-8 p-4 bg-stone-50 border border-stone-100 rounded-2xl animate-pulse">
+            <div className="h-4 w-24 bg-stone-200 rounded mb-2"></div>
+            <div className="h-3 w-full bg-stone-100 rounded"></div>
+        </div>
+    );
+
+    if (!pairing) return null;
+
+    return (
+        <div className="mt-8 p-4 bg-stone-50 border border-stone-100 rounded-2xl">
+            <div className="flex items-center gap-2 mb-2">
+                <div className="p-1 bg-primary/10 rounded-lg">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                </div>
+                <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider">Gurme Eşleşme ✨</h4>
+            </div>
+            <p className="text-sm font-bold text-stone-800 mb-1">{pairing.pairing}</p>
+            <p className="text-[11px] text-stone-500 leading-relaxed italic">"{pairing.reason}"</p>
         </div>
     );
 };

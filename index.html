@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#C5A059" />
+  <meta name="theme-color" content="#008FAC" />
   <meta name="description" content="Kozbeyli Konağı - Dijital Menü. Ege'nin eşsiz lezzet durağı." />
   <meta name="apple-mobile-web-app-capable" content="yes" />
 
@@ -94,27 +94,33 @@
 <body class="bg-white text-gray-900">
   <div id="root"></div>
 
-  <!-- Global Error Handler for Debugging -->
+  <!-- Global Error Handler (Console Only for Production) -->
   <script>
+    // Only show visual errors in development
+    var isDev = window.location.hostname === 'localhost';
+
     window.addEventListener('error', function (event) {
-      var msg = '';
-      if (event.target && (event.target instanceof HTMLScriptElement || event.target instanceof HTMLLinkElement)) {
-        msg = 'Resource Load Error: ' + (event.target.src || event.target.href);
-      } else {
-        msg = event.message || JSON.stringify(event);
+      // Ignore image/resource load errors silently
+      if (event.target && (event.target instanceof HTMLImageElement || event.target instanceof HTMLScriptElement || event.target instanceof HTMLLinkElement)) {
+        console.warn('Resource load warning:', event.target.src || event.target.href);
+        return; // Don't show UI for resource errors
       }
 
-      document.body.innerHTML += '<div style="color:white; background:red; padding:20px; z-index:9999; position:fixed; top:0; left:0; width:100%; border-bottom:2px solid white; font-family:monospace;">' +
-        '<h3>⚠️ CRITICAL ERROR</h3>' +
-        '<p>' + msg + '</p>' +
-        '</div>';
-    }, true); // Capture phase to catch resource errors
+      // Only log JS errors to console in production
+      console.error('App Error:', event.message);
+
+      // Show visual error only in development
+      if (isDev && event.message) {
+        var errorDiv = document.createElement('div');
+        errorDiv.style = 'color:white; background:red; padding:10px; position:fixed; top:0; left:0; right:0; z-index:9999; font-family:monospace; font-size:12px;';
+        errorDiv.innerHTML = '<strong>DEV ERROR:</strong> ' + event.message;
+        document.body.appendChild(errorDiv);
+        setTimeout(function () { errorDiv.remove(); }, 5000);
+      }
+    }, true);
 
     window.addEventListener('unhandledrejection', function (event) {
-      document.body.innerHTML += '<div style="color:white; background:darkred; padding:20px; z-index:9999; position:fixed; top:50px; left:0; width:100%; border-bottom:2px solid white; font-family:monospace;">' +
-        '<h3>⚠️ PROMISE REJECTION</h3>' +
-        '<p>' + event.reason + '</p>' +
-        '</div>';
+      console.error('Unhandled Promise:', event.reason);
     });
   </script>
 

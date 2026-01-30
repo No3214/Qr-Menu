@@ -111,11 +111,11 @@ export function HomePage() {
               iletişime geçin.
             </p>
             <a
-              href="mailto:destek@grainqr.com"
+              href="mailto:info@kozbeylikonagi.com"
               className="inline-flex items-center gap-1.5 mt-3 text-sm text-primary font-medium hover:underline"
             >
               <Mail size={15} />
-              destek@grainqr.com
+              info@kozbeylikonagi.com
             </a>
           </div>
         </div>

@@ -56,10 +56,10 @@ export function DashboardLayout() {
         {/* Logo */}
         <div className="h-16 flex items-center justify-between px-5 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-sm">G</span>
+            <div className="w-8 h-8 rounded-lg bg-transparent flex items-center justify-center overflow-hidden">
+              <img src="/assets/logo-dark.jpg" alt="Logo" className="w-full h-full object-contain" />
             </div>
-            <span className="font-semibold text-[17px] text-text">GrainQR</span>
+            <span className="font-semibold text-[16px] text-text whitespace-nowrap">Kozbeyli Konağı</span>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -147,8 +147,8 @@ export function DashboardLayout() {
           </button>
 
           <div className="ml-auto flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-primary font-semibold text-xs">KK</span>
+            <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center overflow-hidden">
+              <img src="/assets/logo-dark.jpg" alt="Admin" className="w-full h-full object-cover" />
             </div>
           </div>
         </header>

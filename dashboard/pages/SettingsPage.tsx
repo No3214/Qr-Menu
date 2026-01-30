@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
 import {
   User,
   Lock,
@@ -71,11 +72,10 @@ export function SettingsPage() {
                     setActiveSection(section.id);
                     setMobileOpen(false);
                   }}
-                  className={`w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors ${
-                    activeSection === section.id
-                      ? 'bg-primary text-white'
-                      : 'text-text-muted hover:bg-gray-50'
-                  }`}
+                  className={`w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors ${activeSection === section.id
+                    ? 'bg-primary text-white'
+                    : 'text-text-muted hover:bg-gray-50'
+                    }`}
                 >
                   <section.icon size={17} />
                   {section.label}
@@ -91,11 +91,10 @@ export function SettingsPage() {
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id)}
-              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                activeSection === section.id
-                  ? 'bg-primary text-white'
-                  : 'text-text-muted hover:bg-gray-50 hover:text-text'
-              }`}
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeSection === section.id
+                ? 'bg-primary text-white'
+                : 'text-text-muted hover:bg-gray-50 hover:text-text'
+                }`}
             >
               <section.icon size={17} />
               {section.label}
@@ -236,37 +235,105 @@ function GuestSection() {
 }
 
 function QRCodeSection() {
+  const [fgColor, setFgColor] = React.useState('#000000');
+  const [bgColor, setBgColor] = React.useState('#FFFFFF');
+  const menuUrl = 'https://qr-menu-one-iota.vercel.app';
+
+  const downloadQR = (format: 'png' | 'svg') => {
+    const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement | null;
+    const svg = document.getElementById('qr-svg') as SVGSVGElement | null;
+
+    if (format === 'png' && canvas) {
+      const link = document.createElement('a');
+      link.download = 'kozbeyli-qr-code.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      toast.success('PNG indirildi!');
+    } else if (format === 'svg' && svg) {
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svg);
+      const blob = new Blob([svgString], { type: 'image/svg+xml' });
+      const link = document.createElement('a');
+      link.download = 'kozbeyli-qr-code.svg';
+      link.href = URL.createObjectURL(blob);
+      link.click();
+      toast.success('SVG indirildi!');
+    }
+  };
+
   return (
     <SectionCard title="QR Kod Oluşturucu">
       <p className="text-sm text-text-muted">Restoranınız için özel QR kodlar oluşturun ve indirin.</p>
       <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-        <code className="text-sm text-text flex-1 truncate">https://menu.kozbeylikonagi.com</code>
-        <button onClick={() => { navigator.clipboard.writeText('https://menu.kozbeylikonagi.com'); toast.success('Kopyalandı'); }} aria-label="URL kopyala" className="p-1.5 rounded hover:bg-gray-200 text-text-muted transition-colors"><Copy size={15} /></button>
-        <button aria-label="Linki aç" className="p-1.5 rounded hover:bg-gray-200 text-text-muted transition-colors"><ExternalLink size={15} /></button>
+        <code className="text-sm text-text flex-1 truncate">{menuUrl}</code>
+        <button onClick={() => { navigator.clipboard.writeText(menuUrl); toast.success('Kopyalandı'); }} aria-label="URL kopyala" className="p-1.5 rounded hover:bg-gray-200 text-text-muted transition-colors"><Copy size={15} /></button>
+        <a href={menuUrl} target="_blank" rel="noopener noreferrer" aria-label="Linki aç" className="p-1.5 rounded hover:bg-gray-200 text-text-muted transition-colors"><ExternalLink size={15} /></a>
       </div>
-      <div className="bg-white border border-border rounded-xl p-8 flex items-center justify-center">
-        <div className="w-48 h-48 bg-gray-100 rounded-xl flex items-center justify-center"><QrCode size={80} className="text-gray-300" /></div>
+
+      {/* QR Code Preview */}
+      <div className="bg-white border border-border rounded-xl p-8 flex flex-col items-center justify-center gap-4">
+        <div style={{ background: bgColor, padding: '16px', borderRadius: '12px' }}>
+          {/* Canvas version for PNG download */}
+          <QRCodeCanvas
+            id="qr-canvas"
+            value={menuUrl}
+            size={192}
+            fgColor={fgColor}
+            bgColor={bgColor}
+            level="H"
+            includeMargin={false}
+          />
+        </div>
+        {/* Hidden SVG for SVG download */}
+        <div style={{ display: 'none' }}>
+          <QRCodeSVG
+            id="qr-svg"
+            value={menuUrl}
+            size={192}
+            fgColor={fgColor}
+            bgColor={bgColor}
+            level="H"
+            includeMargin={false}
+          />
+        </div>
       </div>
+
+      {/* Color Pickers */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-text mb-1.5">Ön Plan Rengi</label>
-          <input type="color" defaultValue="#000000" className="w-full h-10 rounded-lg border border-border cursor-pointer" />
+          <input
+            type="color"
+            value={fgColor}
+            onChange={(e) => setFgColor(e.target.value)}
+            className="w-full h-10 rounded-lg border border-border cursor-pointer"
+          />
         </div>
         <div>
           <label className="block text-sm font-medium text-text mb-1.5">Arka Plan Rengi</label>
-          <input type="color" defaultValue="#FFFFFF" className="w-full h-10 rounded-lg border border-border cursor-pointer" />
+          <input
+            type="color"
+            value={bgColor}
+            onChange={(e) => setBgColor(e.target.value)}
+            className="w-full h-10 rounded-lg border border-border cursor-pointer"
+          />
         </div>
       </div>
-      <div>
-        <label className="block text-sm font-medium text-text mb-1.5">QR Kod Logo</label>
-        <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary/30 transition-colors cursor-pointer">
-          <ImageIcon size={20} className="mx-auto text-text-muted mb-1" />
-          <p className="text-xs text-text-muted">Logo ekleyin (opsiyonel)</p>
-        </div>
-      </div>
+
+      {/* Download Buttons */}
       <div className="flex gap-3">
-        <button className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"><Download size={16} />PNG İndir</button>
-        <button className="flex items-center gap-2 border border-border text-text px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"><Download size={16} />SVG İndir</button>
+        <button
+          onClick={() => downloadQR('png')}
+          className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
+        >
+          <Download size={16} />PNG İndir
+        </button>
+        <button
+          onClick={() => downloadQR('svg')}
+          className="flex items-center gap-2 border border-border text-text px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+        >
+          <Download size={16} />SVG İndir
+        </button>
       </div>
     </SectionCard>
   );

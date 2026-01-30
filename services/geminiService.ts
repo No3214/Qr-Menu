@@ -1,10 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 
 const getClient = () => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) {
-    throw new Error("API Key not found");
-  }
+  // Use the provided Gemini key
+  const apiKey = "AIzaSyAu7sVDA8tiHoxPQ1qvAhbdRr_q9vkQiEI";
   return new GoogleGenAI({ apiKey });
 };
 
@@ -18,14 +16,13 @@ export const generateTaglines = async (restaurantName: string, vibe: string): Pr
     Return ONLY the phrases as a JSON array of strings. Do not include markdown formatting like \`\`\`json.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash',
       contents: prompt,
     });
 
     const text = response.text || "[]";
-    // Clean up if model includes markdown code blocks despite instructions
     const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    
+
     try {
       return JSON.parse(cleanText);
     } catch (e) {
@@ -39,5 +36,49 @@ export const generateTaglines = async (restaurantName: string, vibe: string): Pr
       "Experience our flavors",
       "Your table awaits"
     ];
+  }
+};
+
+export const getProductPairing = async (productName: string, category: string): Promise<{ pairing: string, reason: string }> => {
+  try {
+    const ai = getClient();
+    const prompt = `Suggest a perfect drink or side dish pairing for this menu item: "${productName}" (${category}).
+    Return a JSON object with two fields:
+    - "pairing": Name of the suggested item (keep it generic if not known, e.g., "Red Wine" or "French Fries")
+    - "reason": A short, appetizing 1-sentence explanation of why they go well together.
+    
+    Do not include markdown.`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: prompt,
+    });
+
+    const text = response.text?.replace(/```json/g, '').replace(/```/g, '').trim() || "{}";
+    return JSON.parse(text);
+  } catch (error) {
+    console.error("Gemini Pairing Error:", error);
+    return { pairing: "Chef's Special", reason: "Our chef recommends this combination." };
+  }
+};
+
+export const getChatResponse = async (message: string, context: string = ""): Promise<string> => {
+  try {
+    const ai = getClient();
+    const prompt = `You are a helpful, sophisticated waiter at "Kozbeyli Konağı". 
+    Context: ${context}
+    User asked: "${message}"
+    
+    Answer briefly (max 2-3 sentences), warmly, and professionally. Recommend items if appropriate.`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: prompt,
+    });
+
+    return response.text || "I'm sorry, I didn't quite catch that. Could you please repeat?";
+  } catch (error) {
+    console.error("Gemini Chat Error:", error);
+    return "I am currently offline, please ask a staff member.";
   }
 };

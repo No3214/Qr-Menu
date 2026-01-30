@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { DigitalMenu } from './components/DigitalMenu';
-import { DashboardLayout } from './dashboard/DashboardLayout';
-import { HomePage } from './dashboard/pages/HomePage';
-import { MenuManagement } from './dashboard/pages/MenuManagement';
-import { AnalyticsPage } from './dashboard/pages/AnalyticsPage';
-import { EventsPage } from './dashboard/pages/EventsPage';
-import { ReviewsPage } from './dashboard/pages/ReviewsPage';
-import { SettingsPage } from './dashboard/pages/SettingsPage';
-import { TranslationsPage } from './dashboard/pages/TranslationsPage';
 import { Toaster } from 'react-hot-toast';
+import { LanguageProvider } from './context/LanguageContext';
+
+// Lazy load components for performance (Fixes INP issues on navigation)
+const DigitalMenu = React.lazy(() => import('./components/DigitalMenu').then(module => ({ default: module.DigitalMenu })));
+const DashboardLayout = React.lazy(() => import('./dashboard/DashboardLayout').then(module => ({ default: module.DashboardLayout })));
+const HomePage = React.lazy(() => import('./dashboard/pages/HomePage').then(module => ({ default: module.HomePage })));
+const MenuManagement = React.lazy(() => import('./dashboard/pages/MenuManagement').then(module => ({ default: module.MenuManagement })));
+const AnalyticsPage = React.lazy(() => import('./dashboard/pages/AnalyticsPage').then(module => ({ default: module.AnalyticsPage })));
+const EventsPage = React.lazy(() => import('./dashboard/pages/EventsPage').then(module => ({ default: module.EventsPage })));
+const ReviewsPage = React.lazy(() => import('./dashboard/pages/ReviewsPage').then(module => ({ default: module.ReviewsPage })));
+const SettingsPage = React.lazy(() => import('./dashboard/pages/SettingsPage').then(module => ({ default: module.SettingsPage })));
+const TranslationsPage = React.lazy(() => import('./dashboard/pages/TranslationsPage').then(module => ({ default: module.TranslationsPage })));
 
 /**
  * App - Ana uygulama bileşeni
@@ -38,33 +41,41 @@ export default function App() {
         }}
       />
 
-      <Routes>
-        {/* Customer-facing menu */}
-        <Route
-          path="/"
-          element={
-            <div className="min-h-screen bg-white text-slate-900 selection:bg-gold-500/20 selection:text-gold-600">
-              <main>
-                <DigitalMenu />
-              </main>
-            </div>
-          }
-        />
+      <LanguageProvider>
+        <Suspense fallback={
+          <div className="h-screen w-full flex items-center justify-center bg-gray-50">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        }>
+          <Routes>
+            {/* Customer-facing menu (Mobile Only Look on Desktop) */}
+            <Route
+              path="/"
+              element={
+                <div className="min-h-screen bg-gray-100 flex justify-center selection:bg-primary/20 selection:text-primary">
+                  <main className="w-full max-w-[480px] bg-white min-h-screen shadow-2xl overflow-hidden relative">
+                    <DigitalMenu />
+                  </main>
+                </div>
+              }
+            />
 
-        {/* Dashboard */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="menu" element={<MenuManagement />} />
-          <Route path="analytics" element={<AnalyticsPage />} />
-          <Route path="events" element={<EventsPage />} />
-          <Route path="reviews" element={<ReviewsPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="translations" element={<TranslationsPage />} />
-        </Route>
+            {/* Dashboard */}
+            <Route path="/dashboard" element={<DashboardLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="menu" element={<MenuManagement />} />
+              <Route path="analytics" element={<AnalyticsPage />} />
+              <Route path="events" element={<EventsPage />} />
+              <Route path="reviews" element={<ReviewsPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="translations" element={<TranslationsPage />} />
+            </Route>
 
-        {/* 404 catch-all */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+            {/* 404 catch-all */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </LanguageProvider>
     </>
   );
 }

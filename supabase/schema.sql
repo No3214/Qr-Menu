@@ -29,8 +29,8 @@ ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public Read Categories" ON categories FOR SELECT USING (true);
 CREATE POLICY "Public Read Products" ON products FOR SELECT USING (true);
 
-CREATE POLICY "Admin Write Categories" ON categories FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Admin Write Products" ON products FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Admin Write Categories" ON categories FOR ALL USING (true);
+CREATE POLICY "Admin Write Products" ON products FOR ALL USING (true);
 
 -- Insert Sample Data (Optional - Mimics MenuData.ts)
 INSERT INTO categories (title, "order", image) VALUES
