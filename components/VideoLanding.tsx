@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, Menu, Globe, X, Settings, MapPin, Phone, MessageSquare } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { Link } from 'react-router-dom';
@@ -15,6 +15,18 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
     const { language, setLanguage, t } = useLanguage();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [showReviewModal, setShowReviewModal] = useState(false);
+    const [showCookies, setShowCookies] = useState(false);
+
+    // Cookie consent check
+    useEffect(() => {
+        const consent = localStorage.getItem('cookie-consent');
+        if (!consent) setShowCookies(true);
+    }, []);
+
+    const handleAcceptCookies = () => {
+        localStorage.setItem('cookie-consent', 'accepted');
+        setShowCookies(false);
+    };
 
     const toggleLanguage = () => {
         setLanguage(language === 'tr' ? 'en' : 'tr');
@@ -154,7 +166,12 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                 </p>
 
                 <button
-                    onClick={onEnter}
+                    onClick={() => {
+                        // Defer state change to next frame to improve INP
+                        requestAnimationFrame(() => {
+                            onEnter();
+                        });
+                    }}
                     className="group flex flex-col items-center gap-2 text-white/90 hover:text-white transition-colors"
                 >
                     <span className="text-sm font-medium tracking-widest uppercase border border-white/30 px-6 py-3 rounded-full backdrop-blur-md bg-white/10 group-hover:bg-white/20 transition-all">
@@ -165,6 +182,25 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
             </div>
             {/* Review Modal */}
             {showReviewModal && <ReviewModal onClose={() => setShowReviewModal(false)} />}
+
+            {/* Cookie Consent Banner */}
+            {showCookies && (
+                <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-2xl">
+                    <div className="max-w-lg mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <p className="text-sm text-gray-700 text-center sm:text-left">
+                            {language === 'tr'
+                                ? 'Bu site deneyiminizi iyileştirmek için çerezler kullanır.'
+                                : 'This site uses cookies to improve your experience.'}
+                        </p>
+                        <button
+                            onClick={handleAcceptCookies}
+                            className="px-6 py-2 bg-primary text-white text-sm font-bold rounded-full hover:bg-primary-hover transition-colors whitespace-nowrap"
+                        >
+                            {language === 'tr' ? 'Kabul Et' : 'Accept'}
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
