@@ -1,0 +1,1076 @@
+--- INDEX.HTML ---
+<!-- Build Trigger: Fix HTML Syntax 2024 -->
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#C5A059" />
+  <meta name="description" content="Kozbeyli Konağı - Dijital Menü. Ege'nin eşsiz lezzet durağı." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+
+  <title>Kozbeyli Konağı | Dijital Menü</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#C5A059',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+
+  <!-- SEO Schema -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Kozbeyli Konağı",
+      "image": "https://via.placeholder.com/1200x600",
+      "description": "Ege'nin eşsiz lezzet durağı. Serpme kahvaltı, taş fırın pizza ve özel şarap menüsü.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Kozbeyli Küme Evleri No:188",
+        "addressLocality": "Foça",
+        "addressRegion": "İzmir",
+        "postalCode": "35680",
+        "addressCountry": "TR"
+      },
+      "telephone": "+905322342686",
+      "priceRange": "₺₺",
+      "servesCuisine": "Turkish, Breakfast, Pizza",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "09:00",
+          "closes": "22:00"
+        }
+      ],
+      "menu": "https://qr-menu-yunuscan-oruks-projects.vercel.app"
+    }
+  </script>
+</head>
+
+<body class="bg-white text-gray-900">
+  <div id="root"></div>
+
+  <!-- Global Error Handler for Debugging -->
+  <script>
+    window.addEventListener('error', function (event) {
+      var msg = '';
+      if (event.target && (event.target instanceof HTMLScriptElement || event.target instanceof HTMLLinkElement)) {
+        msg = 'Resource Load Error: ' + (event.target.src || event.target.href);
+      } else {
+        msg = event.message || JSON.stringify(event);
+      }
+      console.error('⚠️ CRITICAL ERROR:', msg);
+    }, true);
+
+    window.addEventListener('unhandledrejection', function (event) {
+      console.error('⚠️ PROMISE REJECTION:', event.reason);
+    });
+  </script>
+
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>
+
+--- TAILWIND.CONFIG.JS ---
+/** @type {import('tailwindcss').Config} */
+export default {
+    content: [
+        "./index.html",
+        "./src/**/*.{js,ts,jsx,tsx}",
+        "./components/**/*.{js,ts,jsx,tsx}",
+        "./dashboard/**/*.{js,ts,jsx,tsx}",
+        "./*.{js,ts,jsx,tsx}",
+    ],
+    theme: {
+        extend: {
+            fontFamily: {
+                sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+            },
+            colors: {
+                // Blueprint Colors
+                bg: "#F7F7F9",
+                surface: "#FFFFFF",
+                text: {
+                    DEFAULT: "#111827",
+                    muted: "#6B7280"
+                },
+                border: "#E5E7EB",
+                primary: {
+                    DEFAULT: "#C5A059", // Kozbeyli Gold
+                    hover: "#B08D22",
+                    foreground: "#FFFFFF"
+                },
+                success: "#16A34A",
+                warning: "#F59E0B",
+                danger: "#EF4444",
+                chip: {
+                    bg: "#F3F4F6"
+                }
+            },
+            borderRadius: {
+                'lg': '16px',
+                'xl': '20px',
+                '2xl': '24px',
+            },
+            boxShadow: {
+                'card': '0 1px 2px rgba(0,0,0,0.06)',
+                'modal': '0 10px 30px rgba(0,0,0,0.18)',
+            },
+            animation: {
+                'fade-in': 'fadeIn 0.5s ease-out forwards',
+                'slide-up': 'slideUp 0.4s ease-out forwards',
+                'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+                fadeIn: {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' },
+                },
+                slideUp: {
+                    '0%': { opacity: '0', transform: 'translateY(20px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                },
+            },
+        },
+    },
+    plugins: [],
+}
+
+
+--- APP.TSX ---
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { DigitalMenu } from './components/DigitalMenu';
+import { DashboardLayout } from './dashboard/DashboardLayout';
+import { HomePage } from './dashboard/pages/HomePage';
+import { MenuManagement } from './dashboard/pages/MenuManagement';
+import { AnalyticsPage } from './dashboard/pages/AnalyticsPage';
+import { EventsPage } from './dashboard/pages/EventsPage';
+import { ReviewsPage } from './dashboard/pages/ReviewsPage';
+import { SettingsPage } from './dashboard/pages/SettingsPage';
+import { TranslationsPage } from './dashboard/pages/TranslationsPage';
+import { Toaster } from 'react-hot-toast';
+
+/**
+ * App - Ana uygulama bileşeni
+ * Kozbeyli Konağı Dijital Menü Sistemi
+ */
+export default function App() {
+  return (
+    <>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#1E293B',
+            color: '#fff',
+            borderRadius: '12px',
+            fontSize: '14px',
+            fontWeight: '500',
+          },
+          success: {
+            iconTheme: {
+              primary: '#C5A059',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
+
+      <Routes>
+        {/* Customer-facing menu */}
+        <Route
+          path="/"
+          element={
+            <div className="min-h-screen bg-white text-slate-900 selection:bg-gold-500/20 selection:text-gold-600">
+              <main>
+                <DigitalMenu />
+              </main>
+            </div>
+          }
+        />
+
+        {/* Dashboard */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="menu" element={<MenuManagement />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="events" element={<EventsPage />} />
+          <Route path="reviews" element={<ReviewsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="translations" element={<TranslationsPage />} />
+        </Route>
+
+        {/* 404 catch-all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
+  );
+}
+
+
+--- COMPONENTS/DIGITALMENU.TSX ---
+import React, { useState, useEffect } from 'react';
+import { Category, Product } from '../services/MenuData';
+import { MenuService } from '../services/MenuService';
+import { CategoryNav } from './CategoryNav';
+import { ProductCard } from './ProductCard';
+import { ProductModal } from './ProductModal';
+import { VideoLanding } from './VideoLanding';
+import { CategoryGrid } from './CategoryGrid';
+import { Search, ChevronLeft, X } from 'lucide-react';
+
+type ViewState = 'LANDING' | 'GRID' | 'LIST';
+
+export const DigitalMenu: React.FC = () => {
+    const [viewState, setViewState] = useState<ViewState>('LANDING');
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [activeCategory, setActiveCategory] = useState<string>('');
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    // Initial Data Fetch
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const [cats, prods] = await Promise.all([
+                    MenuService.getCategories(),
+                    MenuService.getProducts()
+                ]);
+                setCategories(cats);
+                setProducts(prods);
+                if (cats.length > 0) {
+                    setActiveCategory(cats[0].id);
+                }
+            } catch (error) {
+                console.error("Failed to load menu data", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, []);
+
+    // Handle Category Selection from Grid
+    const handleCategorySelect = (id: string) => {
+        setActiveCategory(id);
+        setViewState('LIST');
+        window.scrollTo(0, 0);
+    };
+
+    // Filter Products
+    const filteredProducts = products.filter((p) => {
+        const q = searchQuery.toLowerCase();
+        // If searching in LIST view, we can decide if we filter by category or not.
+        // Target site usually does global search.
+        const matchesCategory = (viewState === 'LIST' && !searchQuery) ? p.category === activeCategory : true;
+        const matchesSearch = p.name.toLowerCase().includes(q) ||
+                             p.description.toLowerCase().includes(q);
+        return matchesCategory && matchesSearch;
+    });
+
+    // LIST VIEW: Header Component
+    const ListHeader = () => (
+        <div className="sticky top-0 z-30 bg-white border-b border-border shadow-md">
+            <div className="flex items-center justify-between px-4 py-3">
+                <button
+                    onClick={() => setViewState('GRID')}
+                    className="p-2 -ml-2 text-text hover:bg-gray-100 rounded-full transition-colors"
+                    aria-label="Geri Dön"
+                >
+                    <ChevronLeft className="w-6 h-6" />
+                </button>
+
+                {isSearchOpen ? (
+                    <div className="flex-1 flex items-center gap-2 mx-2 animate-fade-in">
+                        <div className="relative flex-1">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                                autoFocus
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Ara..."
+                                className="w-full h-10 pl-9 pr-3 bg-gray-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                            />
+                        </div>
+                        <button
+                            onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}
+                            className="p-2 text-gray-500 hover:text-primary transition-colors"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        <div className="flex-1 text-center">
+                            <h2 className="text-lg font-bold text-text truncate px-4">
+                                {categories.find(c => c.id === activeCategory)?.title || 'Menü'}
+                            </h2>
+                        </div>
+                        <button
+                            onClick={() => setIsSearchOpen(true)}
+                            className={`p-2 rounded-full transition-all ${searchQuery ? 'bg-primary text-white shadow-lg' : 'text-primary hover:bg-primary/10'}`}
+                            aria-label="Ara"
+                        >
+                            <Search className="w-5 h-5" />
+                        </button>
+                    </>
+                )}
+            </div>
+            {/* Sticky Category Pills */}
+            {!isSearchOpen && (
+                <div className="pb-1">
+                    <CategoryNav
+                        categories={categories}
+                        activeCategoryId={activeCategory}
+                        onCategoryClick={(id) => setActiveCategory(id)}
+                    />
+                </div>
+            )}
+        </div>
+    );
+
+    // RENDER
+    if (loading) return <div className="h-screen flex items-center justify-center bg-bg"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
+
+    if (viewState === 'LANDING') {
+        return <VideoLanding onEnter={() => setViewState('GRID')} />;
+    }
+
+    return (
+        <div className="min-h-screen bg-bg">
+
+            {viewState === 'GRID' && (
+                <div className="flex flex-col min-h-screen">
+                    {/* Grid Header */}
+                    <header className={`px-6 pt-8 pb-4 bg-white sticky top-0 z-20 transition-all duration-300 ${searchQuery ? 'shadow-md' : 'shadow-sm'}`}>
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h1 className="text-2xl font-black text-gray-900 tracking-tight">Hoş Geldiniz</h1>
+                                <p className="text-sm font-medium text-primary">Kozbeyli Konağı</p>
+                            </div>
+                            <div className="w-12 h-12 bg-white shadow-md border border-gray-50 rounded-2xl flex items-center justify-center p-2">
+                                <img
+                                    src="https://thefoost.com/kozbeyli-konagi/wp-content/uploads/2023/12/logo-dark.png"
+                                    alt="Logo"
+                                    className="w-full h-full object-contain"
+                                    onError={(e) => {
+                                        e.currentTarget.style.display = 'none';
+                                        e.currentTarget.parentElement!.innerHTML = '<span class="text-primary font-bold text-xl">K</span>';
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        {/* Search Input */}
+                        <div className="relative group">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Ne yemek istersiniz?"
+                                className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm outline-none focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary/20 transition-all placeholder:text-gray-400"
+                            />
+                        </div>
+                    </header>
+
+                    {/* Category Mosaic or Search Results */}
+                    {searchQuery ? (
+                        <div className="p-4 space-y-4 pb-24 animate-fade-in">
+                            <div className="flex items-center justify-between mb-2">
+                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">Arama Sonuçları</h3>
+                                <button
+                                    onClick={() => setSearchQuery('')}
+                                    className="text-xs text-primary font-bold"
+                                >
+                                    Temizle
+                                </button>
+                            </div>
+                            {filteredProducts.map(product => (
+                                <div key={product.id} onClick={() => setSelectedProduct(product)}>
+                                    <ProductCard product={product} />
+                                </div>
+                            ))}
+                            {filteredProducts.length === 0 && (
+                                <div className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-100">
+                                    <Search className="w-12 h-12 text-gray-200 mx-auto mb-4" />
+                                    <p className="text-gray-400 font-medium">"{searchQuery}" için sonuç bulunamadı.</p>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <CategoryGrid
+                            categories={categories}
+                            onCategorySelect={handleCategorySelect}
+                        />
+                    )}
+                </div>
+            )}
+
+            {viewState === 'LIST' && (
+                <>
+                    <ListHeader />
+                    <div className="p-4 space-y-4 pb-24">
+                        {filteredProducts.map(product => (
+                            <div key={product.id} onClick={() => setSelectedProduct(product)}>
+                                <ProductCard product={product} />
+                            </div>
+                        ))}
+                        {filteredProducts.length === 0 && (
+                            <div className="text-center py-10 text-gray-400">
+                                <p>Ürün bulunamadı.</p>
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
+
+            {/* Product Modal */}
+            <ProductModal
+                product={selectedProduct}
+                onClose={() => setSelectedProduct(null)}
+            />
+        </div>
+    );
+};
+
+
+--- COMPONENTS/VIDEOLANDING.TSX ---
+import React from 'react';
+import { ChevronDown, Search, Menu, X } from 'lucide-react';
+
+interface VideoLandingProps {
+    onEnter: () => void;
+}
+
+/**
+ * VideoLanding - The entry screen specified in Foost Blueprint
+ * Features:
+ * - Fullscreen video/image background
+ * - Scrim overlay
+ * - Header (Hamburger, Logo, Search)
+ * - Bottom CTA "Menüyü Görüntüle"
+ */
+export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
+    const [showCookies, setShowCookies] = React.useState(true);
+
+    return (
+        <div className="relative h-screen w-full overflow-hidden bg-black">
+            {/* Background Media (Video Fallback to Image) */}
+            <div className="absolute inset-0 z-0">
+                {/* Placeholder for video - using high quality food shot */}
+                <img
+                    src="https://images.unsplash.com/photo-1496044530019-f36a6c91604d?q=80&w=2672&auto=format&fit=crop"
+                    alt="Atmosphere"
+                    className="w-full h-full object-cover opacity-90"
+                />
+                {/* Scrim Overlay: Gradient from transparent to dark at bottom */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
+            </div>
+
+            {/* Header (Overlay) */}
+            <header className="absolute top-0 left-0 right-0 z-20 bg-white shadow-md flex items-center justify-between px-4 py-2">
+                <button className="p-2 text-gray-800">
+                    <Menu className="w-6 h-6" />
+                </button>
+
+                <div className="flex flex-col items-center">
+                    {/* Logo Area */}
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
+                            <span className="font-serif font-bold text-white text-lg">K</span>
+                        </div>
+                        <div className="flex flex-col items-center -space-y-1">
+                            <span className="text-xs font-bold text-stone-800 tracking-tight">KOZBEYLİ KONAĞI</span>
+                            <span className="text-[8px] text-stone-400 font-medium">Taş Otel</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button className="p-2 text-gray-800">
+                    <Search className="w-6 h-6" />
+                </button>
+            </header>
+
+            {/* Content & CTA */}
+            <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-24 px-6 text-center">
+                <h1 className="text-5xl font-bold text-white mb-4 tracking-tight drop-shadow-lg">Lezzeti Keşfet</h1>
+                <p className="text-white/90 text-base mb-10 max-w-[280px] leading-relaxed drop-shadow-md">
+                    Ege'nin en özel lezzetleri ve eşsiz sunumları sizi bekliyor.
+                </p>
+
+                <button
+                    onClick={onEnter}
+                    className="group flex flex-col items-center gap-2 text-white transition-colors"
+                >
+                    <span className="text-base font-bold tracking-widest uppercase border-2 border-white/40 px-8 py-4 rounded-full backdrop-blur-md bg-white/10 group-hover:bg-white/20 transition-all shadow-xl">
+                        Menüyü Görüntüle
+                    </span>
+                    <ChevronDown className="w-8 h-8 animate-bounce mt-4 opacity-80" />
+                </button>
+            </div>
+
+            {/* Cookie Notice */}
+            {showCookies && (
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-[90%] max-w-[340px] bg-stone-50/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-white animate-slide-up">
+                    <div className="flex items-start gap-3 mb-4">
+                        <div className="w-10 h-10 bg-stone-200 rounded-full flex items-center justify-center flex-shrink-0">
+                            🍪
+                        </div>
+                        <p className="text-[11px] text-stone-600 leading-normal">
+                            Menü deneyiminizi iyileştirmek için çerezler kullanıyoruz. Gezinmeye devam ederek kabul edersiniz.
+                        </p>
+                        <button onClick={() => setShowCookies(false)} className="text-stone-400">
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <button onClick={() => setShowCookies(false)} className="w-full py-2.5 bg-stone-800 text-white text-xs font-bold rounded-xl active:scale-95 transition-all">
+                            Kabul Et
+                        </button>
+                        <button onClick={() => setShowCookies(false)} className="w-full py-1 text-[10px] text-stone-400 font-medium">
+                            Daha Fazla Bilgi
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+
+--- COMPONENTS/CATEGORYGRID.TSX ---
+import React from 'react';
+import { Category } from '../services/MenuData';
+
+interface CategoryGridProps {
+    categories: Category[];
+    onCategorySelect: (id: string) => void;
+}
+
+/**
+ * CategoryGrid - Mosaic Layout specified in Blueprint
+ * Displays categories in a grid pattern:
+ * - Large tiles (Full width)
+ * - Small tiles (2 columns)
+ */
+export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCategorySelect }) => {
+    return (
+        <div className="p-3 grid grid-cols-2 gap-3 pb-24">
+            {categories.map((category, index) => {
+                // Target Pattern: Full (0), Half (1), Half (2), Half (3), Half (4), Full (5)...
+                // This means index % 5 === 0 is Full width
+                const isLarge = index % 5 === 0;
+
+                return (
+                    <div
+                        key={category.id}
+                        onClick={() => onCategorySelect(category.id)}
+                        className={`relative overflow-hidden rounded-2xl shadow-lg group cursor-pointer active:scale-[0.98] transition-all
+              ${isLarge ? 'col-span-2 h-52' : 'col-span-1 h-44'}
+            `}
+                    >
+                        {/* Background Image */}
+                        <img
+                            src={`https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1000&auto=format&fit=crop&random=${index}`}
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            alt={category.title}
+                        />
+
+                        {/* Fallback gradient if image fails or just as overlay */}
+                        <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent`} />
+
+                        {/* Content */}
+                        <div className="absolute inset-0 p-5 flex flex-col justify-start">
+                            <h3 className={`font-bold text-white leading-tight ${isLarge ? 'text-2xl' : 'text-xl'} drop-shadow-md`}>
+                                {category.title}
+                            </h3>
+                            {category.description && (
+                                <p className="text-white/90 text-xs mt-1 line-clamp-2 font-medium drop-shadow-sm">
+                                    {category.description}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Arrow Icon (Optional) */}
+                        <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M9 18l6-6-6-6" />
+                            </svg>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+};
+
+
+--- COMPONENTS/PRODUCTCARD.TSX ---
+import React, { memo } from 'react';
+import { Product } from '../services/MenuData';
+import { Plus } from 'lucide-react';
+
+interface ProductCardProps {
+    product: Product;
+}
+
+export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
+    const formattedPrice = new Intl.NumberFormat('tr-TR').format(product.price);
+
+    return (
+        <div className={`group relative bg-white rounded-2xl p-3 sm:p-4 mb-4 border border-stone-100 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] transition-all hover:shadow-lg active:scale-[0.99] ${!product.isAvailable ? 'opacity-60 grayscale' : ''}`}>
+
+            <div className="flex gap-4">
+                {/* Image Area */}
+                {product.image ? (
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0">
+                        <img
+                            src={product.image}
+                            alt={product.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover rounded-xl shadow-sm"
+                        />
+                        {!product.isAvailable && (
+                            <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
+                                <span className="text-[10px] font-bold text-white uppercase tracking-wider border border-white/30 px-2 py-1 rounded-md backdrop-blur-sm">Tükendi</span>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-stone-50 flex items-center justify-center text-2xl border border-stone-100">
+                        🍽️
+                    </div>
+                )}
+
+                {/* Content Area */}
+                <div className="flex-1 flex flex-col justify-between min-w-0 py-0.5">
+                    <div>
+                        <h3 className="text-base font-bold text-stone-900 leading-tight mb-1 group-hover:text-stone-700 transition-colors">
+                            {product.name}
+                        </h3>
+                        <p className="text-xs text-stone-500 line-clamp-2 leading-relaxed font-medium">
+                            {product.description}
+                        </p>
+                    </div>
+
+                    <div className="flex items-center justify-between mt-3">
+                        <div className="flex items-baseline gap-1">
+                            <span className="text-lg font-bold text-stone-900">{formattedPrice}</span>
+                            <span className="text-xs font-semibold text-stone-400">₺</span>
+                        </div>
+
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shadow-sm border border-primary/20 group-hover:bg-primary group-hover:text-white transition-colors">
+                            <Plus className="w-4 h-4" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+});
+
+ProductCard.displayName = 'ProductCard';
+
+
+--- COMPONENTS/PRODUCTMODAL.TSX ---
+import React, { useEffect } from 'react';
+import { Product } from '../services/MenuData';
+import { X, Share2, Info } from 'lucide-react';
+
+interface ProductModalProps {
+    product: Product | null;
+    onClose: () => void;
+}
+
+export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
+    useEffect(() => {
+        if (product) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [product]);
+
+    if (!product) return null;
+
+    const formattedPrice = new Intl.NumberFormat('tr-TR').format(product.price);
+
+    return (
+        <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center p-0 sm:p-4">
+            {/* Backdrop */}
+            <div
+                className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm transition-all duration-300"
+                onClick={onClose}
+                aria-hidden="true"
+            />
+
+            {/* Modal Content */}
+            <div
+                className="relative w-full max-w-lg bg-white rounded-t-[32px] sm:rounded-[32px] overflow-hidden shadow-2xl transform transition-transform animate-slide-up"
+                style={{ maxHeight: '92vh', height: 'auto' }}
+            >
+                {/* Close Button / Actions */}
+                <div className="absolute top-4 right-4 z-20 flex gap-2">
+                    <button
+                        onClick={onClose}
+                        className="p-2.5 bg-black/10 hover:bg-black/20 text-white rounded-full backdrop-blur-md transition-colors"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+
+                {/* Image Header */}
+                <div className="relative h-80 bg-stone-100">
+                    {product.image ? (
+                        <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-stone-100 text-stone-300">
+                            <span className="text-6xl">🍽️</span>
+                        </div>
+                    )}
+                    {/* Subtle gradient for text readability if needed */}
+                    <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
+                </div>
+
+                {/* Content Body */}
+                <div className="px-6 py-8 -mt-6 relative bg-white rounded-t-[32px]">
+                    {/* Drag Handle (Visual cue) */}
+                        <div className="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-6" />
+
+                    <div className="flex items-start justify-between gap-4 mb-3">
+                            <h2 className="text-2xl font-black text-gray-900 leading-tight tracking-tight">
+                            {product.name}
+                        </h2>
+                    </div>
+
+                    {!product.isAvailable && (
+                        <span className="inline-block px-3 py-1 mb-4 text-[10px] font-bold uppercase bg-stone-100 text-stone-500 rounded-full tracking-wider border border-stone-200">
+                            Tükendi
+                        </span>
+                    )}
+
+                        <div className="flex items-baseline gap-1 mb-6">
+                            <span className="text-3xl font-black text-primary">{formattedPrice}</span>
+                            <span className="text-lg text-primary/60 font-bold">₺</span>
+                    </div>
+
+                        <div className="prose prose-stone prose-sm max-w-none">
+                            <p className="text-gray-600 text-[15px] leading-relaxed font-medium">
+                            {product.description}
+                        </p>
+                    </div>
+
+                    <div className="mt-10 pt-6 border-t border-stone-100 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm font-medium text-stone-500 bg-stone-50 px-3 py-1.5 rounded-full">
+                            <Info className="w-4 h-4" />
+                            <span>{product.category}</span>
+                        </div>
+
+                        {/* Share or Action Button */}
+                        <button className="p-2 text-stone-400 hover:text-stone-900 transition-colors">
+                            <Share2 className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                        {/* Action Button */}
+                        <button
+                            onClick={onClose}
+                            className="w-full mt-8 bg-primary text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
+                        >
+                            Kapat
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+--- COMPONENTS/CATEGORYNAV.TSX ---
+import React, { useRef, useEffect, memo } from 'react';
+import { Category } from '../services/MenuData';
+
+interface CategoryNavProps {
+    categories: Category[];
+    activeCategoryId: string;
+    onCategoryClick: (id: string) => void;
+}
+
+export const CategoryNav: React.FC<CategoryNavProps> = ({
+    categories,
+    activeCategoryId,
+    onCategoryClick,
+}) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const activeElement = scrollRef.current?.querySelector(`[data-id="${activeCategoryId}"]`) as HTMLElement | null;
+        if (activeElement && scrollRef.current) {
+            const container = scrollRef.current;
+            const scrollLeft = activeElement.offsetLeft - container.offsetWidth / 2 + activeElement.offsetWidth / 2;
+            container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+        }
+    }, [activeCategoryId]);
+
+    return (
+        <nav className="bg-white">
+            <div
+                ref={scrollRef}
+                className="flex items-center gap-2 px-4 py-2 overflow-x-auto scrollbar-hide no-scrollbar"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+                {categories.map((category) => {
+                    const isActive = activeCategoryId === category.id;
+                    return (
+                        <button
+                            key={category.id}
+                            data-id={category.id}
+                            onClick={() => onCategoryClick(category.id)}
+                            className={`whitespace-nowrap px-5 py-2 rounded-xl text-[11px] font-bold tracking-tight uppercase transition-all duration-300 flex-shrink-0
+                                ${isActive
+                                    ? 'bg-primary text-white shadow-lg shadow-primary/20 ring-2 ring-primary ring-offset-1'
+                                    : 'text-gray-400 bg-gray-50 hover:bg-gray-100'
+                                }`}
+                        >
+                            {category.title}
+                        </button>
+                    );
+                })}
+            </div>
+        </nav>
+    );
+};
+
+CategoryNav.displayName = 'CategoryNav';
+
+
+--- SERVICES/MENUDATA.TS ---
+export interface Product {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    category: string;
+    isAvailable: boolean;
+    image?: string;
+}
+
+export interface Category {
+    id: string;
+    title: string;
+    slug: string;
+    description?: string;
+}
+
+export const CATEGORIES: Category[] = [
+    { id: 'kahvalti', title: 'Kahvaltı', slug: 'kahvalti', description: 'Güne lezzetli bir başlangıç.' },
+    { id: 'ekstralar', title: 'Ekstralar', slug: 'ekstralar', description: 'Kahvaltı yanı lezzetler.' },
+    { id: 'baslangic', title: 'Başlangıç & Paylaşımlıklar', slug: 'baslangic', description: 'İştah açan dokunuşlar.' },
+    { id: 'pizza-sandvic', title: 'Taş Fırın Pizza ve Sandviç', slug: 'pizza-sandvic', description: 'İnce hamur, bol lezzet.' },
+    { id: 'peynir-tabagi', title: 'Peynir Tabağı', slug: 'peynir-tabagi', description: 'Şık ve keyifli eşlikçi.' },
+    { id: 'tatli', title: 'Tatlı', slug: 'tatli', description: 'Mutluluğun son dokunuşu.' },
+    { id: 'ana-yemek', title: 'Ana Yemek', slug: 'ana-yemek', description: 'Sofranın başrolü.' },
+    { id: 'ara-sicaklar', title: 'Ara Sıcaklar', slug: 'ara-sicaklar', description: 'Lezzete sıcak bir ara.' },
+    { id: 'meze', title: 'Meze', slug: 'meze', description: 'Paylaşmanın en güzel hali.' },
+    { id: 'soguk-icecek', title: 'Soğuk İçecekler', slug: 'soguk-icecek', description: 'Serin ve ferahlatıcı.' },
+    { id: 'sicak-icecek', title: 'Sıcak İçecekler', slug: 'sicak-icecek', description: 'Isıtan keyif.' },
+    { id: 'sarap', title: 'Şarap', slug: 'sarap', description: 'Şık bir yudum keyif.' },
+    { id: 'kokteyl', title: 'Kokteyl', slug: 'kokteyl', description: 'Yaratıcı karışımlar.' },
+    { id: 'bira', title: 'Bira', slug: 'bira', description: 'Ferahlatıcı seçenekler.' },
+    { id: 'viski', title: 'Viski', slug: 'viski', description: 'Özenle seçilmiş damıtımlar.' },
+    { id: 'raki', title: 'Rakı', slug: 'raki', description: 'Geleneksel lezzet.' },
+];
+
+export const PRODUCTS: Product[] = [
+    // KAHVALTI
+    { id: 'k1', name: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', price: 650, category: 'kahvalti', isAvailable: true },
+
+    // EKSTRALAR
+    { id: 'e1', name: '2 Adet Fransız Tereyağlı Kruvasan', description: 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan.', price: 300, category: 'ekstralar', isAvailable: true },
+    { id: 'e2', name: 'Çikolata Kreması', description: 'Ünlü fındık ve kakao bazlı kremalı bir sürülebilir tatlı.', price: 80, category: 'ekstralar', isAvailable: true },
+    { id: 'e3', name: 'Dulce De Leche', description: 'Tatlı ve yoğun kremamsı bir sos, karamelize süt tadıyla öne çıkar.', price: 100, category: 'ekstralar', isAvailable: true },
+    { id: 'e4', name: 'Fesleğenli Domatesli Ciabatta', description: 'İtalya kökenli ciabatta ekmeği fesleğen ve domatesle aromalandırılarak sunulur. 4 Adet servis edilir.', price: 300, category: 'ekstralar', isAvailable: true },
+    { id: 'e5', name: 'Kare Rustik Ekmek', description: 'Kare şeklinde hazırlanmış rustik ekmek. Geleneksel yöntemle mayalanıp fırında pişirilir.', price: 300, category: 'ekstralar', isAvailable: true },
+    { id: 'e6', name: 'Mıhlama', description: 'Karadeniz mutfağının ünlü mısır unu ve peynirle hazırlanan sıcak yemeği.', price: 400, category: 'ekstralar', isAvailable: true },
+    { id: 'e7', name: 'Omlet (Sade/Peynirli)', description: 'Yumurta bazlı ve tercihe göre peynir eklenen kahvaltı klasiği.', price: 300, category: 'ekstralar', isAvailable: true },
+    { id: 'e8', name: 'Patates Kızartması', description: 'Taze patates dilimleri kızartılarak hazırlanır, isteğe göre baharatlı veya sade.', price: 300, category: 'ekstralar', isAvailable: true },
+    { id: 'e9', name: 'Pişi (Adet)', description: 'Kızarmış hamur olarak servis edilen lezzetli bir hamur işi.', price: 100, category: 'ekstralar', isAvailable: true },
+    { id: 'e10', name: 'Sahanda Menemen', description: 'Domates, biber ve yumurta ile hazırlanan geleneksel bir Türk kahvaltı lezzeti.', price: 300, category: 'ekstralar', isAvailable: true },
+    { id: 'e11', name: 'Sahanda Peynirli Yumurta', description: 'Yumurta ve peynirin tavada birleştiği lezzetli bir kahvaltı.', price: 250, category: 'ekstralar', isAvailable: true },
+    { id: 'e12', name: 'Sahanda Sucuklu Yumurta', description: 'Sucuk dilimleri ve yumurta ile hazırlanan, tavada tereyağı ile pişirilerek servis edilen doyurucu bir kahvaltı yemeği.', price: 350, category: 'ekstralar', isAvailable: true },
+    { id: 'e13', name: 'Sigara Böreği (4 Adet)', description: 'İnce yufkaya sarılan ve kızartılmış içi genellikle peynirli hafif bir atıştırmalık.', price: 300, category: 'ekstralar', isAvailable: true },
+
+    // BAŞLANGIÇ & PAYLAŞIMLIKLAR
+    { id: 'b1', name: 'Başlangıç Tabağı', description: 'Zeytin, zahter, zeytinyağı ve fesleğenli domatesli ciabatta ekmeği içeren lezzetli bir atıştırmalık tabağı.', price: 350, category: 'baslangic', isAvailable: true },
+    { id: 'b2', name: 'Kızarmış Tavuk Ve Baharatlı Patates Kızartması', description: 'Tavuk parçaları kızartılıp baharatlanır ve yanında patates kızartması sunulur.', price: 500, category: 'baslangic', isAvailable: true },
+    { id: 'b3', name: 'Patates Kızartması', description: 'Taze patateslerden kızartılmış lezzetli bir garnitür. Baharatlı veya sade tercih edilebilir.', price: 300, category: 'baslangic', isAvailable: true },
+    { id: 'b4', name: 'Roka Salatası', description: 'Roka Beyaz Peynir Tarla Domates ve Ceviz üzeri Balsamik Glaze ile Servis Edilir.', price: 350, category: 'baslangic', isAvailable: true },
+    { id: 'b5', name: 'Rustik Ekmek Üstü Füme Somon', description: 'Füme somon parçaları, rustik ekmek üzerinde sunulur ve taze aromalarla zenginleştirilir.', price: 450, category: 'baslangic', isAvailable: true },
+
+    // TAŞ FIRIN PIZZA VE SANDVİÇ
+    { id: 'p1', name: 'Gurme Rustik Sandviç', description: 'Taze pişirilen rustik baget, beyaz peynir, domates, roka, pesto sos ve zeytinyağı ile hazırlanır patates kızartması ile sıcak servis edilir.', price: 450, category: 'pizza-sandvic', isAvailable: true },
+    { id: 'p2', name: 'Taş Fırın Karışık Pizza', description: 'Taş fırında pişirilmiş, farklı malzemelerle zenginleştirilmiş roka, parmesan ve acılı zeytinyağı ile sunulan doyurucu bir karışık pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true },
+    { id: 'p3', name: 'Taş Fırın Margarita Pizza', description: 'Taş fırında pişirilmiş, taze roka, parmesan peyniri ve acılı zeytinyağı ile sunulan geleneksel bir Margarita Pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true },
+
+    // PEYNİR TABAĞI
+    { id: 'pt1', name: 'Rakı Eşlikçisi Peynir Tabağı', description: 'Rakı ile uyum sağlayan çeşitli peynir türlerinden oluşan bir tabaktır.', price: 850, category: 'peynir-tabagi', isAvailable: true },
+    { id: 'pt2', name: 'Türk Yerli Peynir Şarap Tabağı', description: 'Çeşitli yerli peynirlerin bir araya geldiği, şarapla uyumlu zengin bir tabağa sahiptir.', price: 1000, category: 'peynir-tabagi', isAvailable: true },
+
+    // TATLI
+    { id: 't1', name: '2\'Li Çikolatalı Mini Berliner', description: 'İki adet mini çikolatalı berliner tatlı hamur topudur.', price: 200, category: 'tatli', isAvailable: true },
+    { id: 't2', name: 'Antakya Künefe', description: 'Geleneksel bir Türk tatlısı. İncecik tel kadayıf arasında eriyen peynir ve şerbetiyle sıcak servis edilir.', price: 350, category: 'tatli', isAvailable: true },
+    { id: 't3', name: 'Churros', description: 'Klasik İspanyol tatlısı olarak kızartılmış hamur çubukları. Çilek Reçeli, Vişne Reçeli veya Nutella ile servis edilir.', price: 400, category: 'tatli', isAvailable: true },
+    { id: 't4', name: 'Fransız Tereyağlı Kruvasan (Sade)', description: 'Çıtır kruvasan, file bademlerle zenginleştirilmiştir. Çilek Reçeli, Vişne Reçeli veya Nutella ile servis edilir.', price: 300, category: 'tatli', isAvailable: true },
+    { id: 't5', name: 'Vanilyalı Dondurma (2 Top)', description: 'Klasik vanilya lezzetiyle iki top dondurma sunumu.', price: 200, category: 'tatli', isAvailable: true },
+
+    // ANA YEMEK
+    { id: 'ay1', name: 'Izgara Pirzola', description: 'Izgarada pişirilen kemikli et dilimleri. Patates püresi tabanı ve kavrulmuş file badem ile servis edilir.', price: 1000, category: 'ana-yemek', isAvailable: true },
+    { id: 'ay2', name: 'Konak Köfte', description: 'Geleneksel tarifle hazırlanan nefis köfteler. Patates püresi tabanı, kavrulmuş file badem ile tatlandırılır.', price: 800, category: 'ana-yemek', isAvailable: true },
+    { id: 'ay3', name: 'Konak Sac Kavurma', description: 'Sacda pişirilen lezzetli et parçaları. Patates püresi tabanı, kavrulmuş file badem ile servis edilir.', price: 850, category: 'ana-yemek', isAvailable: true },
+    { id: 'ay4', name: 'Lokum Bonfile', description: 'Yumuşacık bir biftek olarak patates püresi tabanı üzerinde sunulur. Kavrulmuş file badem ile lezzeti tamamlar.', price: 1200, category: 'ana-yemek', isAvailable: true },
+
+    // ARA SICAKLAR
+    { id: 'as1', name: 'İçli Köfte', description: 'Dış hamuru bulgurdan hazırlanan, içi kıymayla doldurulan geleneksel bir köfte çeşidi.', price: 200, category: 'ara-sicaklar', isAvailable: true },
+    { id: 'as2', name: 'Kaşarlı Mantar', description: 'Taze mantarlar üzerine kaşar peyniri serpilerek fırınlanır.', price: 300, category: 'ara-sicaklar', isAvailable: true },
+    { id: 'as3', name: 'Paçanga Böreği', description: 'Pastırma ve peynirle doldurulmuş, ince yufkayla sarılı lezzetli bir börek türü.', price: 200, category: 'ara-sicaklar', isAvailable: true },
+
+    // MEZE
+    { id: 'm1', name: 'Acılı Atom', description: 'Yoğurt ve acı biberle hazırlanan bir meze. Baharatlı tadıyla sofraya canlılık katar.', price: 250, category: 'meze', isAvailable: true },
+    { id: 'm2', name: 'Avokadolu Kapya Biber', description: 'Avokado ve kapya biberin taze birleşimiyle sunulan bu meze, hafif ve renkli bir lezzet sunar.', price: 300, category: 'meze', isAvailable: true },
+    { id: 'm3', name: 'Başlangıç Tabağı', description: 'Zeytin, zeytinyağı ve zahter ile sunulan, rustik ekmek eşliğinde hafif bir başlangıç mezesi.', price: 350, category: 'meze', isAvailable: true },
+    { id: 'm4', name: 'Deniz Börülcesi', description: 'Ege mutfağının sevilen mezelerinden, zeytinyağı ve limonla tatlandırılır.', price: 300, category: 'meze', isAvailable: true },
+    { id: 'm5', name: 'Fesleğenli Girit Ezme', description: 'Taze fesleğen ve peynir bazlı karışımla hazırlanan geleneksel bir Girit ezmesi.', price: 300, category: 'meze', isAvailable: true },
+    { id: 'm6', name: 'Haydari', description: 'Klasik Türk mezesi, süzme yoğurt ve taze otlar kullanılarak hazırlanır.', price: 250, category: 'meze', isAvailable: true },
+    { id: 'm7', name: 'Kuru Cacık', description: 'Yoğurt ve salatalık esaslı koyu kıvamlı bir meze.', price: 250, category: 'meze', isAvailable: true },
+    { id: 'm8', name: 'La Pena (Acılı)', description: 'Baharatlı ve acı sevenlere hitap eden özel bir meze.', price: 250, category: 'meze', isAvailable: true },
+    { id: 'm9', name: 'Tereyağlı Pastırmalı Antakya Humus', description: 'Ezilmiş nohut, tahin, zeytinyağı ve baharatlarla yapılan geleneksel bir meze. Üzerinde dilimlenmiş tereyağlı pastırma.', price: 400, category: 'meze', isAvailable: true },
+    { id: 'm10', name: 'Yoğurtlu Havuç Tarator', description: 'Rendelenmiş havuç ve yoğurtun lezzetli birleşimi.', price: 250, category: 'meze', isAvailable: true },
+    { id: 'm11', name: 'Yoğurtlu Patlıcan', description: 'Közlenmiş patlıcan ile yoğurdun uyumlu birleşimi.', price: 250, category: 'meze', isAvailable: true },
+    { id: 'm12', name: 'Zeytinyağlı & Domatesli Antakya Humus', description: 'Nohut ve tahin temelli klasik humusun domates ve zeytinyağıyla zenginleştirilmiş hali.', price: 250, category: 'meze', isAvailable: true },
+    { id: 'm13', name: 'Zeytinyağlı Vişneli Yaprak Sarma', description: 'Asma yapraklarıyla sarılmış pirinç içini vişnenin ekşi tadıyla buluşturan bir meze.', price: 300, category: 'meze', isAvailable: true },
+
+    // SOĞUK İÇECEKLER
+    { id: 'si1', name: 'Fanta', description: 'Gazlı ve meyveli aromalı bir soğuk içecek.', price: 150, category: 'soguk-icecek', isAvailable: true },
+    { id: 'si2', name: 'Ice Americano', description: 'Buzla soğutulmuş espresso bazlı kahve.', price: 160, category: 'soguk-icecek', isAvailable: true },
+    { id: 'si3', name: 'Ice Latte', description: 'Buzlu ve sütlü espresso karışımı.', price: 180, category: 'soguk-icecek', isAvailable: true },
+    { id: 'si4', name: 'Ice Tea', description: 'Serinletici, buzlu çay bazlı içecek.', price: 150, category: 'soguk-icecek', isAvailable: true },
+    { id: 'si5', name: 'Kola', description: 'Gazlı ve şekerli bir soğuk içecek.', price: 150, category: 'soguk-icecek', isAvailable: true },
+    { id: 'si6', name: 'Niğde Gazozu', description: 'Geleneksel, meyve aromalı gazoz.', price: 100, category: 'soguk-icecek', isAvailable: true },
+    { id: 'si7', name: 'Soda', description: 'Ferahlatıcı, gazlı bir madensuy.', price: 100, category: 'soguk-icecek', isAvailable: true },
+    { id: 'si8', name: 'Taze Sıkılmış Portakal Suyu', description: 'Taze portakalların sıkılmasıyla elde edilen doğal bir meyve suyu.', price: 250, category: 'soguk-icecek', isAvailable: true },
+
+    // SICAK İÇECEKLER
+    { id: 'sc1', name: 'Americano', description: 'Espresso ve sıcak suyun birleşiminden oluşan sade kahve.', price: 150, category: 'sicak-icecek', isAvailable: true },
+    { id: 'sc2', name: 'Bitki Çayları', description: 'Bitkisel karışımlardan oluşan sıcak çay.', price: 150, category: 'sicak-icecek', isAvailable: true },
+    { id: 'sc3', name: 'Çay', description: 'Kırmızıya çalan rengi ve buharıyla her yudumda huzur veren bir keyif.', price: 40, category: 'sicak-icecek', isAvailable: true },
+    { id: 'sc4', name: 'Espresso', description: 'Yoğun ve sert kahve çeşidi.', price: 120, category: 'sicak-icecek', isAvailable: true },
+    { id: 'sc5', name: 'Filtre Kahve', description: 'Klasik yöntemle demlenen kahve.', price: 150, category: 'sicak-icecek', isAvailable: true },
+    { id: 'sc6', name: 'Nescafe', description: 'Hazır kahve granüllerinden sıcak su ile hazırlanan pratik kahve.', price: 150, category: 'sicak-icecek', isAvailable: true },
+    { id: 'sc7', name: 'Türk Kahvesi', description: 'Eşsiz telvesi, köpüğü ve kadifemsi lezzetiyle bir ritüeldir.', price: 100, category: 'sicak-icecek', isAvailable: true },
+
+    // ŞARAP
+    { id: 'sr1', name: 'Kırmızı Phokaia Karasi', description: 'Bu aromatik kırmızı şarap üzümün zengin tatlarını sunar.', price: 1600, category: 'sarap', isAvailable: true },
+    { id: 'sr2', name: 'Öküzgözü 1970 (70 Cl)', description: 'Büyük şişede sunulan bu Öküzgözü, uzun yıllandırma sonucu kompleksleşmiş bir tat profili sunar.', price: 1600, category: 'sarap', isAvailable: true },
+    { id: 'sr3', name: 'Öküzgözü 1970 (Kadeh)', description: 'Şık bir kadeh olarak sunulan bu kırmızı şarap, Öküzgözü üzümünün yoğun gövdesini yansıtır.', price: 400, category: 'sarap', isAvailable: true },
+    { id: 'sr4', name: 'Phokaia Blend', description: 'Farklı üzüm çeşitlerinin özenle harmanlandığı bu kırmızı şarap, meyvemsi ve baharatlı notalara sahiptir.', price: 1600, category: 'sarap', isAvailable: true },
+    { id: 'sr5', name: 'Phokaia Chardonnay (Beyaz)', description: 'Bu beyaz şarap, Chardonnay üzümünün yumuşak ve meyvemsi karakterini taşır.', price: 1600, category: 'sarap', isAvailable: true },
+    { id: 'sr6', name: 'Phokaia Foca Karasi-Merlot', description: 'Bu kırmızı şarap Merlot ve Foca karası üzümlerinin harmanını yansıtır.', price: 1600, category: 'sarap', isAvailable: true },
+
+    // KOKTEYL
+    { id: 'ck1', name: 'Kuzu Kulağı', description: 'Bu tazeleyici kokteyl, ekşimsi notalara sahip bitkisel tatlar içerir.', price: 500, category: 'kokteyl', isAvailable: true },
+    { id: 'ck2', name: 'Wild Berry', description: 'Meyveli bir kokteyl, tatlı ve hafif ekşi meyve özlerini bir araya getirir.', price: 500, category: 'kokteyl', isAvailable: true },
+
+    // BİRA
+    { id: 'br1', name: 'Blanc', description: 'Bu ferahlatıcı bira narenciye ve hafif baharat notalarına sahiptir.', price: 250, category: 'bira', isAvailable: true },
+    { id: 'br2', name: 'Carlsberg', description: 'Bu klasik bira hafif içimli ve tatmin edici bir malt tadına sahiptir.', price: 200, category: 'bira', isAvailable: true },
+    { id: 'br3', name: 'Tuborg Gold', description: 'Orta gövdeli ve hafif tatlımsı bir lezzete sahip olan bu bira.', price: 200, category: 'bira', isAvailable: true },
+
+    // VİSKİ
+    { id: 'v1', name: 'Chivas Regal (35 Cl)', description: 'Orta boy şişede sunulan bu harman viski, meşe fıçılarında yıllandırılarak yumuşak bir tadım elde eder.', price: 2300, category: 'viski', isAvailable: true },
+    { id: 'v2', name: 'Chivas Regal (70 Cl)', description: 'Büyük şişede sunulan Chivas Regal, klasik İskoç harman viskilerinden biridir.', price: 3400, category: 'viski', isAvailable: true },
+    { id: 'v3', name: 'Chivas Regal (Duble)', description: 'Duble servis edilen bu İskoç viski, zengin tahıl ve meyve tonlarıyla katmanlı bir lezzet sunar.', price: 900, category: 'viski', isAvailable: true },
+    { id: 'v4', name: 'Chivas Regal (Tek)', description: 'Bu İskoç harman viskisi, yumuşak içimiyle tanınır.', price: 500, category: 'viski', isAvailable: true },
+    { id: 'v5', name: 'Jack Daniels (35 Cl)', description: 'Orta boy şişede sunulan bu Tennessee viski, hafif tatlımsı karakteriyle tanınır.', price: 2000, category: 'viski', isAvailable: true },
+    { id: 'v6', name: 'Jack Daniels (70 Cl)', description: 'Büyük şişe formatında sunulan Jack Daniels, meşe fıçılarında yıllandırılan klasik bir Amerikan viskidir.', price: 3000, category: 'viski', isAvailable: true },
+    { id: 'v7', name: 'Jack Daniels (Duble)', description: 'Duble servis edilen bu Tennessee viski, odun kömüründe filtrelenen yumuşak tadıyla bilinir.', price: 800, category: 'viski', isAvailable: true },
+    { id: 'v8', name: 'Jack Daniels (Tek)', description: 'Bu klasik Amerikan viski, Tennessee bölgesine özgü kömür filtrasyonundan geçer.', price: 450, category: 'viski', isAvailable: true },
+    { id: 'v9', name: 'Woodford Reserve (70 Cl)', description: 'Büyük şişede sunulan bu özel burbon, özenli üretim süreci sayesinde yumuşak ve yoğun bir karakter kazanır.', price: 5000, category: 'viski', isAvailable: true },
+    { id: 'v10', name: 'Woodford Reserve (Duble)', description: 'Duble servis edilen bu burbon, meşe fıçılarında yıllandırılmasının getirdiği kompleks tat profiline sahiptir.', price: 1200, category: 'viski', isAvailable: true },
+    { id: 'v11', name: 'Woodford Reserve (Tek)', description: 'Bu Amerikan burbonu karamel, vanilya ve hafif meşe tonlarına sahip özel bir harmandır.', price: 800, category: 'viski', isAvailable: true },
+
+    // RAKI
+    { id: 'r1', name: 'Beylerbeyi Göbek (35 Cl)', description: 'Orta boy şişede sunulan bu rakı, geleneksel içim kültürünün vazgeçilmez bir parçasıdır.', price: 1650, category: 'raki', isAvailable: true },
+    { id: 'r2', name: 'Beylerbeyi Göbek (70 Cl)', description: 'Büyük şişede sunulan Beylerbeyi Göbek, masalarda paylaşım için idealdir.', price: 2700, category: 'raki', isAvailable: true },
+    { id: 'r3', name: 'Beylerbeyi Göbek (Duble)', description: 'Duble ölçüde sunulan bu rakı, tatlılık ve anason dengesini iyi yansıtır.', price: 400, category: 'raki', isAvailable: true },
+    { id: 'r4', name: 'Beylerbeyi Göbek (Tek)', description: 'Bu rakı, geleneksel yöntemlerle üretilen anason aromasıyla öne çıkar.', price: 300, category: 'raki', isAvailable: true },
+];
