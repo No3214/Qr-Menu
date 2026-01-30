@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   User,
   Lock,
@@ -12,12 +12,11 @@ import {
   Save,
   Upload,
   Download,
-  ImageIcon,
   Copy,
-  ExternalLink,
   ChevronDown,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { QRCodeEditor } from '../../components/QRCodeEditor';
 
 type SettingsSection =
   | 'profile'
@@ -237,38 +236,29 @@ function GuestSection() {
 
 function QRCodeSection() {
   return (
-    <SectionCard title="QR Kod Oluşturucu">
-      <p className="text-sm text-text-muted">Restoranınız için özel QR kodlar oluşturun ve indirin.</p>
-      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-        <code className="text-sm text-text flex-1 truncate">https://menu.kozbeylikonagi.com</code>
-        <button onClick={() => { navigator.clipboard.writeText('https://menu.kozbeylikonagi.com'); toast.success('Kopyalandı'); }} aria-label="URL kopyala" className="p-1.5 rounded hover:bg-gray-200 text-text-muted transition-colors"><Copy size={15} /></button>
-        <button aria-label="Linki aç" className="p-1.5 rounded hover:bg-gray-200 text-text-muted transition-colors"><ExternalLink size={15} /></button>
-      </div>
-      <div className="bg-white border border-border rounded-xl p-8 flex items-center justify-center">
-        <div className="w-48 h-48 bg-gray-100 rounded-xl flex items-center justify-center"><QrCode size={80} className="text-gray-300" /></div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-text mb-1.5">Ön Plan Rengi</label>
-          <input type="color" defaultValue="#000000" className="w-full h-10 rounded-lg border border-border cursor-pointer" />
+    <div className="space-y-6">
+      <SectionCard title="QR Kod Oluşturucu">
+        <p className="text-sm text-text-muted mb-4">
+          Restoranınız için gelişmiş QR kodlar oluşturun, özelleştirin ve yüksek çözünürlüklü olarak indirin.
+        </p>
+        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-border mb-6">
+          <code className="text-sm text-primary font-mono flex-1 truncate">https://menu.kozbeylikonagi.com</code>
+          <button
+            onClick={() => { navigator.clipboard.writeText('https://menu.kozbeylikonagi.com'); toast.success('Kopyalandı'); }}
+            className="p-2 rounded-lg hover:bg-white hover:shadow-sm text-text-muted transition-all"
+            title="URL Kopyala"
+          >
+            <Copy size={16} />
+          </button>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-text mb-1.5">Arka Plan Rengi</label>
-          <input type="color" defaultValue="#FFFFFF" className="w-full h-10 rounded-lg border border-border cursor-pointer" />
-        </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-text mb-1.5">QR Kod Logo</label>
-        <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary/30 transition-colors cursor-pointer">
-          <ImageIcon size={20} className="mx-auto text-text-muted mb-1" />
-          <p className="text-xs text-text-muted">Logo ekleyin (opsiyonel)</p>
+      </SectionCard>
+
+      <div className="bg-slate-950 rounded-3xl p-1 shadow-2xl overflow-hidden border border-slate-800">
+        <div className="p-6 lg:p-10">
+           <QRCodeEditor />
         </div>
       </div>
-      <div className="flex gap-3">
-        <button className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"><Download size={16} />PNG İndir</button>
-        <button className="flex items-center gap-2 border border-border text-text px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"><Download size={16} />SVG İndir</button>
-      </div>
-    </SectionCard>
+    </div>
   );
 }
 

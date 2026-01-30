@@ -1,19 +1,34 @@
-import React from 'react';
-import { ChevronDown, Search, Menu } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronDown, Search, Menu, ShieldCheck } from 'lucide-react';
 
 interface VideoLandingProps {
     onEnter: () => void;
 }
 
 /**
- * VideoLanding - The entry screen specified in Foost Blueprint
+ * VideoLanding - The entry screen specified in Kozbeyli Blueprint
  * Features:
  * - Fullscreen video/image background
  * - Scrim overlay
  * - Header (Hamburger, Logo, Search)
  * - Bottom CTA "Menüyü Görüntüle"
+ * - Mandatory Cookie Notice
  */
 export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
+    const [showCookies, setShowCookies] = useState(false);
+
+    useEffect(() => {
+        const consent = localStorage.getItem('cookie-consent');
+        if (!consent) {
+            setShowCookies(true);
+        }
+    }, []);
+
+    const handleAcceptCookies = () => {
+        localStorage.setItem('cookie-consent', 'accepted');
+        setShowCookies(false);
+    };
+
     return (
         <div className="relative h-screen w-full overflow-hidden bg-black">
             {/* Background Media (Video Fallback to Image) */}
@@ -37,7 +52,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                 <div className="flex flex-col items-center">
                     {/* Logo Area */}
                     <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg mb-1">
-                        <span className="font-bold text-white text-xl">F</span>
+                        <span className="font-bold text-white text-xl">K</span>
                     </div>
                     <span className="text-xs font-medium tracking-widest uppercase opacity-90">Kozbeyli Konağı</span>
                 </div>
@@ -49,6 +64,26 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
 
             {/* Content & CTA */}
             <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-12 px-6 text-center">
+                {/* Cookie Notice Modal */}
+                {showCookies && (
+                    <div className="mb-8 w-full max-w-sm bg-white/10 backdrop-blur-xl border border-white/20 p-5 rounded-[24px] shadow-2xl animate-slide-up text-left">
+                        <div className="flex items-center gap-3 mb-3">
+                            <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary">
+                                <ShieldCheck className="w-5 h-5" />
+                            </div>
+                            <h3 className="text-white font-bold text-sm">Çerez Kullanımı</h3>
+                        </div>
+                        <p className="text-white/70 text-xs mb-4 leading-relaxed">
+                            Size en iyi deneyimi sunmak için çerezleri kullanıyoruz. Menüye devam ederek kullanım şartlarını kabul etmiş sayılırsınız.
+                        </p>
+                        <button
+                            onClick={handleAcceptCookies}
+                            className="w-full py-2.5 bg-white text-black text-xs font-bold rounded-full hover:bg-white/90 transition-colors"
+                        >
+                            Kabul Et ve Devam Et
+                        </button>
+                    </div>
+                )}
                 <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">Lezzeti Keşfet</h1>
                 <p className="text-white/80 text-sm mb-8 max-w-[250px] leading-relaxed">
                     Ege'nin en özel lezzetleri ve eşsiz sunumları sizi bekliyor.

@@ -22,9 +22,22 @@ export default {
                 },
                 border: "#E5E7EB",
                 primary: {
-                    DEFAULT: "#4F6EF7", // Foost Blue
-                    hover: "#3E5CE6",
+                    DEFAULT: "#C5A059", // Kozbeyli Gold
+                    hover: "#B08D22",
                     foreground: "#FFFFFF"
+                },
+                gold: {
+                    50: '#FBF8F1',
+                    100: '#F4ECD9',
+                    200: '#EADBB3',
+                    300: '#DFC68D',
+                    400: '#D5B266',
+                    500: '#C5A059',
+                    600: '#B08D22',
+                    700: '#8A6E1A',
+                    800: '#645013',
+                    900: '#3F320C',
+                    950: '#201906',
                 },
                 success: "#16A34A",
                 warning: "#F59E0B",

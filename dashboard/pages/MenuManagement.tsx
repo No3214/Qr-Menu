@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Plus,
@@ -650,8 +650,8 @@ function DisplayPreferencesTab() {
           </label>
           <div className="flex gap-3">
             {[
-              { name: 'Varsayılan', color: '#4F6EF7' },
               { name: 'Altın', color: '#C5A059' },
+              { name: 'Mavi', color: '#4F6EF7' },
               { name: 'Yeşil', color: '#16A34A' },
               { name: 'Kırmızı', color: '#EF4444' },
               { name: 'Mor', color: '#8B5CF6' },

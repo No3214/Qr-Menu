@@ -7,6 +7,7 @@
       "DOM",
       "DOM.Iterable"
     ],
+    "types": ["vite/client"],
     "module": "ESNext",
     "skipLibCheck": true,
     /* Bundler mode */
@@ -29,7 +30,13 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "."
+    "src",
+    "components",
+    "dashboard",
+    "services",
+    "lib",
+    "App.tsx",
+    "index.tsx"
   ],
   "references": [
     {

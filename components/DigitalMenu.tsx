@@ -52,7 +52,8 @@ export const DigitalMenu: React.FC = () => {
     // Filter Products
     const filteredProducts = products.filter((p) => {
         const matchesCategory = viewState === 'LIST' ? p.category === activeCategory : true;
-        const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+        const q = searchQuery.toLowerCase();
+        const matchesSearch = p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q);
         return matchesCategory && matchesSearch;
     });
 

@@ -1,14 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import QRCode from 'qrcode'; // Using raw logic library now
 import { 
-  Download, Upload, Type, Palette, Sparkles, Loader2, 
+  Download, Upload, Type, Palette,
   LayoutTemplate, Image as ImageIcon, 
   BoxSelect, Frame, MousePointer2, Square, 
-  AlertTriangle, Lock, Wand2, RefreshCcw, X,
-  Wifi, Link as LinkIcon, Check, Eye, Smartphone, Zap, Ruler, ArrowRightLeft, ShieldCheck, Wrench,
-  Circle, Grid3X3, Maximize, Minimize, Layers
+  Lock, Wand2, X,
+  Wifi, Link as LinkIcon, Eye, Zap, Ruler,
+  Circle, Grid3X3
 } from 'lucide-react';
-import { generateTaglines } from '../services/geminiService';
 import toast from 'react-hot-toast';
 
 // --- TYPES & INTERFACES ---
@@ -178,17 +177,12 @@ export const QRCodeEditor: React.FC = () => {
   
   // Content
   const [contentType, setContentType] = useState<ContentType>('url');
-  const [url, setUrl] = useState('https://menu.yourhotel.com');
+  const [url, setUrl] = useState('https://menu.kozbeylikonagi.com');
   const [wifiSsid, setWifiSsid] = useState('');
   const [wifiPassword, setWifiPassword] = useState('');
-  const [wifiHidden, setWifiHidden] = useState(false);
 
-  const [restaurantName, setRestaurantName] = useState('Grand Hotel Dining');
-  const [vibe, setVibe] = useState('Elegant and Relaxing');
+  const [restaurantName, setRestaurantName] = useState('Kozbeyli Konağı');
   const [customLabel, setCustomLabel] = useState('Scan for Menu');
-  const [frameText, setFrameText] = useState('SCAN ME');
-  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
 
   // Design
   const [fgColor, setFgColor] = useState('#0F172A');
@@ -219,7 +213,6 @@ export const QRCodeEditor: React.FC = () => {
   // Frames
   const [frameStyle, setFrameStyle] = useState<FrameStyle>('none');
   const [borderWidth, setBorderWidth] = useState(4);
-  const [frameBgImg, setFrameBgImg] = useState<string | null>(null);
   const [showAcrylicBase, setShowAcrylicBase] = useState(true);
   const [acrylicOpacity, setAcrylicOpacity] = useState(0.9);
   
@@ -238,7 +231,7 @@ export const QRCodeEditor: React.FC = () => {
     if (contentType === 'wifi') {
       const safeSsid = wifiSsid.replace(/[\\;,:"]/g, '\\$&');
       const safePass = wifiPassword.replace(/[\\;,:"]/g, '\\$&');
-      return `WIFI:T:WPA;S:${safeSsid};P:${safePass};H:${wifiHidden};;`;
+      return `WIFI:T:WPA;S:${safeSsid};P:${safePass};H:false;;`;
     }
     return url;
   };
@@ -394,7 +387,7 @@ export const QRCodeEditor: React.FC = () => {
     }, 50); // Debounce
     return () => clearTimeout(timer);
   }, [
-      url, wifiSsid, wifiPassword, wifiHidden, contentType, 
+      url, wifiSsid, wifiPassword, contentType,
       fgColor, bgColor, bgOpacity, useGradient, gradientStart, gradientEnd,
       dotScale, dotStyle, logoImg, logoPlacement, logoSize, bgImageScale,
       qrEcLevel, borderRadius
@@ -422,7 +415,6 @@ export const QRCodeEditor: React.FC = () => {
     if (theme.bgScale) setBgImageScale(theme.bgScale);
     if (theme.bgOpacity) setBgOpacity(theme.bgOpacity);
 
-    setFrameBgImg(null);
     toast.success(`Theme "${theme.name}" applied`);
   };
 
@@ -434,34 +426,6 @@ export const QRCodeEditor: React.FC = () => {
         setLogoImg(event.target?.result as string);
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const handleFrameBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setFrameBgImg(event.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleAIGenerate = async () => {
-    if (!restaurantName) {
-      toast.error('Please enter a restaurant name first');
-      return;
-    }
-    setIsGeneratingAI(true);
-    try {
-      const suggestions = await generateTaglines(restaurantName, vibe);
-      setAiSuggestions(suggestions);
-      toast.success('AI suggestions generated!');
-    } catch (error) {
-      toast.error('Could not generate suggestions');
-    } finally {
-      setIsGeneratingAI(false);
     }
   };
 
@@ -622,7 +586,7 @@ export const QRCodeEditor: React.FC = () => {
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-4 text-white focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 outline-none transition-all placeholder:text-slate-600"
-                      placeholder="https://menu.yourhotel.com"
+                      placeholder="https://menu.kozbeylikonagi.com"
                     />
                   </div>
                 ) : (
