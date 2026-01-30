@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
         <div className="px-5 h-full flex items-center justify-between max-w-md mx-auto">
           {/* Logo Area */}
           <div className="flex items-center gap-3">
-            <div className={`transition-all duration-300 flex items-center justify-center rounded-xl bg-stone-900 text-white ${scrolled ? 'w-9 h-9' : 'w-10 h-10 shadow-lg'
+            <div className={`transition-all duration-300 flex items-center justify-center rounded-xl bg-primary text-white ${scrolled ? 'w-9 h-9' : 'w-10 h-10 shadow-lg'
               }`}>
               <span className="font-serif font-bold text-xl">K</span>
             </div>

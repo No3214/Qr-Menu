@@ -7,7 +7,7 @@ interface CategoryNavProps {
     onCategoryClick: (id: string) => void;
 }
 
-export const CategoryNav: React.FC<CategoryNavProps> = memo(({
+export const CategoryNav: React.FC<CategoryNavProps> = ({
     categories,
     activeCategoryId,
     onCategoryClick,
@@ -24,10 +24,10 @@ export const CategoryNav: React.FC<CategoryNavProps> = memo(({
     }, [activeCategoryId]);
 
     return (
-        <nav className="sticky top-16 z-40 bg-white/95 backdrop-blur-sm border-b border-stone-100 shadow-sm transition-all">
+        <nav className="bg-white">
             <div
                 ref={scrollRef}
-                className="flex items-center gap-2 px-4 py-3 overflow-x-auto scrollbar-hide"
+                className="flex items-center gap-2 px-4 py-2 overflow-x-auto scrollbar-hide no-scrollbar"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
                 {categories.map((category) => {
@@ -37,10 +37,10 @@ export const CategoryNav: React.FC<CategoryNavProps> = memo(({
                             key={category.id}
                             data-id={category.id}
                             onClick={() => onCategoryClick(category.id)}
-                            className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 ease-out flex-shrink-0
+                            className={`whitespace-nowrap px-5 py-2 rounded-xl text-[11px] font-bold tracking-tight uppercase transition-all duration-300 flex-shrink-0
                                 ${isActive
-                                    ? 'bg-primary text-white shadow-md shadow-primary/30 scale-105'
-                                    : 'text-text-muted bg-gray-100 hover:bg-gray-200 border border-transparent'
+                                    ? 'bg-primary text-white shadow-lg shadow-primary/20 ring-2 ring-primary ring-offset-1'
+                                    : 'text-gray-400 bg-gray-50 hover:bg-gray-100'
                                 }`}
                         >
                             {category.title}
@@ -50,6 +50,6 @@ export const CategoryNav: React.FC<CategoryNavProps> = memo(({
             </div>
         </nav>
     );
-});
+};
 
 CategoryNav.displayName = 'CategoryNav';

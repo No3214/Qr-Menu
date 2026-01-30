@@ -21,6 +21,17 @@
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#C5A059',
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
     html {
@@ -103,18 +114,11 @@
       } else {
         msg = event.message || JSON.stringify(event);
       }
-
-      document.body.innerHTML += '<div style="color:white; background:red; padding:20px; z-index:9999; position:fixed; top:0; left:0; width:100%; border-bottom:2px solid white; font-family:monospace;">' +
-        '<h3>⚠️ CRITICAL ERROR</h3>' +
-        '<p>' + msg + '</p>' +
-        '</div>';
-    }, true); // Capture phase to catch resource errors
+      console.error('⚠️ CRITICAL ERROR:', msg);
+    }, true);
 
     window.addEventListener('unhandledrejection', function (event) {
-      document.body.innerHTML += '<div style="color:white; background:darkred; padding:20px; z-index:9999; position:fixed; top:50px; left:0; width:100%; border-bottom:2px solid white; font-family:monospace;">' +
-        '<h3>⚠️ PROMISE REJECTION</h3>' +
-        '<p>' + event.reason + '</p>' +
-        '</div>';
+      console.error('⚠️ PROMISE REJECTION:', event.reason);
     });
   </script>
 
