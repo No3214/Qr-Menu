@@ -128,7 +128,13 @@ export const DigitalMenu: React.FC = () => {
     if (loading) return <div className="h-screen flex items-center justify-center bg-bg"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
 
     if (viewState === 'LANDING') {
-        return <VideoLanding onEnter={() => setViewState('GRID')} />;
+        return (
+            <VideoLanding
+                onEnter={() => setViewState('GRID')}
+                categories={categories}
+                onCategorySelect={(id) => handleCategorySelect(id)}
+            />
+        );
     }
 
     return (

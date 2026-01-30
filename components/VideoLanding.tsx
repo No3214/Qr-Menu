@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Menu, Globe, X, Settings, MapPin, Phone, MessageSquare } from 'lucide-react';
+import { Category } from '../services/MenuData';
+import { ChevronDown, Menu, Globe, X, MapPin, Phone, MessageSquare } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { Link } from 'react-router-dom';
 import { ReviewModal } from './ReviewModal';
 
 interface VideoLandingProps {
     onEnter: () => void;
+    categories: Category[];
+    onCategorySelect: (categoryId: string) => void;
 }
 
 /**
  * VideoLanding - The entry screen with multi-language support and sidebar
  */
-export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
+export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter, categories, onCategorySelect }) => {
     const { language, setLanguage, t } = useLanguage();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [showReviewModal, setShowReviewModal] = useState(false);
@@ -80,13 +82,25 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                     </div>
 
                     <nav className="space-y-2">
-                        <Link
-                            to="/dashboard"
-                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 transition-colors"
-                        >
-                            <Settings size={20} />
-                            <span className="font-medium">{language === 'tr' ? 'Yönetim Paneli' : 'Admin Panel'}</span>
-                        </Link>
+                        <div className="space-y-1 mb-6">
+                            <p className="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                                {language === 'tr' ? 'Menü' : 'Menu'}
+                            </p>
+                            {categories.map((cat) => (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => {
+                                        onCategorySelect(cat.id);
+                                        setSidebarOpen(false);
+                                    }}
+                                    className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-gray-100 text-gray-700 transition-colors text-left"
+                                >
+                                    <span className="font-medium text-sm">{cat.title}</span>
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="h-px bg-gray-100 my-2 mx-4" />
 
                         <a
                             href="https://maps.google.com/?q=Kozbeyli+Konağı+Foça"
