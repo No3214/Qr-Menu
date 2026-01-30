@@ -51,7 +51,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                             <span className="text-xs font-semibold text-stone-400">₺</span>
                         </div>
 
-                        <div className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center text-stone-900 shadow-sm border border-stone-100 group-hover:bg-stone-900 group-hover:text-white transition-colors">
+                        <div className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center text-stone-900 shadow-sm border border-stone-100 group-hover:bg-primary group-hover:text-white transition-colors">
                             <Plus className="w-4 h-4" />
                         </div>
                     </div>
