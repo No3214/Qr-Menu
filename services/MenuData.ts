@@ -37,7 +37,7 @@ export const CATEGORIES: Category[] = [
 
 export const PRODUCTS: Product[] = [
     // KAHVALTI
-    { id: 'k1', name: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', price: 650, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80' },
+    { id: 'k1', name: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', price: 650, category: 'kahvalti', isAvailable: true, image: '/assets/products/kahvalti-serpme.png' },
 
     // EKSTRALAR
     { id: 'e1', name: '2 Adet Fransız Tereyağlı Kruvasan', description: 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan.', price: 300, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80' },
@@ -63,7 +63,7 @@ export const PRODUCTS: Product[] = [
 
     // TAŞ FIRIN PIZZA VE SANDVİÇ
     { id: 'p1', name: 'Gurme Rustik Sandviç', description: 'Taze pişirilen rustik baget, beyaz peynir, domates, roka, pesto sos ve zeytinyağı ile hazırlanır patates kızartması ile sıcak servis edilir.', price: 450, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80' },
-    { id: 'p2', name: 'Taş Fırın Karışık Pizza', description: 'Taş fırında pişirilmiş, farklı malzemelerle zenginleştirilmiş roka, parmesan ve acılı zeytinyağı ile sunulan doyurucu bir karışık pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80' },
+    { id: 'p2', name: 'Taş Fırın Karışık Pizza', description: 'Taş fırında pişirilmiş, farklı malzemelerle zenginleştirilmiş roka, parmesan ve acılı zeytinyağı ile sunulan doyurucu bir karışık pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true, image: '/assets/products/pizza-karisik.png' },
     { id: 'p3', name: 'Taş Fırın Margarita Pizza', description: 'Taş fırında pişirilmiş, taze roka, parmesan peyniri ve acılı zeytinyağı ile sunulan geleneksel bir Margarita Pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&q=80' },
 
     // PEYNİR TABAĞI
@@ -82,6 +82,7 @@ export const PRODUCTS: Product[] = [
     { id: 'ay2', name: 'Konak Köfte', description: 'Geleneksel tarifle hazırlanan nefis köfteler. Patates püresi tabanı, kavrulmuş file badem ile tatlandırılır.', price: 800, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&q=80' },
     { id: 'ay3', name: 'Konak Sac Kavurma', description: 'Sacda pişirilen lezzetli et parçaları. Patates püresi tabanı, kavrulmuş file badem ile servis edilir.', price: 850, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80' },
     { id: 'ay4', name: 'Lokum Bonfile', description: 'Yumuşacık bir biftek olarak patates püresi tabanı üzerinde sunulur. Kavrulmuş file badem ile lezzeti tamamlar.', price: 1200, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&q=80' },
+    { id: 'ay5', name: 'Izgara Levrek', description: 'Taze günlük levrek, kömür ateşinde ızgara edilir. Yanında roka, kırmızı soğan ve fırın patates ile servis edilir.', price: 950, category: 'ana-yemek', isAvailable: true, image: '/assets/products/levrek.png' },
 
     // ARA SICAKLAR
     { id: 'as1', name: 'İçli Köfte', description: 'Dış hamuru bulgurdan hazırlanan, içi kıymayla doldurulan geleneksel bir köfte çeşidi.', price: 200, category: 'ara-sicaklar', isAvailable: true, image: 'https://cdn.yemek.com/mnresize/1250/833/uploads/2021/03/icli-kofte-tarifi-yeni.jpg' },
