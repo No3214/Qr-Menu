@@ -63,12 +63,12 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                     <div className="flex items-center justify-between mb-8">
                         {/* Logo Area */}
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-white/20">
-                                <img src="/assets/logo-white.jpg" alt="Logo" className="w-full h-full object-contain rounded-xl p-0.5" />
+                            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center shadow-sm border border-gray-200 overflow-hidden">
+                                <img src="/assets/logo-dark.jpg" alt="Logo" className="w-full h-full object-contain rounded-xl p-0.5" />
                             </div>
                             <div className="flex flex-col items-start -space-y-0.5">
-                                <span className="text-sm font-bold text-white tracking-tight drop-shadow-md">KOZBEYLİ KONAĞI</span>
-                                <span className="text-[10px] text-white/80 font-medium tracking-widest uppercase drop-shadow-sm">Taş Otel</span>
+                                <span className="text-sm font-bold text-stone-900 tracking-tight">KOZBEYLİ KONAĞI</span>
+                                <span className="text-[10px] text-stone-500 font-medium tracking-widest uppercase">Taş Otel</span>
                             </div>
                         </div>
                         <button
@@ -85,7 +85,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                             className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 transition-colors"
                         >
                             <Settings size={20} />
-                            <span className="font-medium">{language === 'tr' ? 'Yönetim Paneli' : 'Admin Panel'}</span>
+                            <span className="font-medium">{t('sidebar.adminPanel')}</span>
                         </Link>
 
                         <a
@@ -95,7 +95,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                             className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 transition-colors"
                         >
                             <MapPin size={20} />
-                            <span className="font-medium">{language === 'tr' ? 'Konum' : 'Location'}</span>
+                            <span className="font-medium">{t('sidebar.location')}</span>
                         </a>
 
                         <a
@@ -103,7 +103,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                             className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 transition-colors"
                         >
                             <Phone size={20} />
-                            <span className="font-medium">{language === 'tr' ? 'Ara' : 'Call'}</span>
+                            <span className="font-medium">{t('sidebar.call')}</span>
                         </a>
 
                         <button
@@ -114,7 +114,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 transition-colors text-left"
                         >
                             <MessageSquare size={20} />
-                            <span className="font-medium">{language === 'tr' ? 'Değerlendir' : 'Rate Us'}</span>
+                            <span className="font-medium">{t('sidebar.rateUs')}</span>
                         </button>
                     </nav>
 
@@ -188,15 +188,13 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                 <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-2xl">
                     <div className="max-w-lg mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
                         <p className="text-sm text-gray-700 text-center sm:text-left">
-                            {language === 'tr'
-                                ? 'Bu site deneyiminizi iyileştirmek için çerezler kullanır.'
-                                : 'This site uses cookies to improve your experience.'}
+                            {t('cookie.message')}
                         </p>
                         <button
                             onClick={handleAcceptCookies}
                             className="px-6 py-2 bg-primary text-white text-sm font-bold rounded-full hover:bg-primary-hover transition-colors whitespace-nowrap"
                         >
-                            {language === 'tr' ? 'Kabul Et' : 'Accept'}
+                            {t('cookie.accept')}
                         </button>
                     </div>
                 </div>

@@ -16,31 +16,42 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
     const [name, setName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const getRatingLabel = (r: number) => {
+        const labels: Record<number, string> = {
+            5: t('review.rating5'),
+            4: t('review.rating4'),
+            3: t('review.rating3'),
+            2: t('review.rating2'),
+            1: t('review.rating1'),
+        };
+        return labels[r] || '';
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (rating === 0) {
-            toast.error('Lütfen puan verin.');
+            toast.error(t('review.ratingRequired'));
             return;
         }
 
         setIsSubmitting(true);
         try {
             await ReviewService.submitReview(rating, comment, name);
-            toast.custom((t) => (
-                <div className={`${t.visible ? 'animate-enter' : 'animate-leave'} max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}>
+            toast.custom((toastData) => (
+                <div className={`${toastData.visible ? 'animate-enter' : 'animate-leave'} max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}>
                     <div className="flex-1 w-0 p-4">
                         <div className="flex items-start">
                             <div className="flex-shrink-0 pt-0.5">
                                 <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                                    <span className="text-xl">🎉</span>
+                                    <span className="text-xl">&#127881;</span>
                                 </div>
                             </div>
                             <div className="ml-3 flex-1">
                                 <p className="text-sm font-medium text-gray-900">
-                                    Teşekkürler!
+                                    {t('review.thankYou')}
                                 </p>
                                 <p className="mt-1 text-sm text-gray-500">
-                                    Yorumunuz bizim için çok değerli.
+                                    {t('review.thankYouMessage')}
                                 </p>
                             </div>
                         </div>
@@ -50,7 +61,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
             onClose();
         } catch (error) {
             console.error(error);
-            toast.error('Bir hata oluştu.');
+            toast.error(t('review.error'));
         } finally {
             setIsSubmitting(false);
         }
@@ -61,7 +72,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
             <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
                 {/* Header */}
                 <div className="bg-primary/5 p-4 flex items-center justify-between border-b border-primary/10">
-                    <h2 className="font-bold text-lg text-gray-800">Değerlendir</h2>
+                    <h2 className="font-bold text-lg text-gray-800">{t('review.title')}</h2>
                     <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-colors">
                         <X size={20} className="text-gray-500" />
                     </button>
@@ -70,7 +81,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
                 <form onSubmit={handleSubmit} className="p-5 space-y-5">
                     {/* Star Rating */}
                     <div className="flex flex-col items-center gap-2">
-                        <p className="text-sm text-gray-500">Deneyiminizi puanlayın</p>
+                        <p className="text-sm text-gray-500">{t('review.rateExperience')}</p>
                         <div className="flex gap-2">
                             {[1, 2, 3, 4, 5].map((star) => (
                                 <button
@@ -94,10 +105,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
                         </div>
                         {rating > 0 && (
                             <span className="text-sm font-medium text-primary animate-in fade-in">
-                                {rating === 5 ? 'Muhteşem! 🤩' :
-                                    rating === 4 ? 'Çok İyi 🙂' :
-                                        rating === 3 ? 'İdare Eder 😐' :
-                                            rating === 2 ? 'Kötü 😕' : 'Çok Kötü 😫'}
+                                {getRatingLabel(rating)}
                             </span>
                         )}
                     </div>
@@ -105,21 +113,21 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
                     {/* Inputs */}
                     <div className="space-y-3">
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1 ml-1">İsim (Opsiyonel)</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1 ml-1">{t('review.nameLabel')}</label>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                placeholder="İsminiz..."
+                                placeholder={t('review.namePlaceholder')}
                                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1 ml-1">Yorumunuz</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1 ml-1">{t('review.commentLabel')}</label>
                             <textarea
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
-                                placeholder="Görüşlerinizi yazın..."
+                                placeholder={t('review.commentPlaceholder')}
                                 rows={3}
                                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                             />
@@ -136,7 +144,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
                             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         ) : (
                             <>
-                                <span>Gönder</span>
+                                <span>{t('review.submit')}</span>
                                 <Send size={18} />
                             </>
                         )}

@@ -9,14 +9,21 @@ interface Message {
 }
 
 export const MenuAssistant: React.FC = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', content: 'Merhaba! Ben Kozbeyli Konağı yapay zeka asistanıyım. Size menümüz hakkında nasıl yardımcı olabilirim?' }
+        { role: 'assistant', content: '' }
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Set initial message based on language
+    useEffect(() => {
+        setMessages([
+            { role: 'assistant', content: t('assistant.welcome') }
+        ]);
+    }, [language]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -25,6 +32,10 @@ export const MenuAssistant: React.FC = () => {
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    const suggestedPrompts = language === 'tr'
+        ? ["Ne yemeliyim?", "Tatli onerisi", "Sicak icecekler", "Et yemekleri"]
+        : ["What should I eat?", "Dessert suggestion", "Hot drinks", "Meat dishes"];
 
     const handleSend = async () => {
         if (!input.trim() || isLoading) return;
@@ -35,10 +46,13 @@ export const MenuAssistant: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const response = await getChatResponse(userMessage, "User is viewing the digital menu of Kozbeyli Konağı.");
+            const langContext = language === 'tr'
+                ? "Kullanici Kozbeyli Konagi dijital menusune bakiyor. Turkce yanit ver."
+                : "User is viewing the digital menu of Kozbeyli Konagi. Reply in English.";
+            const response = await getChatResponse(userMessage, langContext);
             setMessages(prev => [...prev, { role: 'assistant', content: response }]);
         } catch (error) {
-            setMessages(prev => [...prev, { role: 'assistant', content: 'Üzgünüm, şu an yanıt veremiyorum. Lütfen daha sonra tekrar deneyin.' }]);
+            setMessages(prev => [...prev, { role: 'assistant', content: t('assistant.error') }]);
         } finally {
             setIsLoading(false);
         }
@@ -59,7 +73,7 @@ export const MenuAssistant: React.FC = () => {
                     </span>
                     {/* Tooltip */}
                     <div className="absolute right-full mr-3 px-3 py-1 bg-white text-stone-900 text-xs font-bold rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-stone-100 italic">
-                        AI Garsona Sor ✨
+                        {t('assistant.tooltip')}
                     </div>
                 </button>
             )}
@@ -74,8 +88,8 @@ export const MenuAssistant: React.FC = () => {
                                 <Sparkles className="w-5 h-5 text-primary" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-sm">Gurme AI</h3>
-                                <p className="text-[10px] text-stone-400">Kozbeyli Konağı Asistanı</p>
+                                <h3 className="font-bold text-sm">{t('assistant.title')}</h3>
+                                <p className="text-[10px] text-stone-400">{t('assistant.subtitle')}</p>
                             </div>
                         </div>
                         <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
@@ -110,13 +124,8 @@ export const MenuAssistant: React.FC = () => {
                     </div>
 
                     {/* Suggested Prompts */}
-                    <div className="px-4 py-2 bg-stone-50 overflow-x-auto flex gap-2 no-scrollbar">
-                        {[
-                            "Ne yemeliyim?",
-                            "Tatlı önerisi",
-                            "Sıcak içecekler",
-                            "Et yemekleri"
-                        ].map(prompt => (
+                    <div className="px-4 py-2 bg-stone-50 overflow-x-auto flex gap-2 scrollbar-hide">
+                        {suggestedPrompts.map(prompt => (
                             <button
                                 key={prompt}
                                 onClick={() => { setInput(prompt); }}
@@ -133,8 +142,8 @@ export const MenuAssistant: React.FC = () => {
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                            placeholder="Sorunuzu buraya yazın..."
+                            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                            placeholder={t('assistant.placeholder')}
                             className="flex-1 bg-stone-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
                         />
                         <button

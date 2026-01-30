@@ -22,8 +22,8 @@ export default {
                 },
                 border: "#E5E7EB",
                 primary: {
-                    DEFAULT: "#008FAC", // "Modern Fisherman Blue" (Deep Cyan/Teal)
-                    hover: "#007A94",
+                    DEFAULT: "#C5A059", // Kozbeyli Gold
+                    hover: "#B08D22",
                     foreground: "#FFFFFF"
                 },
                 success: "#16A34A",

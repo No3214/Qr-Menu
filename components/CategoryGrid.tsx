@@ -31,10 +31,10 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
                     >
                         {/* Background Image */}
                         <img
-                            src={category.image || `https://source.unsplash.com/random/400x400/?food,${category.title}`}
+                            src={category.image || ''}
                             loading="lazy"
                             onError={(e) => {
-                                e.currentTarget.style.display = 'none'; // Hide if fails
+                                e.currentTarget.style.display = 'none';
                             }}
                             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             alt={category.title}
@@ -49,9 +49,9 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
                             <h3 className={`font-bold text-white leading-tight ${isLarge ? 'text-xl' : 'text-sm'}`}>
                                 {category.title}
                             </h3>
-                            {isLarge && (
+                            {isLarge && category.description && (
                                 <p className="text-white/80 text-xs mt-1 line-clamp-1">
-                                    En lezzetli {category.title.toLowerCase()} çeşitlerimiz
+                                    {category.description}
                                 </p>
                             )}
                         </div>

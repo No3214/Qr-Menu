@@ -1,8 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
 
 const getClient = () => {
-  // Use the provided Gemini key
-  const apiKey = "AIzaSyAu7sVDA8tiHoxPQ1qvAhbdRr_q9vkQiEI";
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
+  if (!apiKey) {
+    throw new Error("Gemini API key is not configured. Set VITE_GEMINI_API_KEY in .env");
+  }
   return new GoogleGenAI({ apiKey });
 };
 
