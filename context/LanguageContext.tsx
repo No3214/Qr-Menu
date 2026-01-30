@@ -31,6 +31,14 @@ const translations: Record<Language, Record<string, string>> = {
         'search': 'Ara...',
         'loading': 'Yükleniyor...',
         'menu': 'Menü',
+
+        // Review Modal
+        'review.title': 'Deneyiminizi Değerlendirin',
+        'review.name': 'İsminiz',
+        'review.comment': 'Yorumunuz',
+        'review.submit': 'Gönder',
+        'review.success': 'Yorumunuz alındı, teşekkürler!',
+        'review.rating': 'Puanınız',
     },
     en: {
         // VideoLanding
@@ -54,6 +62,14 @@ const translations: Record<Language, Record<string, string>> = {
         'search': 'Search...',
         'loading': 'Loading...',
         'menu': 'Menu',
+
+        // Review Modal
+        'review.title': 'Rate Your Experience',
+        'review.name': 'Your Name',
+        'review.comment': 'Your Comment',
+        'review.submit': 'Submit',
+        'review.success': 'Review submitted, thank you!',
+        'review.rating': 'Your Rating',
     }
 };
 
