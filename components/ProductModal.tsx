@@ -67,10 +67,10 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                 {/* Content Body */}
                 <div className="px-6 py-8 -mt-6 relative bg-white rounded-t-[32px]">
                     {/* Drag Handle (Visual cue) */}
-                    <div className="w-12 h-1 bg-stone-200 rounded-full mx-auto mb-6" />
+                        <div className="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-6" />
 
                     <div className="flex items-start justify-between gap-4 mb-3">
-                        <h2 className="text-3xl font-bold text-stone-900 leading-tight font-serif tracking-tight">
+                            <h2 className="text-2xl font-black text-gray-900 leading-tight tracking-tight">
                             {product.name}
                         </h2>
                     </div>
@@ -81,13 +81,13 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                         </span>
                     )}
 
-                    <div className="flex items-baseline gap-1 mb-8">
-                        <span className="text-4xl font-bold text-stone-900">{formattedPrice}</span>
-                        <span className="text-xl text-stone-400 font-medium">₺</span>
+                        <div className="flex items-baseline gap-1 mb-6">
+                            <span className="text-3xl font-black text-primary">{formattedPrice}</span>
+                            <span className="text-lg text-primary/60 font-bold">₺</span>
                     </div>
 
-                    <div className="prose prose-stone prose-sm">
-                        <p className="text-stone-600 text-base leading-relaxed font-medium">
+                        <div className="prose prose-stone prose-sm max-w-none">
+                            <p className="text-gray-600 text-[15px] leading-relaxed font-medium">
                             {product.description}
                         </p>
                     </div>
@@ -104,9 +104,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                         </button>
                     </div>
 
-                    {/* Add to Order Button (Visual only for now) */}
-                    <button className="w-full mt-6 bg-stone-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-stone-900/20 active:scale-[0.98] transition-all">
-                        Siparişe Ekle
+                        {/* Action Button */}
+                        <button
+                            onClick={onClose}
+                            className="w-full mt-8 bg-primary text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
+                        >
+                            Kapat
                     </button>
                 </div>
             </div>
