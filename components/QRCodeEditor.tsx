@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import QRCode from 'qrcode'; // Using raw logic library now
 import {
-  Download, Upload, Type, Palette, Sparkles, Loader2,
+  Download, Upload, Type, Palette,
   LayoutTemplate, Image as ImageIcon,
   BoxSelect, Frame, MousePointer2, Square,
-  AlertTriangle, Lock, Wand2, RefreshCcw, X,
-  Wifi, Link as LinkIcon, Check, Eye, Smartphone, Zap, Ruler, ArrowRightLeft, ShieldCheck, Wrench,
-  Circle, Grid3X3, Maximize, Minimize, Layers
+  Lock, Wand2, X,
+  Wifi, Link as LinkIcon, Eye, Zap, Ruler,
+  Circle, Grid3X3
 } from 'lucide-react';
 import { generateTaglines } from '../services/geminiService';
 import toast from 'react-hot-toast';
@@ -219,7 +219,6 @@ export const QRCodeEditor: React.FC = () => {
   // Frames
   const [frameStyle, setFrameStyle] = useState<FrameStyle>('none');
   const [borderWidth, setBorderWidth] = useState(4);
-  const [frameBgImg, setFrameBgImg] = useState<string | null>(null);
   const [showAcrylicBase, setShowAcrylicBase] = useState(true);
   const [acrylicOpacity, setAcrylicOpacity] = useState(0.9);
 
@@ -422,7 +421,6 @@ export const QRCodeEditor: React.FC = () => {
     if (theme.bgScale) setBgImageScale(theme.bgScale);
     if (theme.bgOpacity) setBgOpacity(theme.bgOpacity);
 
-    setFrameBgImg(null);
     toast.success(`Theme "${theme.name}" applied`);
   };
 
@@ -432,17 +430,6 @@ export const QRCodeEditor: React.FC = () => {
       const reader = new FileReader();
       reader.onload = (event) => {
         setLogoImg(event.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleFrameBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setFrameBgImg(event.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -634,6 +621,15 @@ export const QRCodeEditor: React.FC = () => {
                       <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">Password</label>
                       <input type="text" value={wifiPassword} onChange={(e) => setWifiPassword(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white" />
                     </div>
+                    <div className="flex items-center justify-between pt-2">
+                      <span className="text-xs text-slate-400">Hidden Network</span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked={wifiHidden} onChange={(e) => setWifiHidden(e.target.checked)} className="sr-only peer" />
+                        <div className="w-9 h-5 bg-slate-700 peer-focus:ring-2 peer-focus:ring-gold-500/30 rounded-full peer peer-checked:bg-gold-500 transition-colors">
+                          <div className={`absolute top-[2px] left-[2px] w-4 h-4 bg-white rounded-full transition-transform ${wifiHidden ? 'translate-x-4' : ''}`} />
+                        </div>
+                      </label>
+                    </div>
                   </div>
                 )}
 
@@ -646,6 +642,43 @@ export const QRCodeEditor: React.FC = () => {
                     <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider ml-1">Subtitle</label>
                     <input type="text" value={customLabel} onChange={(e) => setCustomLabel(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white" />
                   </div>
+                </div>
+
+                {/* Frame Text */}
+                <div>
+                  <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider ml-1">Frame Text</label>
+                  <input type="text" value={frameText} onChange={(e) => setFrameText(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white" placeholder="SCAN ME" />
+                </div>
+
+                {/* AI Tagline Generator */}
+                <div className="bg-slate-950/50 rounded-2xl p-5 border border-slate-800">
+                  <h4 className="text-xs font-semibold text-slate-300 mb-3 flex items-center gap-2">
+                    <Wand2 className="w-3.5 h-3.5 text-gold-500" /> AI Tagline Generator
+                  </h4>
+                  <div className="mb-3">
+                    <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Vibe / Atmosphere</label>
+                    <input type="text" value={vibe} onChange={(e) => setVibe(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm" placeholder="Elegant and Relaxing" />
+                  </div>
+                  <button
+                    onClick={handleAIGenerate}
+                    disabled={isGeneratingAI}
+                    className="w-full py-2.5 bg-gold-500/20 text-gold-400 border border-gold-500/30 rounded-xl text-xs font-semibold hover:bg-gold-500/30 transition-colors disabled:opacity-50"
+                  >
+                    {isGeneratingAI ? 'Generating...' : 'Generate Taglines'}
+                  </button>
+                  {aiSuggestions.length > 0 && (
+                    <div className="mt-3 space-y-2">
+                      {aiSuggestions.map((suggestion, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setCustomLabel(suggestion)}
+                          className="w-full text-left px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-300 hover:border-gold-500/50 hover:text-white transition-colors"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

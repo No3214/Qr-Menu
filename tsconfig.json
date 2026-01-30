@@ -29,7 +29,18 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "."
+    "*.tsx",
+    "*.ts",
+    "components/**/*",
+    "context/**/*",
+    "dashboard/**/*",
+    "services/**/*",
+    "lib/**/*"
+  ],
+  "exclude": [
+    "vite.config.ts",
+    "node_modules",
+    "dist"
   ],
   "references": [
     {

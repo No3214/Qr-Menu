@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send, X, Bot, Sparkles, UtensilsCrossed } from 'lucide-react';
+import { Send, X, Bot, Sparkles } from 'lucide-react';
 import { getChatResponse } from '../services/geminiService';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -147,7 +147,7 @@ export const MenuAssistant: React.FC = () => {
                             className="flex-1 bg-stone-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
                         />
                         <button
-                            onClick={handleSend}
+                            onClick={() => handleSend()}
                             disabled={isLoading || !input.trim()}
                             className="w-11 h-11 bg-stone-900 text-white rounded-xl flex items-center justify-center disabled:opacity-50 transition-all hover:scale-105 active:scale-95"
                         >

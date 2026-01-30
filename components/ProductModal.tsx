@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Product } from '../services/MenuData';
-import { X, Share2, Info, Sparkles, Check } from 'lucide-react';
+import { X, Share2, Info, Sparkles } from 'lucide-react';
 import { getProductPairing } from '../services/geminiService';
 import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
