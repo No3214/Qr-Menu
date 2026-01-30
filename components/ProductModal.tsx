@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { Product } from '../services/MenuData';
-import { X, Share2, Info, Sparkles } from 'lucide-react';
+import { X, Share2, Info, Sparkles, Check } from 'lucide-react';
 import { getProductPairing } from '../services/geminiService';
 import { useLanguage } from '../context/LanguageContext';
+import toast from 'react-hot-toast';
 
 interface ProductModalProps {
     product: Product | null;
@@ -104,13 +105,37 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                                 <span>{product.category}</span>
                             </div>
 
-                            <button className="p-2 text-stone-400 hover:text-stone-900 transition-colors">
+                            <button
+                                onClick={async () => {
+                                    try {
+                                        if (navigator.share) {
+                                            await navigator.share({
+                                                title: product.name,
+                                                text: `${product.name} - ${formattedPrice}₺`,
+                                                url: window.location.href,
+                                            });
+                                        } else {
+                                            await navigator.clipboard.writeText(`${product.name} - ${formattedPrice}₺ | ${window.location.href}`);
+                                            toast.success(t('product.shared'));
+                                        }
+                                    } catch { /* user cancelled share */ }
+                                }}
+                                className="p-2 text-stone-400 hover:text-stone-900 transition-colors"
+                                aria-label="Share"
+                            >
                                 <Share2 className="w-5 h-5" />
                             </button>
                         </div>
 
-                        <button className="w-full mt-6 bg-stone-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-stone-900/20 active:scale-[0.98] transition-all">
-                            {t('product.addToOrder')}
+                        <button
+                            onClick={() => {
+                                toast.success(t('product.addedToOrder'));
+                                onClose();
+                            }}
+                            disabled={!product.isAvailable}
+                            className="w-full mt-6 bg-stone-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-stone-900/20 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {product.isAvailable ? t('product.addToOrder') : t('product.outOfStock')}
                         </button>
                     </div>
                 </div>

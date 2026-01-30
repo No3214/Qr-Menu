@@ -37,10 +37,10 @@ export const MenuAssistant: React.FC = () => {
         ? ["Ne yemeliyim?", "Tatli onerisi", "Sicak icecekler", "Et yemekleri"]
         : ["What should I eat?", "Dessert suggestion", "Hot drinks", "Meat dishes"];
 
-    const handleSend = async () => {
-        if (!input.trim() || isLoading) return;
+    const handleSend = async (directMessage?: string) => {
+        const userMessage = (directMessage || input).trim();
+        if (!userMessage || isLoading) return;
 
-        const userMessage = input.trim();
         setInput('');
         setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
         setIsLoading(true);
@@ -128,7 +128,7 @@ export const MenuAssistant: React.FC = () => {
                         {suggestedPrompts.map(prompt => (
                             <button
                                 key={prompt}
-                                onClick={() => { setInput(prompt); }}
+                                onClick={() => { handleSend(prompt); }}
                                 className="px-3 py-1.5 bg-white border border-stone-200 rounded-full text-[10px] font-bold text-stone-600 hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
                             >
                                 {prompt}

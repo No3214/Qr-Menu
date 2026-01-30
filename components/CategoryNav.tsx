@@ -24,7 +24,7 @@ export const CategoryNav: React.FC<CategoryNavProps> = memo(({
     }, [activeCategoryId]);
 
     return (
-        <nav className="sticky top-16 z-40 bg-white/95 backdrop-blur-sm border-b border-stone-100 shadow-sm transition-all">
+        <nav className="bg-white/95 backdrop-blur-sm border-t border-stone-100 transition-all">
             <div
                 ref={scrollRef}
                 className="flex items-center gap-2 px-4 py-3 overflow-x-auto scrollbar-hide"

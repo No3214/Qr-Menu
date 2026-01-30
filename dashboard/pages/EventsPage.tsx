@@ -11,6 +11,7 @@ import {
   X,
   Save,
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface Event {
   id: string;
@@ -135,10 +136,16 @@ export function EventsPage() {
                   </span>
                 </div>
                 <div className="flex gap-1">
-                  <button className="p-1.5 rounded-lg hover:bg-gray-100 text-text-muted hover:text-primary transition-colors">
+                  <button
+                    onClick={() => toast.success('Düzenleme yakında aktif olacak')}
+                    className="p-1.5 rounded-lg hover:bg-gray-100 text-text-muted hover:text-primary transition-colors"
+                  >
                     <Edit3 size={15} />
                   </button>
-                  <button className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-danger transition-colors">
+                  <button
+                    onClick={() => toast.success('Silme yakında aktif olacak')}
+                    className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-danger transition-colors"
+                  >
                     <Trash2 size={15} />
                   </button>
                 </div>
@@ -353,7 +360,13 @@ function CreateEventModal({ onClose }: { onClose: () => void }) {
           >
             İptal
           </button>
-          <button className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
+          <button
+            onClick={() => {
+              toast.success('Etkinlik oluşturuldu');
+              onClose();
+            }}
+            className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
+          >
             <Save size={16} />
             Oluştur
           </button>

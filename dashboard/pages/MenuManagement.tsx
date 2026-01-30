@@ -148,7 +148,10 @@ function ProductsTab({
             </button>
           );
         })}
-        <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-primary font-medium hover:bg-primary/5 transition-colors mt-3">
+        <button
+          onClick={() => toast.success('Kategori ekleme yakında aktif olacak')}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-primary font-medium hover:bg-primary/5 transition-colors mt-3"
+        >
           <Plus size={16} />
           Kategori Ekle
         </button>
@@ -171,7 +174,10 @@ function ProductsTab({
               className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
             />
           </div>
-          <button className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
+          <button
+            onClick={() => toast.success('Ürün ekleme yakında aktif olacak')}
+            className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
+          >
             <Plus size={16} />
             Ürün Ekle
           </button>
@@ -260,6 +266,7 @@ function ProductsTab({
                         <Edit3 size={15} />
                       </button>
                       <button
+                        onClick={() => toast.success('Silme işlemi yakında aktif olacak')}
                         className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-danger transition-colors"
                         title="Sil"
                       >
@@ -556,7 +563,10 @@ function RecommendationsTab() {
             Müşterilere önerilecek özel ürünleri seçin
           </p>
         </div>
-        <button className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
+        <button
+          onClick={() => toast.success('Öneri ekleme yakında aktif olacak')}
+          className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
+        >
           <Plus size={16} />
           Öneri Ekle
         </button>
@@ -696,7 +706,10 @@ function DisplayPreferencesTab() {
       </div>
 
       <div className="flex justify-end">
-        <button className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
+        <button
+          onClick={() => toast.success('Kaydedildi')}
+          className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
+        >
           <Save size={16} />
           Değişiklikleri Kaydet
         </button>

@@ -14,6 +14,7 @@ import {
   X,
   ChevronLeft,
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const navItems = [
   { to: '/dashboard', icon: Home, label: 'Ana Sayfa', end: true },
@@ -27,7 +28,7 @@ const navItems = [
 
 export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [language, setLanguage] = useState<'TR' | 'EN'>('TR');
+  const { language, setLanguage } = useLanguage();
   const navigate = useNavigate();
 
   return (
@@ -95,11 +96,11 @@ export function DashboardLayout() {
         <div className="border-t border-border p-3 space-y-1">
           {/* Language toggle */}
           <button
-            onClick={() => setLanguage(language === 'TR' ? 'EN' : 'TR')}
+            onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-[14px] font-medium text-text-muted hover:bg-gray-50 hover:text-text transition-colors"
           >
             <Globe size={19} />
-            Dil: {language}
+            Dil: {language.toUpperCase()}
           </button>
 
           {/* Logout */}

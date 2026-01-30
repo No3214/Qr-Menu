@@ -149,9 +149,10 @@ export const DigitalMenu: React.FC = () => {
                                     <Globe className="w-5 h-5 text-text-muted" />
                                     <span className="text-sm font-semibold text-text uppercase">{language}</span>
                                 </button>
-                                <div
+                                <button
                                     onClick={() => setShowReviewModal(true)}
                                     className="w-12 h-12 bg-white shadow-md border border-gray-50 rounded-2xl flex items-center justify-center p-0.5 overflow-hidden active:scale-95 transition-transform"
+                                    aria-label={t('sidebar.rateUs')}
                                 >
                                     <img
                                         src="/assets/logo-dark.jpg"
@@ -162,7 +163,7 @@ export const DigitalMenu: React.FC = () => {
                                             e.currentTarget.parentElement!.innerHTML = '<span class="text-primary font-bold text-xl">K</span>';
                                         }}
                                     />
-                                </div>
+                                </button>
                             </div>
                         </div>
                         <div className="relative">

@@ -6,6 +6,7 @@ import {
   Edit3,
 } from 'lucide-react';
 import { PRODUCTS, CATEGORIES } from '../../services/MenuData';
+import toast from 'react-hot-toast';
 
 interface SupportedLanguage {
   code: string;
@@ -78,7 +79,10 @@ export function TranslationsPage() {
     <div className="max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-text">Çeviri Yönetimi</h1>
-        <button className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
+        <button
+          onClick={() => toast.success('Otomatik çeviri yakında aktif olacak')}
+          className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
+        >
           <Languages size={16} />
           Otomatik Çevir
         </button>

@@ -24,6 +24,8 @@ const translations: Record<Language, Record<string, string>> = {
 
         // ProductModal
         'product.addToOrder': 'Siparişe Ekle',
+        'product.addedToOrder': 'Siparişe eklendi!',
+        'product.shared': 'Kopyalandı!',
         'product.outOfStock': 'Tükendi',
         'product.notFound': 'Ürün bulunamadı.',
         'product.pairingTitle': 'Gurme Eşleşme',
@@ -86,6 +88,8 @@ const translations: Record<Language, Record<string, string>> = {
 
         // ProductModal
         'product.addToOrder': 'Add to Order',
+        'product.addedToOrder': 'Added to order!',
+        'product.shared': 'Copied!',
         'product.outOfStock': 'Out of Stock',
         'product.notFound': 'Product not found.',
         'product.pairingTitle': 'Gourmet Pairing',
