@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send, X, Bot, Sparkles, UtensilsCrossed } from 'lucide-react';
+import { Send, X, Bot, Sparkles } from 'lucide-react';
 import { getChatResponse } from '../services/geminiService';
-import { useLanguage } from '../context/LanguageContext';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -9,7 +8,6 @@ interface Message {
 }
 
 export const MenuAssistant: React.FC = () => {
-    const { t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
         { role: 'assistant', content: 'Merhaba! Ben Kozbeyli Konağı yapay zeka asistanıyım. Size menümüz hakkında nasıl yardımcı olabilirim?' }

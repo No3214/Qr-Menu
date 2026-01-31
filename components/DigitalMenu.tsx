@@ -26,6 +26,14 @@ export const DigitalMenu: React.FC = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    // Transition to LIST view when searching from GRID
+    useEffect(() => {
+        if (searchQuery && viewState === 'GRID') {
+            setViewState('LIST');
+            setIsSearchOpen(true);
+        }
+    }, [searchQuery, viewState]);
+
     // Debounce search query
     useEffect(() => {
         const timer = setTimeout(() => {

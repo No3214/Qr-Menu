@@ -13,7 +13,6 @@ import {
   Save,
   Upload,
   Download,
-  ImageIcon,
   Copy,
   ExternalLink,
   ChevronDown,
@@ -235,8 +234,8 @@ function GuestSection() {
 }
 
 function QRCodeSection() {
-  const [fgColor, setFgColor] = React.useState('#000000');
-  const [bgColor, setBgColor] = React.useState('#FFFFFF');
+  const [fgColor, setFgColor] = useState('#000000');
+  const [bgColor, setBgColor] = useState('#FFFFFF');
   const menuUrl = 'https://qr-menu-one-iota.vercel.app';
 
   const downloadQR = (format: 'png' | 'svg') => {

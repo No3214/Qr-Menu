@@ -22,6 +22,11 @@ export const MenuService = {
             return MOCK_CATEGORIES;
         }
 
+        if (!data || data.length === 0) {
+            console.warn('No categories found in Supabase, using mock data');
+            return MOCK_CATEGORIES;
+        }
+
         return data as Category[];
     },
 
@@ -39,6 +44,11 @@ export const MenuService = {
 
         if (error) {
             console.error('Error fetching products:', error);
+            return MOCK_PRODUCTS;
+        }
+
+        if (!data || data.length === 0) {
+            console.warn('No products found in Supabase, using mock data');
             return MOCK_PRODUCTS;
         }
 
@@ -67,7 +77,11 @@ export const MenuService = {
 
         if (error) {
             console.error('Error fetching products by category:', error);
-            return [];
+            return MOCK_PRODUCTS.filter(p => p.category === categoryId);
+        }
+
+        if (!data || data.length === 0) {
+            return MOCK_PRODUCTS.filter(p => p.category === categoryId);
         }
 
         return data.map((item: any) => ({

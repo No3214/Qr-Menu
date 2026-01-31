@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import QRCode from 'qrcode'; // Using raw logic library now
 import {
-  Download, Upload, Type, Palette, Sparkles, Loader2,
+  Download, Upload, Type, Palette,
   LayoutTemplate, Image as ImageIcon,
   BoxSelect, Frame, MousePointer2, Square,
-  AlertTriangle, Lock, Wand2, RefreshCcw, X,
-  Wifi, Link as LinkIcon, Check, Eye, Smartphone, Zap, Ruler, ArrowRightLeft, ShieldCheck, Wrench,
-  Circle, Grid3X3, Maximize, Minimize, Layers
+  Lock, Wand2, X,
+  Wifi, Link as LinkIcon, Eye, Zap, Ruler,
+  Circle, Grid3X3
 } from 'lucide-react';
-// import { generateTaglines } from '../services/geminiService';
 import toast from 'react-hot-toast';
 
 // --- TYPES & INTERFACES ---
@@ -181,14 +180,10 @@ export const QRCodeEditor: React.FC = () => {
   const [url, setUrl] = useState('https://menu.kozbeylikonagi.com');
   const [wifiSsid, setWifiSsid] = useState('');
   const [wifiPassword, setWifiPassword] = useState('');
-  const [wifiHidden, setWifiHidden] = useState(false);
+  const [wifiHidden] = useState(false);
 
   const [restaurantName, setRestaurantName] = useState('Kozbeyli Konağı');
-  const [vibe, setVibe] = useState('Elegant and Relaxing');
   const [customLabel, setCustomLabel] = useState('Scan for Menu');
-  const [frameText, setFrameText] = useState('SCAN ME');
-  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
 
   // Design
   const [fgColor, setFgColor] = useState('#0F172A');
@@ -219,7 +214,6 @@ export const QRCodeEditor: React.FC = () => {
   // Frames
   const [frameStyle, setFrameStyle] = useState<FrameStyle>('none');
   const [borderWidth, setBorderWidth] = useState(4);
-  const [frameBgImg, setFrameBgImg] = useState<string | null>(null);
   const [showAcrylicBase, setShowAcrylicBase] = useState(true);
   const [acrylicOpacity, setAcrylicOpacity] = useState(0.9);
 
@@ -422,7 +416,6 @@ export const QRCodeEditor: React.FC = () => {
     if (theme.bgScale) setBgImageScale(theme.bgScale);
     if (theme.bgOpacity) setBgOpacity(theme.bgOpacity);
 
-    setFrameBgImg(null);
     toast.success(`Theme "${theme.name}" applied`);
   };
 
@@ -437,37 +430,6 @@ export const QRCodeEditor: React.FC = () => {
     }
   };
 
-  const handleFrameBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setFrameBgImg(event.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleAIGenerate = async () => {
-    // Mock AI generation for now as service is missing
-    /*
-    if (!restaurantName) {
-      toast.error('Please enter a restaurant name first');
-      return;
-    }
-    setIsGeneratingAI(true);
-    try {
-      const suggestions = await generateTaglines(restaurantName, vibe);
-      setAiSuggestions(suggestions);
-      toast.success('AI suggestions generated!');
-    } catch (error) {
-      toast.error('Could not generate suggestions');
-    } finally {
-      setIsGeneratingAI(false);
-    }
-    */
-    toast.success("AI Generation Placeholder");
-  };
 
   const handleDownload = () => {
     const qrCanvas = canvasRef.current;
