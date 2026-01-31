@@ -10,9 +10,9 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
     const formattedPrice = new Intl.NumberFormat('tr-TR').format(product.price);
 
     return (
-        <div className={`group relative bg-white rounded-2xl p-3 sm:p-4 mb-4 border border-stone-100 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] transition-all hover:shadow-lg active:scale-[0.99] ${!product.isAvailable ? 'opacity-60 grayscale' : ''}`}>
+        <div className={`group relative bg-white rounded-2xl p-3 sm:p-4 mb-4 border-2 border-transparent shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-xl hover:border-primary/20 hover:-translate-y-0.5 active:scale-[0.98] ${!product.isAvailable ? 'opacity-60 grayscale' : ''}`}>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 sm:gap-6">
                 {/* Image Area */}
                 {product.image ? (
                     <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0">
@@ -37,10 +37,10 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                 {/* Content Area */}
                 <div className="flex-1 flex flex-col justify-between min-w-0 py-0.5">
                     <div>
-                        <h3 className="text-base font-bold text-stone-900 leading-tight mb-1 group-hover:text-stone-700 transition-colors">
+                        <h3 className="text-lg font-bold text-text leading-tight mb-1.5 group-hover:text-primary transition-colors">
                             {product.name}
                         </h3>
-                        <p className="text-xs text-stone-500 line-clamp-2 leading-relaxed font-medium">
+                        <p className="text-sm text-text-muted line-clamp-2 leading-relaxed font-medium">
                             {product.description}
                         </p>
                     </div>

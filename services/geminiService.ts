@@ -1,14 +1,18 @@
 import { GoogleGenAI } from "@google/genai";
 
 const getClient = () => {
-  // Use the provided Gemini key
-  const apiKey = "AIzaSyAu7sVDA8tiHoxPQ1qvAhbdRr_q9vkQiEI";
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) {
+    console.warn("VITE_GEMINI_API_KEY is not defined");
+    return null;
+  }
   return new GoogleGenAI({ apiKey });
 };
 
 export const generateTaglines = async (restaurantName: string, vibe: string): Promise<string[]> => {
   try {
     const ai = getClient();
+    if (!ai) throw new Error("AI client not initialized");
     const prompt = `Generate 3 short, elegant, and inviting call-to-action phrases (max 5-7 words each) for a QR code display at a hotel restaurant. 
     Restaurant Name: "${restaurantName}"
     Vibe/Atmosphere: "${vibe}"
@@ -42,6 +46,7 @@ export const generateTaglines = async (restaurantName: string, vibe: string): Pr
 export const getProductPairing = async (productName: string, category: string): Promise<{ pairing: string, reason: string }> => {
   try {
     const ai = getClient();
+    if (!ai) throw new Error("AI client not initialized");
     const prompt = `Suggest a perfect drink or side dish pairing for this menu item: "${productName}" (${category}).
     Return a JSON object with two fields:
     - "pairing": Name of the suggested item (keep it generic if not known, e.g., "Red Wine" or "French Fries")
@@ -65,6 +70,7 @@ export const getProductPairing = async (productName: string, category: string): 
 export const getChatResponse = async (message: string, context: string = ""): Promise<string> => {
   try {
     const ai = getClient();
+    if (!ai) throw new Error("AI client not initialized");
     const prompt = `You are a helpful, sophisticated waiter at "Kozbeyli Konağı". 
     Context: ${context}
     User asked: "${message}"

@@ -37,14 +37,15 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter, categories,
     return (
         <div className="relative h-screen w-full overflow-hidden bg-black">
             {/* Background Media */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 overflow-hidden">
                 <img
-                    src="https://images.unsplash.com/photo-1544025162-d76690b67f14?q=80&w=2574&auto=format&fit=crop"
+                    src="https://images.unsplash.com/photo-1514362545857-3bc16549766b?q=80&w=2574&auto=format&fit=crop"
                     alt="Atmosphere"
-                    className="w-full h-full object-cover opacity-90"
+                    className="w-full h-full object-cover scale-105 animate-[pulse_8s_ease-in-out_infinite] opacity-80"
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/90" />
+                <div className="absolute inset-0 backdrop-blur-[2px]" />
             </div>
 
             {/* Sidebar Overlay */}
@@ -155,11 +156,11 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter, categories,
                     <Menu className="w-5 h-5" />
                 </button>
 
-                <div className="flex flex-col items-center">
-                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg mb-1">
-                        <span className="font-bold text-white text-xl">K</span>
+                <div className="flex flex-col items-center group cursor-pointer" onClick={onEnter}>
+                    <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-2xl mb-1.5 transition-all duration-700 group-hover:scale-110 group-hover:rotate-3">
+                        <span className="font-bold text-white text-2xl drop-shadow-md">K</span>
                     </div>
-                    <span className="text-xs font-medium tracking-widest uppercase opacity-90">Kozbeyli Konağı</span>
+                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase opacity-90 text-primary">Kozbeyli Konağı</span>
                 </div>
 
                 {/* Language Toggle */}

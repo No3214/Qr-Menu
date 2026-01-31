@@ -65,11 +65,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                 </div>
 
                 {/* Content Body */}
-                <div className="px-6 py-8 -mt-6 relative bg-white rounded-t-[32px]">
-                    <div className="w-12 h-1 bg-stone-200 rounded-full mx-auto mb-6" />
+                <div className="px-8 py-10 -mt-6 relative bg-white rounded-t-[32px]">
+                    <div className="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-8" />
 
-                    <div className="flex items-start justify-between gap-4 mb-3">
-                        <h2 className="text-3xl font-bold text-stone-900 leading-tight font-serif tracking-tight">
+                    <div className="flex items-start justify-between gap-4 mb-4">
+                        <h2 className="text-3xl font-bold text-text leading-tight tracking-tight">
                             {product.name}
                         </h2>
                     </div>
@@ -105,7 +105,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                         </button>
                     </div>
 
-                    <button className="w-full mt-6 bg-stone-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-stone-900/20 active:scale-[0.98] transition-all">
+                    <button className="w-full mt-8 bg-primary text-white py-4.5 rounded-2xl font-bold text-lg shadow-lg shadow-primary/30 hover:bg-primary-hover active:scale-[0.98] transition-all duration-300">
                         Siparişe Ekle
                     </button>
                 </div>

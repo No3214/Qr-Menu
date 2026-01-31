@@ -61,7 +61,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
             <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
                 {/* Header */}
                 <div className="bg-primary/5 p-4 flex items-center justify-between border-b border-primary/10">
-                    <h2 className="font-bold text-lg text-gray-800">Değerlendir</h2>
+                    <h2 className="font-bold text-lg text-gray-800">{t('review.title')}</h2>
                     <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-colors">
                         <X size={20} className="text-gray-500" />
                     </button>
@@ -70,7 +70,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
                 <form onSubmit={handleSubmit} className="p-5 space-y-5">
                     {/* Star Rating */}
                     <div className="flex flex-col items-center gap-2">
-                        <p className="text-sm text-gray-500">Deneyiminizi puanlayın</p>
+                        <p className="text-sm text-gray-500">{t('review.rating')}</p>
                         <div className="flex gap-2">
                             {[1, 2, 3, 4, 5].map((star) => (
                                 <button
@@ -105,21 +105,21 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
                     {/* Inputs */}
                     <div className="space-y-3">
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1 ml-1">İsim (Opsiyonel)</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1 ml-1">{t('review.name')}</label>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                placeholder="İsminiz..."
+                                placeholder="..."
                                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1 ml-1">Yorumunuz</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1 ml-1">{t('review.comment')}</label>
                             <textarea
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
-                                placeholder="Görüşlerinizi yazın..."
+                                placeholder="..."
                                 rows={3}
                                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                             />
@@ -136,7 +136,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
                             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         ) : (
                             <>
-                                <span>Gönder</span>
+                                <span>{t('review.submit')}</span>
                                 <Send size={18} />
                             </>
                         )}

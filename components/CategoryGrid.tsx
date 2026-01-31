@@ -16,17 +16,15 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
     return (
         <div className="p-4 grid grid-cols-2 gap-3 pb-24">
             {categories.map((category, index) => {
-                // Pattern: 0=Large, 1,2=Small, 3,4=Small, 5=Large... 
-                // Simple logic for demo: First item large, then 2 small, then repeating or random.
-                // Let's use a fixed pattern for stability: index % 3 === 0 ? Large : Small
-                const isLarge = index % 3 === 0;
+                // Pattern: 1 Full-width followed by 4 Half-width items (repeating every 5)
+                const isLarge = index % 5 === 0;
 
                 return (
                     <div
                         key={category.id}
                         onClick={() => onCategorySelect(category.id)}
-                        className={`relative overflow-hidden rounded-xl shadow-card group cursor-pointer active:scale-[0.98] transition-all
-              ${isLarge ? 'col-span-2 h-40' : 'col-span-1 h-32'}
+                        className={`relative overflow-hidden rounded-2xl shadow-card group cursor-pointer active:scale-[0.98] transition-all duration-500
+              ${isLarge ? 'col-span-2 h-48' : 'col-span-1 h-36'}
             `}
                     >
                         {/* Background Image */}

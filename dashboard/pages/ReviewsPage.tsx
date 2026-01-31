@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Star, MessageSquare, Check, Trash2, Clock } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Star, MessageSquare, Clock } from 'lucide-react';
 import { ReviewService, Review } from '../../services/ReviewService';
 import toast from 'react-hot-toast';
 
-export const ReviewsPage: React.FC = () => {
+export const ReviewsPage = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [stats, setStats] = useState({ average: 0, total: 0 });
   const [loading, setLoading] = useState(true);
