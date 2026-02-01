@@ -1,5 +1,5 @@
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const getClient = () => {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -7,7 +7,7 @@ const getClient = () => {
     console.warn("VITE_GEMINI_API_KEY is not defined");
     return null;
   }
-  return new GoogleGenAI({ apiKey });
+  return new GoogleGenerativeAI(apiKey);
 };
 
 export const generateTaglines = async (restaurantName: string, vibe: string): Promise<string[]> => {

@@ -1,6 +1,6 @@
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Download, Share2, Sparkles, Wand2, QrCode, Palette, Type, Layout, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Download, Share2, Sparkles, Wand2, QrCode, Palette, RefreshCw } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { generateTaglines } from '../services/geminiService';
 

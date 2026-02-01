@@ -16,7 +16,7 @@ import {
 import { MenuService, Product, Category, CATEGORIES, PRODUCTS } from '../../services/MenuService';
 import { parseMenuFromImage } from '../../services/geminiService';
 import toast from 'react-hot-toast';
-import { Sparkles, Loader2, Upload } from 'lucide-react';
+import { Sparkles, Loader2 } from 'lucide-react';
 
 type Tab = 'products' | 'recommendations' | 'display';
 
@@ -43,7 +43,7 @@ export function MenuManagement() {
       const q = searchQuery.toLowerCase();
       items = items.filter(
         (p) =>
-          p.name.toLowerCase().includes(q) ||
+          p.title.toLowerCase().includes(q) ||
           p.description.toLowerCase().includes(q)
       );
     }
@@ -278,7 +278,7 @@ function ProductsTab({
                         {product.image ? (
                           <img
                             src={product.image}
-                            alt={product.name}
+                            alt={product.title}
                             className="w-full h-full object-cover"
                           />
                         ) : (
@@ -287,7 +287,7 @@ function ProductsTab({
                       </div>
                       <div className="min-w-0">
                         <p className="text-sm font-medium text-text truncate">
-                          {product.name}
+                          {product.title}
                         </p>
                         <p className="text-xs text-text-muted truncate max-w-[260px]">
                           {product.description}
@@ -369,7 +369,7 @@ function ProductEditModal({
   product: Product;
   onClose: () => void;
 }) {
-  const [name, setName] = useState(product.name);
+  const [title, setTitle] = useState(product.title);
   const [price, setPrice] = useState(product.price.toString());
   const [description, setDescription] = useState(product.description);
   const [isAvailable, setIsAvailable] = useState(product.isAvailable);
@@ -410,8 +410,8 @@ function ProductEditModal({
             </label>
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
             />
           </div>
@@ -630,7 +630,7 @@ function RecommendationsTab() {
                 {product.image ? (
                   <img
                     src={product.image}
-                    alt={product.name}
+                    alt={product.title}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -639,7 +639,7 @@ function RecommendationsTab() {
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-medium text-text truncate">
-                  {product.name}
+                  {product.title}
                 </h3>
                 <p className="text-xs text-text-muted mt-0.5 line-clamp-2">
                   {product.description}

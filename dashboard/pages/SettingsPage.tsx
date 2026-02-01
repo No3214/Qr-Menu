@@ -13,7 +13,6 @@ import {
   Save,
   Upload,
   Download,
-  ImageIcon,
   Copy,
   ExternalLink,
   ChevronDown,

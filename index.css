@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: hsl(24 9.8% 10%);
-  --color-primary-hover: hsl(24 9.8% 15%);
+  --color-primary: #C5A059;
+  --color-primary-hover: #b38f4d;
   --color-bg: #FCFBF7;
   --color-surface: #FFFFFF;
   --color-text: #1C1917;
@@ -19,8 +19,8 @@
     --card-foreground: 20 14.3% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 20 14.3% 4.1%;
-    --primary: 24 9.8% 10%;
-    /* Stone 900 */
+    --primary: 40 48% 56%;
+    /* Kozbeyli Gold */
     --primary-foreground: 60 9.1% 97.8%;
     --secondary: 60 4.8% 95.9%;
     --secondary-foreground: 24 9.8% 10%;
