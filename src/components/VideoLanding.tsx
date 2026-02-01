@@ -1,12 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, Utensils, Award, Sparkles, MapPin, ArrowRight } from 'lucide-react';
+import { Utensils, Award, Sparkles, MapPin, ArrowRight, Globe } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface VideoLandingProps {
     onEnter: () => void;
 }
 
 export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
+    const { language, setLanguage, t } = useLanguage();
     const [scrolled, setScrolled] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -44,9 +46,15 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                         </div>
                     </div>
                     <div className="flex items-center gap-6">
-                        <span className="text-[10px] text-white/40 uppercase tracking-[0.3em] font-bold hidden sm:block">Founded 1994</span>
+                        <span className="text-[10px] text-white/40 uppercase tracking-[0.3em] font-bold hidden sm:block">{t('landing.founded')}</span>
                         <div className="h-4 w-[1px] bg-white/10 hidden sm:block" />
-                        <button className="text-[10px] text-primary uppercase tracking-[0.3em] font-black border-b border-primary pb-1">TR / EN</button>
+                        <button
+                            onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
+                            className="h-9 px-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all"
+                        >
+                            <Globe className="w-3.5 h-3.5 text-primary" />
+                            <span className="text-[10px] text-white uppercase tracking-[0.2em] font-black">{language}</span>
+                        </button>
                     </div>
                 </header>
 
@@ -59,21 +67,17 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                             </span>
-                            <span className="text-[10px] text-white font-black uppercase tracking-[0.4em]">Welcome to Excellence</span>
+                            <span className="text-[10px] text-white font-black uppercase tracking-[0.4em]">{t('landing.welcome')}</span>
                         </div>
 
                         {/* Title Section */}
                         <div className="relative">
-                            <h1 className="text-6xl sm:text-8xl md:text-9xl font-black text-white tracking-tighter leading-[0.85] mb-4">
-                                KOZBEYLİ<br />
-                                <span className="text-primary italic">KONAĞI</span>
+                            <h1 className="text-6xl sm:text-8xl md:text-9xl font-black text-white tracking-tighter leading-[0.85] mb-4 uppercase">
+                                {t('landing.title')}<br />
+                                <span className="text-primary italic lowercase">{t('landing.titleAccent')}</span>
                             </h1>
                             <div className="flex items-center justify-center gap-4 text-white/30 mb-8 font-serif italic text-lg sm:text-2xl">
-                                <span>Fine Dining</span>
-                                <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                                <span>Authentic Flavors</span>
-                                <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                                <span>Legacy</span>
+                                <span>{t('landing.subtitle')}</span>
                             </div>
                         </div>
 
@@ -81,14 +85,14 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 max-w-2xl mx-auto w-full">
                             <button
                                 onClick={onEnter}
-                                className="group relative w-full sm:w-auto bg-primary text-stone-950 px-10 py-6 rounded-[24px] font-black text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 transition-all hover:bg-white hover:scale-105 active:scale-95 shadow-[0_20px_40px_-10px_rgba(197,160,89,0.3)]overflow-hidden"
+                                className="group relative w-full sm:w-auto bg-primary text-stone-950 px-10 py-6 rounded-[24px] font-black text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 transition-all hover:bg-white hover:scale-105 active:scale-95 shadow-[0_20px_40px_-10px_rgba(197,160,89,0.3)] overflow-hidden"
                             >
-                                <span>Menüyü Keşfedin</span>
+                                <span>{t('landing.cta')}</span>
                                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
                             </button>
 
-                            <button className="w-full sm:w-auto bg-white/5 backdrop-blur-md text-white border border-white/10 px-10 py-6 rounded-[24px] font-bold text-sm tracking-[0.2em] hover:bg-white/10 transition-all">
-                                REZERVASYON
+                            <button className="w-full sm:w-auto bg-white/5 backdrop-blur-md text-white border border-white/10 px-10 py-6 rounded-[24px] font-bold text-sm tracking-[0.2em] hover:bg-white/10 transition-all uppercase">
+                                {t('landing.reservation')}
                             </button>
                         </div>
                     </div>
@@ -96,10 +100,10 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                     {/* Features Scroll Reveal */}
                     <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 mt-24 max-w-4xl mx-auto transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
                         {[
-                            { label: 'Michelin Standard', icon: Award },
-                            { label: 'Fresh Daily', icon: Utensils },
-                            { label: 'Wine Cellar', icon: Sparkles },
-                            { label: 'Historical Venue', icon: MapPin },
+                            { label: t('landing.michelin'), icon: Award },
+                            { label: t('landing.fresh'), icon: Utensils },
+                            { label: t('landing.wine'), icon: Sparkles },
+                            { label: t('landing.history'), icon: MapPin },
                         ].map((feature, idx) => (
                             <div key={idx} className="group cursor-default">
                                 <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10 group-hover:bg-primary transition-all duration-500">

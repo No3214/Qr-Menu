@@ -4,8 +4,6 @@ import {
   TrendingUp,
   Users,
   Clock,
-  ArrowUpRight,
-  Calendar,
   Sparkles,
   ChevronRight
 } from 'lucide-react';

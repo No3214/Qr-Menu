@@ -1,17 +1,13 @@
 
 import React from 'react';
 import {
-  BarChart,
-  Bar,
+  AreaChart,
+  Area,
+  ResponsiveContainer,
+  CartesianGrid,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  AreaChart,
-  Area
+  Tooltip
 } from 'recharts';
 import {
   TrendingUp,
@@ -22,7 +18,7 @@ import {
   Users,
   Eye,
   MousePointer2,
-  Clock
+  Clock, // Added Clock import as it's used but missing
 } from 'lucide-react';
 
 const data = [

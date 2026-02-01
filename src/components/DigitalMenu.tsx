@@ -9,6 +9,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { ReviewModal } from './ReviewModal';
 import { MenuAssistant } from './MenuAssistant';
 import { ListHeader } from './ListHeader';
+import { CookieConsent } from './CookieConsent';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type ViewState = 'LANDING' | 'GRID' | 'LIST';
@@ -54,6 +55,15 @@ export const DigitalMenu: React.FC = () => {
             }
         };
         loadData();
+
+        // Listen for internal product selections (from pairings)
+        const handleInternalSelect = (e: any) => {
+            if (e.detail) {
+                setSelectedProduct(e.detail);
+            }
+        };
+        window.addEventListener('selectProduct', handleInternalSelect);
+        return () => window.removeEventListener('selectProduct', handleInternalSelect);
     }, []);
 
     // Handle Category Selection from Grid
@@ -74,7 +84,7 @@ export const DigitalMenu: React.FC = () => {
         });
     }, [products, debouncedQuery, viewState, activeCategory]);
 
-    if (loading) return <div className="h-screen flex items-center justify-center bg-bg"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
+    if (loading) return <div className="h-screen flex items-center justify-center bg-bg"><div className="animate-spin rounded-full h-10 w-10 border-[3px] border-primary/20 border-b-accent"></div></div>;
 
     return (
         <div className="min-h-screen bg-bg overflow-x-hidden">
@@ -97,44 +107,43 @@ export const DigitalMenu: React.FC = () => {
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                     >
-                        <header className="px-6 pt-8 pb-4 bg-surface sticky top-0 z-20 shadow-sm">
-                            <div className="flex items-center justify-between mb-4">
+                        <header className="px-6 pt-10 pb-6 bg-surface/90 backdrop-blur-xl sticky top-0 z-20 border-b border-primary/5 shadow-sm">
+                            <div className="flex items-center justify-between mb-6">
                                 <div>
-                                    <h1 className="text-2xl font-bold text-text">{t('menu.welcome')}</h1>
-                                    <p className="text-sm text-text-muted">{t('menu.restaurant')}</p>
+                                    <h1 className="text-2xl font-extrabold text-text tracking-tight uppercase">{t('menu.welcome')}</h1>
+                                    <div className="flex items-center gap-2 mt-0.5">
+                                        <div className="h-px w-4 bg-accent" />
+                                        <p className="text-[11px] font-bold text-accent uppercase tracking-[0.2em]">{t('menu.restaurant')}</p>
+                                    </div>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <button
                                         onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
-                                        className="h-12 px-3 bg-white/50 border border-border/50 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all"
+                                        className="h-11 px-3 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all"
                                     >
-                                        <Globe className="w-5 h-5 text-text-muted" />
-                                        <span className="text-sm font-semibold text-text uppercase">{language}</span>
+                                        <Globe className="w-4 h-4 text-primary" />
+                                        <span className="text-[11px] font-bold text-primary uppercase tracking-wider">{language}</span>
                                     </button>
                                     <div
                                         onClick={() => setShowReviewModal(true)}
-                                        className="w-12 h-12 bg-white shadow-md border border-gray-50 rounded-2xl flex items-center justify-center p-0.5 overflow-hidden active:scale-95 transition-transform"
+                                        className="w-11 h-11 bg-white shadow-card border border-primary/10 rounded-xl flex items-center justify-center p-1.5 overflow-hidden active:scale-95 transition-all hover:border-accent/40"
                                     >
                                         <img
                                             src="/assets/logo-dark.jpg"
                                             alt="Kozbeyli Konağı"
                                             className="w-full h-full object-contain"
-                                            onError={(e) => {
-                                                e.currentTarget.style.display = 'none';
-                                                e.currentTarget.parentElement!.innerHTML = '<span class="text-primary font-bold text-xl">K</span>';
-                                            }}
                                         />
                                     </div>
                                 </div>
                             </div>
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+                            <div className="relative group">
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/40 group-focus-within:text-accent transition-colors" />
                                 <input
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder={t('menu.search')}
-                                    className="w-full h-11 pl-10 pr-4 bg-gray-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                                    className="w-full h-12 pl-11 pr-4 bg-primary/[0.03] border border-primary/[0.05] rounded-xl text-sm outline-none focus:ring-2 focus:ring-accent/10 focus:bg-white focus:border-accent/30 transition-all font-medium"
                                 />
                             </div>
                         </header>
@@ -194,6 +203,7 @@ export const DigitalMenu: React.FC = () => {
             )}
 
             <MenuAssistant />
+            <CookieConsent />
         </div>
     );
 };

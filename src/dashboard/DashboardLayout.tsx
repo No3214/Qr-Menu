@@ -13,9 +13,6 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
-  PanelLeftClose,
-  PanelLeftOpen,
-  LayoutDashboard,
   QrCode
 } from 'lucide-react';
 
@@ -35,7 +32,7 @@ export const DashboardLayout: React.FC = () => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#F8F9FA]">
+    <div className="flex min-h-screen bg-bg">
       {/* Sidebar */}
       <aside
         className={`

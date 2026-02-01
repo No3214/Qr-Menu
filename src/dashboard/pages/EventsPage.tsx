@@ -5,11 +5,8 @@ import {
   Plus,
   Search,
   MoreVertical,
-  Clock,
   MapPin,
   Users,
-  CheckCircle2,
-  XCircle,
   Clock3,
   Edit3,
   Trash2,
@@ -154,8 +151,8 @@ export const EventsPage: React.FC = () => {
                 />
                 <div className="absolute top-4 left-4">
                   <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md border ${event.status === 'Upcoming' ? 'bg-green-500/10 text-green-600 border-green-500/20' :
-                      event.status === 'Past' ? 'bg-stone-500/10 text-stone-600 border-stone-500/20' :
-                        'bg-red-500/10 text-red-600 border-red-500/20'
+                    event.status === 'Past' ? 'bg-stone-500/10 text-stone-600 border-stone-500/20' :
+                      'bg-red-500/10 text-red-600 border-red-500/20'
                     }`}>
                     {event.status === 'Upcoming' ? 'Gelecek' : 'Geçmiş'}
                   </span>

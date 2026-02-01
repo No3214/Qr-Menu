@@ -11,14 +11,25 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './'),
+      '@': path.resolve(__dirname, './src'),
     },
+  },
+  optimizeDeps: {
+    include: ['lucide-react', 'recharts', 'framer-motion', 'react-is']
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false,
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['lucide-react', 'framer-motion', 'recharts'],
+        },
+      },
     },
   },
 });

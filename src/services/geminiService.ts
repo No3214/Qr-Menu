@@ -1,5 +1,5 @@
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const getClient = () => {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -7,7 +7,7 @@ const getClient = () => {
     console.warn("VITE_GEMINI_API_KEY is not defined");
     return null;
   }
-  return new GoogleGenAI({ apiKey });
+  return new GoogleGenerativeAI(apiKey);
 };
 
 export const generateTaglines = async (restaurantName: string, vibe: string): Promise<string[]> => {
@@ -44,12 +44,16 @@ export const getProductPairing = async (productName: string, category: string): 
   try {
     const ai = getClient();
     if (!ai) throw new Error("AI client not initialized");
-    const prompt = `Suggest a perfect drink or side dish pairing for this menu item: "${productName}" (${category}).
-    Return a JSON object with two fields:
-    - "pairing": Name of the suggested item (keep it generic if not known, e.g., "Red Wine" or "French Fries")
-    - "reason": A short, appetizing 1-sentence explanation of why they go well together.
+    const prompt = `You are a gourmet somatic at "Kozbeyli Konağı". 
+    Suggest a perfect beverage or side dish pairing for this menu item to increase guest satisfaction and upsell.
     
-    Do not include markdown.`;
+    Item: "${productName}" (${category})
+    
+    Return a JSON object with:
+    - "pairing": Name of the suggested item. IMPORTANT: Use the most likely official name (e.g., "Turkish Coffee", "Red Wine", "French Fries", "Ayran").
+    - "reason": A short (max 15 words) appetizing explanation of why they go well together.
+    
+    Keep the pairing name simple and likely to match a menu title. Do not include markdown formatting.`;
 
     const response = await ai.getGenerativeModel({ model: "gemini-1.5-flash" }).generateContent(prompt);
     const text = response.response.text().replace(/```json/g, '').replace(/```/g, '').trim() || "{}";
