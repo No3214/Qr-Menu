@@ -68,7 +68,7 @@ export const DigitalMenu: React.FC = () => {
         return products.filter((p) => {
             const q = debouncedQuery.toLowerCase();
             const matchesCategory = (viewState === 'LIST' && !debouncedQuery) ? p.category === activeCategory : true;
-            const matchesSearch = p.name.toLowerCase().includes(q) ||
+            const matchesSearch = p.title.toLowerCase().includes(q) ||
                 p.description.toLowerCase().includes(q);
             return matchesCategory && matchesSearch;
         });
