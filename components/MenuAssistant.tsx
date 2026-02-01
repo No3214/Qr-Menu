@@ -113,10 +113,10 @@ export const MenuAssistant: React.FC = () => {
                     {/* Suggested Prompts */}
                     <div className="px-4 py-2 bg-stone-50 overflow-x-auto flex gap-2 no-scrollbar">
                         {[
+                            "Konağın Hikayesi",
                             "Ne yemeliyim?",
                             "Tatlı önerisi",
-                            "Sıcak içecekler",
-                            "Et yemekleri"
+                            "Sıcak içecekler"
                         ].map(prompt => (
                             <button
                                 key={prompt}

@@ -1,22 +1,20 @@
 {
-    "name": "Kozbeyli Konağı Digital Menu",
-    "short_name": "Kozbeyli Menu",
-    "description": "Kozbeyli Konağı - Dijital Menü ve Sipariş Sistemi",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#008FAC",
-    "orientation": "portrait",
+    "short_name": "Kozbeyli",
+    "name": "Kozbeyli Konağı Dijital Menü",
     "icons": [
-        {
-            "src": "/favicon.svg",
-            "sizes": "192x192 512x512",
-            "type": "image/svg+xml"
-        },
         {
             "src": "/assets/logo-dark.jpg",
             "sizes": "192x192",
             "type": "image/jpeg"
+        },
+        {
+            "src": "/assets/logo-dark.jpg",
+            "sizes": "512x512",
+            "type": "image/jpeg"
         }
-    ]
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#FCFBF7",
+    "background_color": "#FCFBF7"
 }

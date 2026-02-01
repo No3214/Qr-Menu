@@ -9,6 +9,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { ReviewModal } from './ReviewModal';
 import { MenuAssistant } from './MenuAssistant';
 import { ListHeader } from './ListHeader';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type ViewState = 'LANDING' | 'GRID' | 'LIST';
 
@@ -75,92 +76,110 @@ export const DigitalMenu: React.FC = () => {
 
     if (loading) return <div className="h-screen flex items-center justify-center bg-bg"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
 
-    if (viewState === 'LANDING') {
-        return (
-            <VideoLanding
-                onEnter={() => setViewState('GRID')}
-            />
-        );
-    }
-
     return (
-        <div className="min-h-screen bg-bg">
-            {viewState === 'GRID' && (
-                <>
-                    <header className="px-6 pt-8 pb-4 bg-surface sticky top-0 z-20 shadow-sm">
-                        <div className="flex items-center justify-between mb-4">
-                            <div>
-                                <h1 className="text-2xl font-bold text-text">{t('menu.welcome')}</h1>
-                                <p className="text-sm text-text-muted">{t('menu.restaurant')}</p>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <button
-                                    onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
-                                    className="h-12 px-3 bg-white/50 border border-border/50 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all"
-                                >
-                                    <Globe className="w-5 h-5 text-text-muted" />
-                                    <span className="text-sm font-semibold text-text uppercase">{language}</span>
-                                </button>
-                                <div
-                                    onClick={() => setShowReviewModal(true)}
-                                    className="w-12 h-12 bg-white shadow-md border border-gray-50 rounded-2xl flex items-center justify-center p-0.5 overflow-hidden active:scale-95 transition-transform"
-                                >
-                                    <img
-                                        src="/assets/logo-dark.jpg"
-                                        alt="Kozbeyli Konağı"
-                                        className="w-full h-full object-contain"
-                                        onError={(e) => {
-                                            e.currentTarget.style.display = 'none';
-                                            e.currentTarget.parentElement!.innerHTML = '<span class="text-primary font-bold text-xl">K</span>';
-                                        }}
-                                    />
+        <div className="min-h-screen bg-bg overflow-x-hidden">
+            <AnimatePresence mode="wait">
+                {viewState === 'LANDING' ? (
+                    <motion.div
+                        key="landing"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        <VideoLanding onEnter={() => setViewState('GRID')} />
+                    </motion.div>
+                ) : viewState === 'GRID' ? (
+                    <motion.div
+                        key="grid"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                    >
+                        <header className="px-6 pt-8 pb-4 bg-surface sticky top-0 z-20 shadow-sm">
+                            <div className="flex items-center justify-between mb-4">
+                                <div>
+                                    <h1 className="text-2xl font-bold text-text">{t('menu.welcome')}</h1>
+                                    <p className="text-sm text-text-muted">{t('menu.restaurant')}</p>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <button
+                                        onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
+                                        className="h-12 px-3 bg-white/50 border border-border/50 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all"
+                                    >
+                                        <Globe className="w-5 h-5 text-text-muted" />
+                                        <span className="text-sm font-semibold text-text uppercase">{language}</span>
+                                    </button>
+                                    <div
+                                        onClick={() => setShowReviewModal(true)}
+                                        className="w-12 h-12 bg-white shadow-md border border-gray-50 rounded-2xl flex items-center justify-center p-0.5 overflow-hidden active:scale-95 transition-transform"
+                                    >
+                                        <img
+                                            src="/assets/logo-dark.jpg"
+                                            alt="Kozbeyli Konağı"
+                                            className="w-full h-full object-contain"
+                                            onError={(e) => {
+                                                e.currentTarget.style.display = 'none';
+                                                e.currentTarget.parentElement!.innerHTML = '<span class="text-primary font-bold text-xl">K</span>';
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder={t('menu.search')}
-                                className="w-full h-11 pl-10 pr-4 bg-gray-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                            />
-                        </div>
-                    </header>
-                    <CategoryGrid
-                        categories={categories}
-                        onCategorySelect={handleCategorySelect}
-                    />
-                </>
-            )}
-
-            {viewState === 'LIST' && (
-                <>
-                    <ListHeader
-                        categories={categories}
-                        activeCategory={activeCategory}
-                        isSearchOpen={isSearchOpen}
-                        searchQuery={searchQuery}
-                        setIsSearchOpen={setIsSearchOpen}
-                        setSearchQuery={setSearchQuery}
-                        setViewState={setViewState}
-                        setActiveCategory={setActiveCategory}
-                    />
-                    <div className="p-4 space-y-4 pb-24">
-                        {filteredProducts.map(product => (
-                            <div key={product.id} onClick={() => setSelectedProduct(product)}>
-                                <ProductCard product={product} />
+                            <div className="relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder={t('menu.search')}
+                                    className="w-full h-11 pl-10 pr-4 bg-gray-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                                />
                             </div>
-                        ))}
-                        {filteredProducts.length === 0 && (
-                            <div className="text-center py-10 text-gray-400">
-                                <p>{t('product.notFound')}</p>
-                            </div>
-                        )}
-                    </div>
-                </>
-            )}
+                        </header>
+                        <CategoryGrid
+                            categories={categories}
+                            onCategorySelect={handleCategorySelect}
+                        />
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        key="list"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                    >
+                        <ListHeader
+                            categories={categories}
+                            activeCategory={activeCategory}
+                            isSearchOpen={isSearchOpen}
+                            searchQuery={searchQuery}
+                            setIsSearchOpen={setIsSearchOpen}
+                            setSearchQuery={setSearchQuery}
+                            setViewState={setViewState}
+                            setActiveCategory={setActiveCategory}
+                        />
+                        <div className="p-4 space-y-4 pb-24">
+                            {filteredProducts.map(product => (
+                                <motion.div
+                                    key={product.id}
+                                    onClick={() => setSelectedProduct(product)}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    <ProductCard product={product} />
+                                </motion.div>
+                            ))}
+                            {filteredProducts.length === 0 && (
+                                <div className="text-center py-10 text-gray-400">
+                                    <p>{t('product.notFound')}</p>
+                                </div>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <ProductModal
                 product={selectedProduct}

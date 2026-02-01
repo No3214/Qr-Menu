@@ -103,8 +103,8 @@ export const AnalyticsPage: React.FC = () => {
               <AreaChart data={data}>
                 <defs>
                   <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#C5A059" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#C5A059" stopOpacity={0} />
+                    <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F2F2F2" />
@@ -126,7 +126,7 @@ export const AnalyticsPage: React.FC = () => {
                 <Area
                   type="monotone"
                   dataKey="views"
-                  stroke="#C5A059"
+                  stroke="var(--color-primary)"
                   strokeWidth={4}
                   fillOpacity={1}
                   fill="url(#colorViews)"
