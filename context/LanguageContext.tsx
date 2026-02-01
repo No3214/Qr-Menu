@@ -14,13 +14,16 @@ const translations: Record<Language, Record<string, string>> = {
         'landing.title': 'Lezzeti Keşfet',
         'landing.subtitle': "Ege'nin en özel lezzetleri ve eşsiz sunumları sizi bekliyor.",
         'landing.cta': 'Menüyü Görüntüle',
+        'landing.brandName': 'Kozbeyli Konağı',
+        'landing.brandSub': 'Taş Otel',
+        'landing.switchLang': 'English',
 
         // CategoryGrid
         'menu.welcome': 'Hoş Geldiniz',
         'menu.restaurant': 'Kozbeyli Konağı',
         'menu.search': 'Ne yemek istersiniz?',
         'menu.categories': 'Kategoriler',
-        'menu.poweredBy': 'Powered by',
+        'menu.poweredBy': 'Kozbeyli Konağı',
 
         // ProductModal
         'product.addToOrder': 'Siparişe Ekle',
@@ -56,6 +59,10 @@ const translations: Record<Language, Record<string, string>> = {
         'assistant.tooltip': 'AI Garsona Sor',
         'assistant.title': 'Gurme AI',
         'assistant.subtitle': 'Kozbeyli Konağı Asistanı',
+        'assistant.prompt1': 'Ne yemeliyim?',
+        'assistant.prompt2': 'Tatlı önerisi',
+        'assistant.prompt3': 'Sıcak içecekler',
+        'assistant.prompt4': 'Et yemekleri',
 
         // Sidebar
         'sidebar.adminPanel': 'Yönetim Paneli',
@@ -66,6 +73,32 @@ const translations: Record<Language, Record<string, string>> = {
         // Cookie
         'cookie.message': 'Bu site deneyiminizi iyileştirmek için çerezler kullanır.',
         'cookie.accept': 'Kabul Et',
+
+        // Dashboard - Sidebar Nav
+        'dash.home': 'Ana Sayfa',
+        'dash.menuManagement': 'Menü Yönetimi',
+        'dash.events': 'Etkinlik Tanıtımı',
+        'dash.analytics': 'Analitik',
+        'dash.reviews': 'Yorumlar',
+        'dash.translations': 'Çeviri',
+        'dash.settings': 'Ayarlar',
+        'dash.closeSidebar': 'Menü kapat',
+        'dash.language': 'Dil',
+        'dash.logout': 'Çıkış Yap',
+        'dash.dbActive': 'Veritabanı: Aktif',
+        'dash.dbDemo': 'Veritabanı: Demo',
+        'dash.backToMenu': 'Menüye Dön',
+
+        // Dashboard - Reviews Page
+        'dash.reviews.title': 'Değerlendirmeler',
+        'dash.reviews.subtitle': 'Müşteri yorumları ve puanları.',
+        'dash.reviews.avgRating': 'Ortalama Puan',
+        'dash.reviews.totalReviews': 'Toplam Yorum',
+        'dash.reviews.recent': 'Son Yorumlar',
+        'dash.reviews.loading': 'Yükleniyor...',
+        'dash.reviews.empty': 'Henüz hiç yorum yapılmamış.',
+        'dash.reviews.guest': 'Misafir',
+        'dash.reviews.loadError': 'Yorumlar yüklenemedi.',
 
         // General
         'back': 'Geri',
@@ -78,13 +111,16 @@ const translations: Record<Language, Record<string, string>> = {
         'landing.title': 'Discover Taste',
         'landing.subtitle': "The finest flavors and unique presentations of the Aegean await you.",
         'landing.cta': 'View Menu',
+        'landing.brandName': 'Kozbeyli Konağı',
+        'landing.brandSub': 'Stone Hotel',
+        'landing.switchLang': 'Türkçe',
 
         // CategoryGrid
         'menu.welcome': 'Welcome',
         'menu.restaurant': 'Kozbeyli Konağı',
         'menu.search': 'What would you like to eat?',
         'menu.categories': 'Categories',
-        'menu.poweredBy': 'Powered by',
+        'menu.poweredBy': 'Kozbeyli Konağı',
 
         // ProductModal
         'product.addToOrder': 'Add to Order',
@@ -120,6 +156,10 @@ const translations: Record<Language, Record<string, string>> = {
         'assistant.tooltip': 'Ask AI Waiter',
         'assistant.title': 'Gourmet AI',
         'assistant.subtitle': 'Kozbeyli Konagi Assistant',
+        'assistant.prompt1': 'What should I eat?',
+        'assistant.prompt2': 'Dessert suggestion',
+        'assistant.prompt3': 'Hot drinks',
+        'assistant.prompt4': 'Meat dishes',
 
         // Sidebar
         'sidebar.adminPanel': 'Admin Panel',
@@ -130,6 +170,32 @@ const translations: Record<Language, Record<string, string>> = {
         // Cookie
         'cookie.message': 'This site uses cookies to improve your experience.',
         'cookie.accept': 'Accept',
+
+        // Dashboard - Sidebar Nav
+        'dash.home': 'Home',
+        'dash.menuManagement': 'Menu Management',
+        'dash.events': 'Events',
+        'dash.analytics': 'Analytics',
+        'dash.reviews': 'Reviews',
+        'dash.translations': 'Translations',
+        'dash.settings': 'Settings',
+        'dash.closeSidebar': 'Close menu',
+        'dash.language': 'Language',
+        'dash.logout': 'Logout',
+        'dash.dbActive': 'Database: Active',
+        'dash.dbDemo': 'Database: Demo',
+        'dash.backToMenu': 'Back to Menu',
+
+        // Dashboard - Reviews Page
+        'dash.reviews.title': 'Reviews',
+        'dash.reviews.subtitle': 'Customer reviews and ratings.',
+        'dash.reviews.avgRating': 'Average Rating',
+        'dash.reviews.totalReviews': 'Total Reviews',
+        'dash.reviews.recent': 'Recent Reviews',
+        'dash.reviews.loading': 'Loading...',
+        'dash.reviews.empty': 'No reviews yet.',
+        'dash.reviews.guest': 'Guest',
+        'dash.reviews.loadError': 'Could not load reviews.',
 
         // General
         'back': 'Back',

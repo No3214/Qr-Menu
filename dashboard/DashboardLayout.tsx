@@ -17,18 +17,18 @@ import {
 import { useLanguage } from '../context/LanguageContext';
 
 const navItems = [
-  { to: '/dashboard', icon: Home, label: 'Ana Sayfa', end: true },
-  { to: '/dashboard/menu', icon: UtensilsCrossed, label: 'Menü Yönetimi' },
-  { to: '/dashboard/events', icon: CalendarDays, label: 'Etkinlik Tanıtımı' },
-  { to: '/dashboard/analytics', icon: BarChart3, label: 'Analitik' },
-  { to: '/dashboard/reviews', icon: MessageSquare, label: 'Yorumlar' },
-  { to: '/dashboard/translations', icon: Languages, label: 'Çeviri' },
-  { to: '/dashboard/settings', icon: Settings, label: 'Ayarlar' },
+  { to: '/dashboard', icon: Home, labelKey: 'dash.home', end: true },
+  { to: '/dashboard/menu', icon: UtensilsCrossed, labelKey: 'dash.menuManagement' },
+  { to: '/dashboard/events', icon: CalendarDays, labelKey: 'dash.events' },
+  { to: '/dashboard/analytics', icon: BarChart3, labelKey: 'dash.analytics' },
+  { to: '/dashboard/reviews', icon: MessageSquare, labelKey: 'dash.reviews' },
+  { to: '/dashboard/translations', icon: Languages, labelKey: 'dash.translations' },
+  { to: '/dashboard/settings', icon: Settings, labelKey: 'dash.settings' },
 ];
 
 export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
 
   return (
@@ -38,7 +38,7 @@ export function DashboardLayout() {
         <div
           className="fixed inset-0 bg-black/40 z-40 lg:hidden"
           role="button"
-          aria-label="Menü kapat"
+          aria-label={t('dash.closeSidebar')}
           tabIndex={0}
           onClick={() => setSidebarOpen(false)}
           onKeyDown={(e) => e.key === 'Escape' && setSidebarOpen(false)}
@@ -60,11 +60,11 @@ export function DashboardLayout() {
             <div className="w-8 h-8 rounded-lg bg-transparent flex items-center justify-center overflow-hidden">
               <img src="/assets/logo-dark.jpg" alt="Logo" className="w-full h-full object-contain" />
             </div>
-            <span className="font-semibold text-[16px] text-text whitespace-nowrap">Kozbeyli Konağı</span>
+            <span className="font-semibold text-[16px] text-text whitespace-nowrap">{t('landing.brandName')}</span>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            aria-label="Menü kapat"
+            aria-label={t('dash.closeSidebar')}
             className="lg:hidden p-1 rounded hover:bg-gray-100"
           >
             <X size={20} />
@@ -87,7 +87,7 @@ export function DashboardLayout() {
               }
             >
               <item.icon size={19} />
-              {item.label}
+              {t(item.labelKey)}
             </NavLink>
           ))}
         </nav>
@@ -100,7 +100,7 @@ export function DashboardLayout() {
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-[14px] font-medium text-text-muted hover:bg-gray-50 hover:text-text transition-colors"
           >
             <Globe size={19} />
-            Dil: {language.toUpperCase()}
+            {t('dash.language')}: {language.toUpperCase()}
           </button>
 
           {/* Logout */}
@@ -109,7 +109,7 @@ export function DashboardLayout() {
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-[14px] font-medium text-text-muted hover:bg-gray-50 hover:text-text transition-colors"
           >
             <LogOut size={19} />
-            Çıkış Yap
+            {t('dash.logout')}
           </button>
 
           {/* Connection Status */}
@@ -121,7 +121,7 @@ export function DashboardLayout() {
                 : 'bg-amber-50 text-amber-700 border-amber-200'}
             `}>
               <div className={`w-2 h-2 rounded-full ${import.meta.env.VITE_SUPABASE_URL ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-              {import.meta.env.VITE_SUPABASE_URL ? 'Veritabanı: Aktif' : 'Veritabanı: Demo'}
+              {import.meta.env.VITE_SUPABASE_URL ? t('dash.dbActive') : t('dash.dbDemo')}
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@ export function DashboardLayout() {
         <header className="h-16 bg-white border-b border-border flex items-center px-5 gap-4 shrink-0">
           <button
             onClick={() => setSidebarOpen(true)}
-            aria-label="Menü aç"
+            aria-label={t('menu')}
             className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100"
           >
             <Menu size={22} />
@@ -144,7 +144,7 @@ export function DashboardLayout() {
             className="flex items-center gap-1.5 text-sm text-text-muted hover:text-text transition-colors"
           >
             <ChevronLeft size={16} />
-            Menüye Dön
+            {t('dash.backToMenu')}
           </button>
 
           <div className="ml-auto flex items-center gap-3">

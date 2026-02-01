@@ -33,9 +33,7 @@ export const MenuAssistant: React.FC = () => {
         scrollToBottom();
     }, [messages]);
 
-    const suggestedPrompts = language === 'tr'
-        ? ["Ne yemeliyim?", "Tatli onerisi", "Sicak icecekler", "Et yemekleri"]
-        : ["What should I eat?", "Dessert suggestion", "Hot drinks", "Meat dishes"];
+    const suggestedPrompts = [t('assistant.prompt1'), t('assistant.prompt2'), t('assistant.prompt3'), t('assistant.prompt4')];
 
     const handleSend = async (directMessage?: string) => {
         const userMessage = (directMessage || input).trim();

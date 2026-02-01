@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Star, MessageSquare, Clock } from 'lucide-react';
 import { ReviewService, Review } from '../../services/ReviewService';
+import { useLanguage } from '../../context/LanguageContext';
 import toast from 'react-hot-toast';
 
 export const ReviewsPage: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [stats, setStats] = useState({ average: 0, total: 0 });
   const [loading, setLoading] = useState(true);
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     loadData();
@@ -23,14 +25,14 @@ export const ReviewsPage: React.FC = () => {
       setStats(statsData);
     } catch (error) {
       console.error(error);
-      toast.error('Yorumlar yüklenemedi.');
+      toast.error(t('dash.reviews.loadError'));
     } finally {
       setLoading(false);
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('tr-TR', {
+    return new Date(dateString).toLocaleDateString(language === 'tr' ? 'tr-TR' : 'en-US', {
       day: 'numeric',
       month: 'long',
       hour: '2-digit',
@@ -42,8 +44,8 @@ export const ReviewsPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Değerlendirmeler</h1>
-          <p className="text-gray-500">Müşteri yorumları ve puanları.</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('dash.reviews.title')}</h1>
+          <p className="text-gray-500">{t('dash.reviews.subtitle')}</p>
         </div>
       </div>
 
@@ -54,7 +56,7 @@ export const ReviewsPage: React.FC = () => {
             <Star size={24} fill="currentColor" />
           </div>
           <div>
-            <p className="text-sm text-gray-500">Ortalama Puan</p>
+            <p className="text-sm text-gray-500">{t('dash.reviews.avgRating')}</p>
             <h2 className="text-2xl font-bold text-gray-900">{stats.average} / 5.0</h2>
           </div>
         </div>
@@ -64,7 +66,7 @@ export const ReviewsPage: React.FC = () => {
             <MessageSquare size={24} />
           </div>
           <div>
-            <p className="text-sm text-gray-500">Toplam Yorum</p>
+            <p className="text-sm text-gray-500">{t('dash.reviews.totalReviews')}</p>
             <h2 className="text-2xl font-bold text-gray-900">{stats.total}</h2>
           </div>
         </div>
@@ -72,11 +74,11 @@ export const ReviewsPage: React.FC = () => {
 
       {/* Reviews List */}
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Son Yorumlar</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4">{t('dash.reviews.recent')}</h2>
         {loading ? (
-          <div className="text-center py-10 text-gray-500">Yükleniyor...</div>
+          <div className="text-center py-10 text-gray-500">{t('dash.reviews.loading')}</div>
         ) : reviews.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">Henüz hiç yorum yapılmamış.</div>
+          <div className="text-center py-10 text-gray-500">{t('dash.reviews.empty')}</div>
         ) : (
           <div className="space-y-4">
             {reviews.map((review) => (
@@ -108,17 +110,12 @@ export const ReviewsPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-xs font-bold text-gray-600">
-                      {(review.customer_name?.[0] || 'M').toUpperCase()}
+                      {(review.customer_name?.[0] || t('dash.reviews.guest')[0]).toUpperCase()}
                     </div>
                     <span className="text-sm font-medium text-gray-600">
-                      {review.customer_name || 'Misafir'}
+                      {review.customer_name || t('dash.reviews.guest')}
                     </span>
                   </div>
-
-                  {/* Actions (Mock - implement delete later if needed) */}
-                  {/* <button className="text-red-400 hover:text-red-600 p-1">
-                                        <Trash2 size={16} />
-                                    </button> */}
                 </div>
               </div>
             ))}

@@ -10,7 +10,7 @@ if (!rootElement) {
 }
 
 const root = ReactDOM.createRoot(rootElement);
-console.log("GrainQR Digital Menu v1.0.1 Loaded");
+console.log("Kozbeyli Konagi Digital Menu v2.0.0");
 root.render(
   <React.StrictMode>
     <BrowserRouter>

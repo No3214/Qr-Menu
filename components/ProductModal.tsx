@@ -11,7 +11,7 @@ interface ProductModalProps {
 }
 
 export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     useEffect(() => {
         if (product) {
@@ -26,7 +26,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
 
     if (!product) return null;
 
-    const formattedPrice = new Intl.NumberFormat('tr-TR').format(product.price);
+    const formattedPrice = new Intl.NumberFormat(language === 'tr' ? 'tr-TR' : 'en-US').format(product.price);
 
     return (
         <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center p-0 sm:p-4">

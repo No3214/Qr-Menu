@@ -67,8 +67,8 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                                 <img src="/assets/logo-dark.jpg" alt="Logo" className="w-full h-full object-contain rounded-xl p-0.5" />
                             </div>
                             <div className="flex flex-col items-start -space-y-0.5">
-                                <span className="text-sm font-bold text-stone-900 tracking-tight">KOZBEYLİ KONAĞI</span>
-                                <span className="text-[10px] text-stone-500 font-medium tracking-widest uppercase">Taş Otel</span>
+                                <span className="text-sm font-bold text-stone-900 tracking-tight">{t('landing.brandName').toUpperCase()}</span>
+                                <span className="text-[10px] text-stone-500 font-medium tracking-widest uppercase">{t('landing.brandSub')}</span>
                             </div>
                         </div>
                         <button
@@ -126,7 +126,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                             className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 rounded-xl text-gray-700 font-medium"
                         >
                             <Globe size={18} />
-                            {language === 'tr' ? 'English' : 'Türkçe'}
+                            {t('landing.switchLang')}
                         </button>
                     </div>
                 </div>
@@ -145,7 +145,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                     <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg mb-1">
                         <span className="font-bold text-white text-xl">K</span>
                     </div>
-                    <span className="text-xs font-medium tracking-widest uppercase opacity-90">Kozbeyli Konağı</span>
+                    <span className="text-xs font-medium tracking-widest uppercase opacity-90">{t('landing.brandName')}</span>
                 </div>
 
                 {/* Language Toggle */}

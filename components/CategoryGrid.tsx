@@ -1,5 +1,6 @@
 import React from 'react';
 import { Category } from '../services/MenuData';
+import { useLanguage } from '../context/LanguageContext';
 
 interface CategoryGridProps {
     categories: Category[];
@@ -13,6 +14,7 @@ interface CategoryGridProps {
  * - Small tiles (2 columns)
  */
 export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCategorySelect }) => {
+    const { t } = useLanguage();
     return (
         <div className="p-4 grid grid-cols-2 gap-3 pb-24">
             {categories.map((category, index) => {
@@ -70,8 +72,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
             {/* Footer */}
             <div className="col-span-2 text-center py-6">
                 <div className="flex items-center justify-center gap-2 opacity-50">
-                    <span className="text-[10px] font-medium tracking-widest uppercase">Powered by</span>
-                    <span className="text-[10px] font-bold tracking-widest uppercase">Kozbeyli Konağı</span>
+                    <span className="text-[10px] font-medium tracking-widest uppercase">{t('menu.poweredBy')}</span>
                 </div>
             </div>
         </div>
