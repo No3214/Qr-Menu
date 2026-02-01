@@ -1,163 +1,137 @@
+
 import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
-  Home,
-  UtensilsCrossed,
-  CalendarDays,
   BarChart3,
-  MessageSquare,
-  Languages,
+  Menu as MenuIcon,
   Settings,
-  Globe,
   LogOut,
-  Menu,
-  X,
+  Calendar,
+  MessageSquare,
+  Globe,
+  Home,
   ChevronLeft,
+  ChevronRight,
+  User,
+  PanelLeftClose,
+  PanelLeftOpen,
+  LayoutDashboard,
+  QrCode
 } from 'lucide-react';
 
-const navItems = [
-  { to: '/dashboard', icon: Home, label: 'Ana Sayfa', end: true },
-  { to: '/dashboard/menu', icon: UtensilsCrossed, label: 'Menü Yönetimi' },
-  { to: '/dashboard/events', icon: CalendarDays, label: 'Etkinlik Tanıtımı' },
-  { to: '/dashboard/analytics', icon: BarChart3, label: 'Analitik' },
-  { to: '/dashboard/reviews', icon: MessageSquare, label: 'Yorumlar' },
-  { to: '/dashboard/translations', icon: Languages, label: 'Çeviri' },
-  { to: '/dashboard/settings', icon: Settings, label: 'Ayarlar' },
-];
-
-export function DashboardLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [language, setLanguage] = useState<'TR' | 'EN'>('TR');
+export const DashboardLayout: React.FC = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
-  return (
-    <div className="flex h-screen bg-bg overflow-hidden">
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
-          role="button"
-          aria-label="Menü kapat"
-          tabIndex={0}
-          onClick={() => setSidebarOpen(false)}
-          onKeyDown={(e) => e.key === 'Escape' && setSidebarOpen(false)}
-        />
-      )}
+  const navItems = [
+    { path: '/dashboard', icon: Home, label: 'Panel' },
+    { path: '/dashboard/menu', icon: MenuIcon, label: 'Menü Yönetimi' },
+    { path: '/dashboard/analytics', icon: BarChart3, label: 'Analizler' },
+    { path: '/dashboard/events', icon: Calendar, label: 'Etkinlikler' },
+    { path: '/dashboard/reviews', icon: MessageSquare, label: 'Değerlendirmeler' },
+    { path: '/dashboard/translations', icon: Globe, label: 'Çeviriler' },
+    { path: '/dashboard/qr-editor', icon: QrCode, label: 'QR Tasarımı' },
+    { path: '/dashboard/settings', icon: Settings, label: 'Ayarlar' },
+  ];
 
+  return (
+    <div className="flex min-h-screen bg-[#F8F9FA]">
       {/* Sidebar */}
       <aside
         className={`
-          fixed lg:static inset-y-0 left-0 z-50
-          w-[260px] bg-white border-r border-border
-          flex flex-col transition-transform duration-200
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        `}
+                    ${isSidebarOpen ? 'w-72' : 'w-24'} 
+                    bg-stone-900 border-r border-stone-800 transition-all duration-500 ease-in-out relative flex flex-col z-50
+                `}
       >
-        {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-5 border-b border-border">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-transparent flex items-center justify-center overflow-hidden">
-              <img src="/assets/logo-dark.jpg" alt="Logo" className="w-full h-full object-contain" />
-            </div>
-            <span className="font-semibold text-[16px] text-text whitespace-nowrap">Kozbeyli Konağı</span>
+        {/* Logo Section */}
+        <div className="p-8 flex items-center gap-4">
+          <div className="w-10 h-10 border-2 border-primary rounded-xl flex items-center justify-center flex-shrink-0">
+            <span className="text-xl font-black text-white italic">K</span>
           </div>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            aria-label="Menü kapat"
-            className="lg:hidden p-1 rounded hover:bg-gray-100"
-          >
-            <X size={20} />
-          </button>
+          {isSidebarOpen && (
+            <div className="animate-fade-in whitespace-nowrap">
+              <h2 className="text-white font-black text-xs tracking-[0.2em] uppercase">Kozbeyli</h2>
+              <p className="text-stone-500 text-[9px] font-bold uppercase tracking-widest">Digital Admin</p>
+            </div>
+          )}
         </div>
 
-        {/* Nav items */}
-        <nav className="flex-1 py-3 px-3 space-y-0.5 overflow-y-auto">
+        {/* Sidebar Toggle */}
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="absolute -right-3 top-20 w-6 h-12 bg-primary text-stone-950 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl z-[60]"
+        >
+          {isSidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+        </button>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-4 mt-10 space-y-2">
           {navItems.map((item) => (
             <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              onClick={() => setSidebarOpen(false)}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors ${isActive
-                  ? 'bg-primary text-white'
-                  : 'text-text-muted hover:bg-gray-50 hover:text-text'
-                }`
-              }
+              key={item.path}
+              to={item.path}
+              end={item.path === '/dashboard'}
+              className={({ isActive }) => `
+                                flex items-center gap-4 px-4 py-4 rounded-2xl transition-all duration-300 group relative
+                                ${isActive
+                  ? 'bg-primary text-stone-950 shadow-[0_10px_20px_-10px_rgba(197,160,89,0.5)]'
+                  : 'text-stone-500 hover:text-white hover:bg-white/5'
+                }
+                            `}
             >
-              <item.icon size={19} />
-              {item.label}
+              <item.icon className={`w-5 h-5 ${isSidebarOpen ? '' : 'mx-auto'}`} />
+              {isSidebarOpen && <span className="text-sm font-bold tracking-tight">{item.label}</span>}
+              {!isSidebarOpen && (
+                <div className="absolute left-full ml-4 px-3 py-2 bg-stone-800 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                  {item.label}
+                </div>
+              )}
             </NavLink>
           ))}
         </nav>
 
-        {/* Bottom section */}
-        <div className="border-t border-border p-3 space-y-1">
-          {/* Language toggle */}
-          <button
-            onClick={() => setLanguage(language === 'TR' ? 'EN' : 'TR')}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-[14px] font-medium text-text-muted hover:bg-gray-50 hover:text-text transition-colors"
-          >
-            <Globe size={19} />
-            Dil: {language}
-          </button>
-
-          {/* Logout */}
+        {/* Footer Controls */}
+        <div className="p-4 border-t border-stone-800">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-[14px] font-medium text-text-muted hover:bg-gray-50 hover:text-text transition-colors"
+            className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-stone-500 hover:text-white hover:bg-red-500/10 hover:text-red-500 transition-all group"
           >
-            <LogOut size={19} />
-            Çıkış Yap
+            <LogOut className={`w-5 h-5 ${isSidebarOpen ? '' : 'mx-auto'}`} />
+            {isSidebarOpen && <span className="text-sm font-bold tracking-tight">Çıkış Yap</span>}
           </button>
-
-          {/* Connection Status */}
-          <div className="pt-2">
-            <div className={`
-              text-xs px-2 py-1.5 rounded-md flex items-center justify-center gap-2 font-medium border
-              ${import.meta.env.VITE_SUPABASE_URL
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                : 'bg-amber-50 text-amber-700 border-amber-200'}
-            `}>
-              <div className={`w-2 h-2 rounded-full ${import.meta.env.VITE_SUPABASE_URL ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-              {import.meta.env.VITE_SUPABASE_URL ? 'Veritabanı: Aktif' : 'Veritabanı: Demo'}
-            </div>
-          </div>
         </div>
       </aside>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
-        <header className="h-16 bg-white border-b border-border flex items-center px-5 gap-4 shrink-0">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            aria-label="Menü aç"
-            className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100"
-          >
-            <Menu size={22} />
-          </button>
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Header */}
+        <header className="h-24 bg-white border-b border-stone-100 flex items-center justify-between px-10 flex-shrink-0">
+          <div>
+            <h1 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Current Workspace</h1>
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-black text-stone-900">Ana Şube</span>
+              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+            </div>
+          </div>
 
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-1.5 text-sm text-text-muted hover:text-text transition-colors"
-          >
-            <ChevronLeft size={16} />
-            Menüye Dön
-          </button>
-
-          <div className="ml-auto flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center overflow-hidden">
-              <img src="/assets/logo-dark.jpg" alt="Admin" className="w-full h-full object-cover" />
+          <div className="flex items-center gap-6">
+            <div className="hidden sm:flex flex-col items-end mr-4">
+              <span className="text-sm font-bold text-stone-900">Admin Panel</span>
+              <span className="text-[10px] text-stone-400 font-bold uppercase tracking-widest">Kozbeyli Konağı</span>
+            </div>
+            <div className="w-12 h-12 bg-stone-50 rounded-2xl flex items-center justify-center border border-stone-100">
+              <User className="w-5 h-5 text-stone-400" />
             </div>
           </div>
         </header>
 
-        {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          <Outlet />
-        </main>
-      </div>
+        {/* Content Container */}
+        <div className="flex-1 overflow-y-auto p-10 custom-scrollbar">
+          <div className="max-w-7xl mx-auto">
+            <Outlet />
+          </div>
+        </div>
+      </main>
     </div>
   );
-}
+};

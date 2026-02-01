@@ -5,7 +5,7 @@ import {
   Languages,
   Edit3,
 } from 'lucide-react';
-import { PRODUCTS, CATEGORIES } from '../../services/MenuData';
+import { CATEGORIES, PRODUCTS } from '../../services/MenuService';
 
 interface SupportedLanguage {
   code: string;
@@ -89,15 +89,14 @@ export function TranslationsPage() {
         {supportedLanguages.map((lang) => (
           <div
             key={lang.code}
-            className={`border rounded-xl p-3.5 text-center transition-colors ${
-              lang.code === 'tr'
-                ? 'border-primary/30 bg-primary/5'
-                : lang.code === selectedLang
+            className={`border rounded-xl p-3.5 text-center transition-colors ${lang.code === 'tr'
+              ? 'border-primary/30 bg-primary/5'
+              : lang.code === selectedLang
                 ? 'border-primary bg-primary/5 ring-1 ring-primary/20 cursor-pointer'
                 : lang.enabled
-                ? 'border-border bg-white hover:border-primary/20 cursor-pointer'
-                : 'border-border bg-gray-50 opacity-60'
-            }`}
+                  ? 'border-border bg-white hover:border-primary/20 cursor-pointer'
+                  : 'border-border bg-gray-50 opacity-60'
+              }`}
             onClick={() => lang.code !== 'tr' && setSelectedLang(lang.code)}
           >
             <p className="text-sm font-semibold text-text">{lang.nativeName}</p>
@@ -177,11 +176,10 @@ export function TranslationsPage() {
                 >
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-block px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
-                        item.type === 'category'
-                          ? 'bg-blue-50 text-blue-600'
-                          : 'bg-purple-50 text-purple-600'
-                      }`}
+                      className={`inline-block px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${item.type === 'category'
+                        ? 'bg-blue-50 text-blue-600'
+                        : 'bg-purple-50 text-purple-600'
+                        }`}
                     >
                       {item.type === 'category' ? 'Kategori' : 'Ürün'}
                     </span>

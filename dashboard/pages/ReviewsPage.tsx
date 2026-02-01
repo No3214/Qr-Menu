@@ -29,6 +29,29 @@ export const ReviewsPage: React.FC = () => {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Bu yorumu silmek istediğinize emin misiniz?')) return;
+    try {
+      await ReviewService.deleteReview(id);
+      toast.success('Yorum silindi.');
+      loadData();
+    } catch (error) {
+      console.error(error);
+      toast.error('Yorum silinemedi.');
+    }
+  };
+
+  const handleToggleApproval = async (id: string, currentStatus: boolean) => {
+    try {
+      await ReviewService.toggleApproval(id, currentStatus);
+      toast.success(currentStatus ? 'Onay kaldırıldı.' : 'Yorum onaylandı.');
+      loadData();
+    } catch (error) {
+      console.error(error);
+      toast.error('İşlem başarısız.');
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('tr-TR', {
       day: 'numeric',
@@ -115,10 +138,22 @@ export const ReviewsPage: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Actions (Mock - implement delete later if needed) */}
-                  {/* <button className="text-red-400 hover:text-red-600 p-1">
-                                        <Trash2 size={16} />
-                                    </button> */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleToggleApproval(review.id, review.is_approved)}
+                      className={`p-1.5 rounded-lg transition-colors ${review.is_approved ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400 hover:text-green-600'}`}
+                      title={review.is_approved ? 'Onayı Kaldır' : 'Onayla'}
+                    >
+                      <Check size={16} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(review.id)}
+                      className="p-1.5 bg-red-50 text-red-400 hover:text-red-600 rounded-lg transition-colors"
+                      title="Sil"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

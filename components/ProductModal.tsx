@@ -1,5 +1,6 @@
+
 import React, { useEffect } from 'react';
-import { Product } from '../services/MenuData';
+import { Product } from '../services/MenuService';
 import { X, Share2, Info, Sparkles } from 'lucide-react';
 import { getProductPairing } from '../services/geminiService';
 
@@ -53,7 +54,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                     {product.image ? (
                         <img
                             src={product.image}
-                            alt={product.name}
+                            alt={product.title}
                             className="w-full h-full object-cover"
                         />
                     ) : (
@@ -65,16 +66,16 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                 </div>
 
                 {/* Content Body */}
-                <div className="px-6 py-8 -mt-6 relative bg-white rounded-t-[32px]">
-                    <div className="w-12 h-1 bg-stone-200 rounded-full mx-auto mb-6" />
+                <div className="px-8 py-10 -mt-6 relative bg-white rounded-t-[32px]">
+                    <div className="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-8" />
 
-                    <div className="flex items-start justify-between gap-4 mb-3">
-                        <h2 className="text-3xl font-bold text-stone-900 leading-tight font-serif tracking-tight">
-                            {product.name}
+                    <div className="flex items-start justify-between gap-4 mb-4">
+                        <h2 className="text-3xl font-bold text-text leading-tight tracking-tight">
+                            {product.title}
                         </h2>
                     </div>
 
-                    {!product.isAvailable && (
+                    {!product.is_active && (
                         <span className="inline-block px-3 py-1 mb-4 text-[10px] font-bold uppercase bg-stone-100 text-stone-500 rounded-full tracking-wider border border-stone-200">
                             Tükendi
                         </span>
@@ -97,7 +98,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                     <div className="mt-10 pt-6 border-t border-stone-100 flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm font-medium text-stone-500 bg-stone-50 px-3 py-1.5 rounded-full">
                             <Info className="w-4 h-4" />
-                            <span>{product.category}</span>
+                            <span>{product.category_id}</span>
                         </div>
 
                         <button className="p-2 text-stone-400 hover:text-stone-900 transition-colors">
@@ -105,7 +106,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                         </button>
                     </div>
 
-                    <button className="w-full mt-6 bg-stone-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-stone-900/20 active:scale-[0.98] transition-all">
+                    <button className="w-full mt-8 bg-primary text-white py-4.5 rounded-2xl font-bold text-lg shadow-lg shadow-primary/30 hover:bg-primary-hover active:scale-[0.98] transition-all duration-300">
                         Siparişe Ekle
                     </button>
                 </div>

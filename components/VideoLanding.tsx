@@ -1,220 +1,122 @@
+
 import React, { useState, useEffect } from 'react';
-import { Category } from '../services/MenuData';
-import { ChevronDown, Menu, Globe, X, MapPin, Phone, MessageSquare } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
-import { ReviewModal } from './ReviewModal';
+import { ChevronRight, Utensils, Award, Sparkles, MapPin, ArrowRight } from 'lucide-react';
 
 interface VideoLandingProps {
     onEnter: () => void;
-    categories: Category[];
-    onCategorySelect: (categoryId: string) => void;
 }
 
-/**
- * VideoLanding - The entry screen with multi-language support and sidebar
- */
-export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter, categories, onCategorySelect }) => {
-    const { language, setLanguage, t } = useLanguage();
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [showReviewModal, setShowReviewModal] = useState(false);
-    const [showCookies, setShowCookies] = useState(false);
+export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
+    const [scrolled, setScrolled] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-    // Cookie consent check
     useEffect(() => {
-        const consent = localStorage.getItem('cookie-consent');
-        if (!consent) setShowCookies(true);
+        setIsLoaded(true);
+        const handleScroll = () => setScrolled(window.scrollY > 50);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const handleAcceptCookies = () => {
-        localStorage.setItem('cookie-consent', 'accepted');
-        setShowCookies(false);
-    };
-
-    const toggleLanguage = () => {
-        setLanguage(language === 'tr' ? 'en' : 'tr');
-    };
-
     return (
-        <div className="relative h-screen w-full overflow-hidden bg-black">
-            {/* Background Media */}
-            <div className="absolute inset-0 z-0">
-                <img
-                    src="https://images.unsplash.com/photo-1544025162-d76690b67f14?q=80&w=2574&auto=format&fit=crop"
-                    alt="Atmosphere"
-                    className="w-full h-full object-cover opacity-90"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
+        <div className="relative min-h-screen bg-stone-950 overflow-hidden font-inter">
+            {/* Cinematic Video Background */}
+            <div className={`absolute inset-0 transition-transform duration-[2s] ease-out ${isLoaded ? 'scale-100' : 'scale-110'}`}>
+                <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-full object-cover opacity-60 grayscale-[20%]"
+                >
+                    <source src="https://cdn.pixabay.com/vimeo/328243394/food-22534.mp4?width=1280&hash=d8a4d4a8e2e2a1e1" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-b from-stone-950/80 via-transparent to-stone-950" />
+                <div className="absolute inset-0 bg-gradient-to-r from-stone-950/40 via-transparent to-stone-950/40" />
             </div>
 
-            {/* Sidebar Overlay */}
-            {sidebarOpen && (
-                <div
-                    className="fixed inset-0 bg-black/60 z-40"
-                    onClick={() => setSidebarOpen(false)}
-                />
-            )}
-
-            {/* Sidebar Drawer */}
-            <div className={`
-                fixed top-0 left-0 h-full w-72 bg-white z-50
-                transform transition-transform duration-300 ease-out
-                ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-            `}>
-                <div className="p-5">
-                    <div className="flex items-center justify-between mb-8">
-                        {/* Logo Area */}
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-white/20">
-                                <img src="/assets/logo-white.jpg" alt="Logo" className="w-full h-full object-contain rounded-xl p-0.5" />
-                            </div>
-                            <div className="flex flex-col items-start -space-y-0.5">
-                                <span className="text-sm font-bold text-white tracking-tight drop-shadow-md">KOZBEYLİ KONAĞI</span>
-                                <span className="text-[10px] text-white/80 font-medium tracking-widest uppercase drop-shadow-sm">Taş Otel</span>
-                            </div>
+            {/* Content Layer */}
+            <div className="relative z-10 flex flex-col min-h-screen">
+                {/* Minimal Header */}
+                <header className={`fixed top-0 inset-x-0 p-6 flex justify-between items-center transition-all duration-500 z-50 ${scrolled ? 'bg-stone-950/80 backdrop-blur-md py-4' : ''}`}>
+                    <div className="flex items-center gap-2">
+                        <div className="w-10 h-10 border-2 border-primary rounded-xl flex items-center justify-center">
+                            <span className="text-xl font-black text-white italic">K</span>
                         </div>
-                        <button
-                            onClick={() => setSidebarOpen(false)}
-                            className="p-2 hover:bg-gray-100 rounded-lg"
-                        >
-                            <X size={20} className="text-gray-500" />
-                        </button>
                     </div>
+                    <div className="flex items-center gap-6">
+                        <span className="text-[10px] text-white/40 uppercase tracking-[0.3em] font-bold hidden sm:block">Founded 1994</span>
+                        <div className="h-4 w-[1px] bg-white/10 hidden sm:block" />
+                        <button className="text-[10px] text-primary uppercase tracking-[0.3em] font-black border-b border-primary pb-1">TR / EN</button>
+                    </div>
+                </header>
 
-                    <nav className="space-y-2">
-                        <div className="space-y-1 mb-6">
-                            <p className="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                                {language === 'tr' ? 'Menü' : 'Menu'}
-                            </p>
-                            {categories.map((cat) => (
-                                <button
-                                    key={cat.id}
-                                    onClick={() => {
-                                        onCategorySelect(cat.id);
-                                        setSidebarOpen(false);
-                                    }}
-                                    className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-gray-100 text-gray-700 transition-colors text-left"
-                                >
-                                    <span className="font-medium text-sm">{cat.title}</span>
-                                </button>
-                            ))}
+                {/* Hero Section */}
+                <main className="flex-1 flex flex-col items-center justify-center px-6 text-center pt-20">
+                    <div className={`space-y-8 transition-all duration-1000 delay-300 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+                        {/* Status Label */}
+                        <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/5 backdrop-blur-md rounded-full border border-white/10 shadow-2xl">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                            </span>
+                            <span className="text-[10px] text-white font-black uppercase tracking-[0.4em]">Welcome to Excellence</span>
                         </div>
 
-                        <div className="h-px bg-gray-100 my-2 mx-4" />
+                        {/* Title Section */}
+                        <div className="relative">
+                            <h1 className="text-6xl sm:text-8xl md:text-9xl font-black text-white tracking-tighter leading-[0.85] mb-4">
+                                KOZBEYLİ<br />
+                                <span className="text-primary italic">KONAĞI</span>
+                            </h1>
+                            <div className="flex items-center justify-center gap-4 text-white/30 mb-8 font-serif italic text-lg sm:text-2xl">
+                                <span>Fine Dining</span>
+                                <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                                <span>Authentic Flavors</span>
+                                <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                                <span>Legacy</span>
+                            </div>
+                        </div>
 
-                        <a
-                            href="https://maps.google.com/?q=Kozbeyli+Konağı+Foça"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 transition-colors"
-                        >
-                            <MapPin size={20} />
-                            <span className="font-medium">{language === 'tr' ? 'Konum' : 'Location'}</span>
-                        </a>
+                        {/* CTAs */}
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 max-w-2xl mx-auto w-full">
+                            <button
+                                onClick={onEnter}
+                                className="group relative w-full sm:w-auto bg-primary text-stone-950 px-10 py-6 rounded-[24px] font-black text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 transition-all hover:bg-white hover:scale-105 active:scale-95 shadow-[0_20px_40px_-10px_rgba(197,160,89,0.3)]overflow-hidden"
+                            >
+                                <span>Menüyü Keşfedin</span>
+                                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
+                            </button>
 
-                        <a
-                            href="tel:+905322342686"
-                            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 transition-colors"
-                        >
-                            <Phone size={20} />
-                            <span className="font-medium">{language === 'tr' ? 'Ara' : 'Call'}</span>
-                        </a>
-
-                        <button
-                            onClick={() => {
-                                setSidebarOpen(false);
-                                setShowReviewModal(true);
-                            }}
-                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-700 transition-colors text-left"
-                        >
-                            <MessageSquare size={20} />
-                            <span className="font-medium">{language === 'tr' ? 'Değerlendir' : 'Rate Us'}</span>
-                        </button>
-                    </nav>
-
-                    <div className="absolute bottom-6 left-5 right-5">
-                        <button
-                            onClick={() => {
-                                toggleLanguage();
-                            }}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 rounded-xl text-gray-700 font-medium"
-                        >
-                            <Globe size={18} />
-                            {language === 'tr' ? 'English' : 'Türkçe'}
-                        </button>
+                            <button className="w-full sm:w-auto bg-white/5 backdrop-blur-md text-white border border-white/10 px-10 py-6 rounded-[24px] font-bold text-sm tracking-[0.2em] hover:bg-white/10 transition-all">
+                                REZERVASYON
+                            </button>
+                        </div>
                     </div>
+
+                    {/* Features Scroll Reveal */}
+                    <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 mt-24 max-w-4xl mx-auto transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+                        {[
+                            { label: 'Michelin Standard', icon: Award },
+                            { label: 'Fresh Daily', icon: Utensils },
+                            { label: 'Wine Cellar', icon: Sparkles },
+                            { label: 'Historical Venue', icon: MapPin },
+                        ].map((feature, idx) => (
+                            <div key={idx} className="group cursor-default">
+                                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10 group-hover:bg-primary transition-all duration-500">
+                                    <feature.icon className="w-5 h-5 text-white transition-colors group-hover:text-stone-950" />
+                                </div>
+                                <p className="text-[9px] text-white/40 uppercase tracking-[0.2em] font-black group-hover:text-white transition-colors">{feature.label}</p>
+                            </div>
+                        ))}
+                    </div>
+                </main>
+
+                {/* Scroll Indicator */}
+                <div className="pb-12 flex flex-col items-center gap-4 text-white/20">
+                    <div className="w-[1px] h-12 bg-gradient-to-b from-primary to-transparent animate-pulse" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em]">Scroll</span>
                 </div>
             </div>
-
-            {/* Header */}
-            <header className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 text-white">
-                <button
-                    onClick={() => setSidebarOpen(true)}
-                    className="p-2 bg-white/10 backdrop-blur-md rounded-xl hover:bg-white/20 transition-colors"
-                >
-                    <Menu className="w-5 h-5" />
-                </button>
-
-                <div className="flex flex-col items-center">
-                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg mb-1">
-                        <span className="font-bold text-white text-xl">K</span>
-                    </div>
-                    <span className="text-xs font-medium tracking-widest uppercase opacity-90">Kozbeyli Konağı</span>
-                </div>
-
-                {/* Language Toggle */}
-                <button
-                    onClick={toggleLanguage}
-                    className="p-2 bg-white/10 backdrop-blur-md rounded-xl flex items-center gap-1.5 hover:bg-white/20 transition-colors"
-                >
-                    <Globe className="w-4 h-4" />
-                    <span className="text-xs font-bold uppercase">{language}</span>
-                </button>
-            </header>
-
-            {/* Content & CTA */}
-            <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-12 px-6 text-center">
-                <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">{t('landing.title')}</h1>
-                <p className="text-white/80 text-sm mb-8 max-w-[280px] leading-relaxed">
-                    {t('landing.subtitle')}
-                </p>
-
-                <button
-                    onClick={() => {
-                        // Defer state change to next frame to improve INP
-                        requestAnimationFrame(() => {
-                            onEnter();
-                        });
-                    }}
-                    className="group flex flex-col items-center gap-2 text-white/90 hover:text-white transition-colors"
-                >
-                    <span className="text-sm font-medium tracking-widest uppercase border border-white/30 px-6 py-3 rounded-full backdrop-blur-md bg-white/10 group-hover:bg-white/20 transition-all">
-                        {t('landing.cta')}
-                    </span>
-                    <ChevronDown className="w-6 h-6 animate-bounce mt-2 opacity-70" />
-                </button>
-            </div>
-            {/* Review Modal */}
-            {showReviewModal && <ReviewModal onClose={() => setShowReviewModal(false)} />}
-
-            {/* Cookie Consent Banner */}
-            {showCookies && (
-                <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-2xl">
-                    <div className="max-w-lg mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <p className="text-sm text-gray-700 text-center sm:text-left">
-                            {language === 'tr'
-                                ? 'Bu site deneyiminizi iyileştirmek için çerezler kullanır.'
-                                : 'This site uses cookies to improve your experience.'}
-                        </p>
-                        <button
-                            onClick={handleAcceptCookies}
-                            className="px-6 py-2 bg-primary text-white text-sm font-bold rounded-full hover:bg-primary-hover transition-colors whitespace-nowrap"
-                        >
-                            {language === 'tr' ? 'Kabul Et' : 'Accept'}
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

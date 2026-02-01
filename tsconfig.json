@@ -7,6 +7,9 @@
       "DOM",
       "DOM.Iterable"
     ],
+    "types": [
+      "vite/client"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     /* Bundler mode */
@@ -30,6 +33,9 @@
   },
   "include": [
     "."
+  ],
+  "exclude": [
+    "vite.config.ts"
   ],
   "references": [
     {

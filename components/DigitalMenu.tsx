@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Category, Product } from '../services/MenuData';
-import { MenuService } from '../services/MenuService';
-import { CategoryNav } from './CategoryNav';
+import { Category, Product, MenuService } from '../services/MenuService';
 import { ProductCard } from './ProductCard';
 import { ProductModal } from './ProductModal';
 import { VideoLanding } from './VideoLanding';
 import { CategoryGrid } from './CategoryGrid';
-import { Search, ChevronLeft, X, Globe } from 'lucide-react';
+import { Search, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { ReviewModal } from './ReviewModal';
 import { MenuAssistant } from './MenuAssistant';
+import { ListHeader } from './ListHeader';
 
 type ViewState = 'LANDING' | 'GRID' | 'LIST';
 
@@ -74,65 +73,12 @@ export const DigitalMenu: React.FC = () => {
         });
     }, [products, debouncedQuery, viewState, activeCategory]);
 
-    // LIST VIEW: Header Component
-    const ListHeader = () => (
-        <div className="sticky top-0 z-30 bg-white border-b border-border shadow-sm">
-            <div className="flex items-center gap-3 p-4">
-                <button
-                    onClick={() => setViewState('GRID')}
-                    className="p-2 -ml-2 text-text hover:bg-gray-100 rounded-full"
-                >
-                    <ChevronLeft className="w-6 h-6" />
-                </button>
-
-                {isSearchOpen ? (
-                    <div className="flex-1 flex items-center gap-2 animate-fade-in">
-                        <input
-                            autoFocus
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Ara..."
-                            className="flex-1 h-9 px-3 bg-gray-100 rounded-lg text-sm outline-none"
-                        />
-                        <button onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} className="p-1">
-                            <X className="w-5 h-5 text-gray-500" />
-                        </button>
-                    </div>
-                ) : (
-                    <>
-                        <div className="flex-1">
-                            <h2 className="text-lg font-bold text-text">
-                                {categories.find(c => c.id === activeCategory)?.title || 'Menü'}
-                            </h2>
-                        </div>
-                        <button
-                            onClick={() => setIsSearchOpen(true)}
-                            className={`p-2 rounded-full ${searchQuery ? 'bg-primary text-white' : 'text-primary bg-primary/10'}`}
-                        >
-                            <Search className="w-5 h-5" />
-                        </button>
-                    </>
-                )}
-            </div>
-            {!isSearchOpen && (
-                <CategoryNav
-                    categories={categories}
-                    activeCategoryId={activeCategory}
-                    onCategoryClick={(id) => setActiveCategory(id)}
-                />
-            )}
-        </div>
-    );
-
     if (loading) return <div className="h-screen flex items-center justify-center bg-bg"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
 
     if (viewState === 'LANDING') {
         return (
             <VideoLanding
                 onEnter={() => setViewState('GRID')}
-                categories={categories}
-                onCategorySelect={(id) => handleCategorySelect(id)}
             />
         );
     }
@@ -191,7 +137,16 @@ export const DigitalMenu: React.FC = () => {
 
             {viewState === 'LIST' && (
                 <>
-                    <ListHeader />
+                    <ListHeader
+                        categories={categories}
+                        activeCategory={activeCategory}
+                        isSearchOpen={isSearchOpen}
+                        searchQuery={searchQuery}
+                        setIsSearchOpen={setIsSearchOpen}
+                        setSearchQuery={setSearchQuery}
+                        setViewState={setViewState}
+                        setActiveCategory={setActiveCategory}
+                    />
                     <div className="p-4 space-y-4 pb-24">
                         {filteredProducts.map(product => (
                             <div key={product.id} onClick={() => setSelectedProduct(product)}>
@@ -212,7 +167,12 @@ export const DigitalMenu: React.FC = () => {
                 onClose={() => setSelectedProduct(null)}
             />
 
-            {showReviewModal && <ReviewModal onClose={() => setShowReviewModal(false)} />}
+            {showReviewModal && (
+                <ReviewModal
+                    isOpen={showReviewModal}
+                    onClose={() => setShowReviewModal(false)}
+                />
+            )}
 
             <MenuAssistant />
         </div>

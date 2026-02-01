@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, memo } from 'react';
-import { Category } from '../services/MenuData';
+import { Category } from '../services/MenuService';
 
 interface CategoryNavProps {
     categories: Category[];

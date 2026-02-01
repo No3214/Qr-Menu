@@ -1,6 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-primary: hsl(24 9.8% 10%);
+  --color-primary-hover: hsl(24 9.8% 15%);
+  --color-bg: #FCFBF7;
+  --color-surface: #FFFFFF;
+  --color-text: #1C1917;
+  --color-text-muted: #78716C;
+  --color-border: #E7E5E4;
+}
 
 @layer base {
   :root {
@@ -40,13 +48,50 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    @apply font-sans antialiased;
   }
 }
 
 @layer utilities {
   .glass {
     @apply bg-white/80 backdrop-blur-md border-b border-white/20;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    @apply shadow-sm;
+  }
+
+  .night-glass {
+    background: rgba(15, 15, 15, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .premium-gradient {
+    background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+  }
+
+  @keyframes premium-fade {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-premium-fade {
+    animation: premium-fade 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
   .scrollbar-hide::-webkit-scrollbar {

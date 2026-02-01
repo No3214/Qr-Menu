@@ -57,5 +57,29 @@ export const ReviewService = {
         const average = (sum / totalReviews).toFixed(1);
 
         return { average: Number(average), total: totalReviews };
+    },
+
+    /**
+     * Delete a review (Admin)
+     */
+    deleteReview: async (id: string) => {
+        const { error } = await supabase
+            .from('reviews')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    },
+
+    /**
+     * Toggle approval status (Admin)
+     */
+    toggleApproval: async (id: string, currentStatus: boolean) => {
+        const { error } = await supabase
+            .from('reviews')
+            .update({ is_approved: !currentStatus })
+            .eq('id', id);
+
+        if (error) throw error;
     }
 };

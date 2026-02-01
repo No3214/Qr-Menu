@@ -13,8 +13,10 @@ import {
   X,
   Star,
 } from 'lucide-react';
-import { CATEGORIES, PRODUCTS, type Product, type Category } from '../../services/MenuData';
+import { MenuService, Product, Category, CATEGORIES, PRODUCTS } from '../../services/MenuService';
+import { parseMenuFromImage } from '../../services/geminiService';
 import toast from 'react-hot-toast';
+import { Sparkles, Loader2, Upload } from 'lucide-react';
 
 type Tab = 'products' | 'recommendations' | 'display';
 
@@ -66,11 +68,10 @@ export function MenuManagement() {
             <button
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
-              className={`px-5 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === tab.id
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-text-muted hover:text-text'
-              }`}
+              className={`px-5 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === tab.id
+                ? 'border-primary text-primary'
+                : 'border-transparent text-text-muted hover:text-text'
+                }`}
             >
               {tab.label}
             </button>
@@ -93,6 +94,70 @@ export function MenuManagement() {
       )}
       {activeTab === 'recommendations' && <RecommendationsTab />}
       {activeTab === 'display' && <DisplayPreferencesTab />}
+    </div>
+  );
+}
+
+/* ── AI Importer Component ── */
+function AIImporter() {
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsProcessing(true);
+    const toastId = toast.loading('AI Menüyü Analiz Ediyor...');
+
+    try {
+      const reader = new FileReader();
+      const base64Promise = new Promise<string>((resolve) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(file);
+      });
+
+      const base64 = await base64Promise;
+      const extracted = await parseMenuFromImage(base64);
+
+      if (!extracted.categories.length) {
+        throw new Error('Menü verisi çekilemedi.');
+      }
+
+      await MenuService.bulkInsertMenuData(extracted);
+      toast.success('Menü başarıyla içe aktarıldı!', { id: toastId });
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (error) {
+      console.error(error);
+      toast.error('Aktarma sırasında hata oluştu.', { id: toastId });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <input
+        type="file"
+        id="ai-menu-upload"
+        className="hidden"
+        accept="image/*"
+        onChange={handleFileUpload}
+        disabled={isProcessing}
+      />
+      <label
+        htmlFor="ai-menu-upload"
+        className={`flex items-center gap-2 px-4 py-2 border-2 border-dashed rounded-xl transition-all cursor-pointer
+          ${isProcessing
+            ? 'bg-stone-50 border-stone-200 text-stone-400'
+            : 'border-primary/30 text-primary hover:bg-primary/5 active:scale-95'}`}
+      >
+        {isProcessing ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Sparkles className="w-4 h-4" />
+        )}
+        <span className="text-sm font-bold">AI İçe Aktar</span>
+      </label>
     </div>
   );
 }
@@ -123,11 +188,10 @@ function ProductsTab({
       <div className="lg:w-60 shrink-0 space-y-2 flex lg:flex-col overflow-x-auto lg:overflow-visible gap-2 lg:gap-0 scrollbar-hide">
         <button
           onClick={() => onSelectCategory(null)}
-          className={`w-full shrink-0 text-left px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-            !selectedCategory
-              ? 'bg-primary text-white'
-              : 'text-text-muted hover:bg-gray-50'
-          }`}
+          className={`w-full shrink-0 text-left px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${!selectedCategory
+            ? 'bg-primary text-white'
+            : 'text-text-muted hover:bg-gray-50'
+            }`}
         >
           Tüm Kategoriler ({PRODUCTS.length})
         </button>
@@ -137,11 +201,10 @@ function ProductsTab({
             <button
               key={cat.id}
               onClick={() => onSelectCategory(cat.id)}
-              className={`w-full shrink-0 flex items-center justify-between px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
-                selectedCategory === cat.id
-                  ? 'bg-primary text-white'
-                  : 'text-text-muted hover:bg-gray-50'
-              }`}
+              className={`w-full shrink-0 flex items-center justify-between px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${selectedCategory === cat.id
+                ? 'bg-primary text-white'
+                : 'text-text-muted hover:bg-gray-50'
+                }`}
             >
               <span className="font-medium truncate">{cat.title}</span>
               <span className="text-xs opacity-70">{count}</span>
@@ -458,11 +521,10 @@ function ProductEditModal({
                   <button
                     key={tag}
                     onClick={() => toggleSet(selectedDietary, setSelectedDietary, tag)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                      selectedDietary.has(tag)
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border text-text-muted hover:border-primary hover:text-primary'
-                    }`}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${selectedDietary.has(tag)
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-border text-text-muted hover:border-primary hover:text-primary'
+                      }`}
                   >
                     {tag}
                   </button>
@@ -484,11 +546,10 @@ function ProductEditModal({
                 <button
                   key={allergen}
                   onClick={() => toggleSet(selectedAllergens, setSelectedAllergens, allergen)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                    selectedAllergens.has(allergen)
-                      ? 'border-warning bg-warning/10 text-warning'
-                      : 'border-border text-text-muted hover:border-warning hover:text-warning'
-                  }`}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${selectedAllergens.has(allergen)
+                    ? 'border-warning bg-warning/10 text-warning'
+                    : 'border-border text-text-muted hover:border-warning hover:text-warning'
+                    }`}
                 >
                   {allergen}
                 </button>
@@ -506,14 +567,12 @@ function ProductEditModal({
             </div>
             <button
               onClick={() => setIsAvailable(!isAvailable)}
-              className={`relative w-11 h-6 rounded-full transition-colors ${
-                isAvailable ? 'bg-primary' : 'bg-gray-300'
-              }`}
+              className={`relative w-11 h-6 rounded-full transition-colors ${isAvailable ? 'bg-primary' : 'bg-gray-300'
+                }`}
             >
               <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
-                  isAvailable ? 'translate-x-5' : ''
-                }`}
+                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${isAvailable ? 'translate-x-5' : ''
+                  }`}
               />
             </button>
           </div>
@@ -549,17 +608,15 @@ function RecommendationsTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-text">Önerilen Ürünler</h2>
-          <p className="text-sm text-text-muted mt-0.5">
-            Müşterilere önerilecek özel ürünleri seçin
-          </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h2 className="text-xl font-semibold text-text">Ürün Listesi</h2>
+        <div className="flex items-center gap-2">
+          <AIImporter />
+          <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl shadow-sm hover:bg-primary-hover active:scale-95 transition-all">
+            <Plus size={18} />
+            <span className="text-sm font-bold">Ürün Ekle</span>
+          </button>
         </div>
-        <button className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
-          <Plus size={16} />
-          Öneri Ekle
-        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

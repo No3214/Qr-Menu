@@ -1,4 +1,3 @@
-
 -- ⚠️ IMPORTANT: This script will RESET your categories and products tables.
 -- It fixes the "UUID vs Text" ID mismatch and populates all menu data.
 

@@ -1,284 +1,160 @@
+
 import React from 'react';
 import {
-  MousePointerClick,
-  Eye,
-  Users,
-  QrCode,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  AreaChart,
+  Area
+} from 'recharts';
+import {
   TrendingUp,
-  TrendingDown,
-  Clock,
-  Smartphone,
-  Monitor,
+  ArrowUpRight,
+  ArrowDownRight,
+  Download,
+  Filter,
+  Users,
+  Eye,
+  MousePointer2,
+  Clock
 } from 'lucide-react';
-import { PRODUCTS, CATEGORIES } from '../../services/MenuData';
 
-const stats = [
-  {
-    label: 'Toplam Tıklama',
-    value: '202',
-    change: '+12%',
-    trend: 'up' as const,
-    icon: MousePointerClick,
-    color: 'bg-blue-50 text-blue-600',
-  },
-  {
-    label: 'Toplam Görüntüleme',
-    value: '921',
-    change: '+8%',
-    trend: 'up' as const,
-    icon: Eye,
-    color: 'bg-green-50 text-green-600',
-  },
-  {
-    label: 'Toplam Oturum',
-    value: '1,253',
-    change: '+15%',
-    trend: 'up' as const,
-    icon: Users,
-    color: 'bg-purple-50 text-purple-600',
-  },
-  {
-    label: 'QR Tarama',
-    value: '847',
-    change: '+5%',
-    trend: 'up' as const,
-    icon: QrCode,
-    color: 'bg-orange-50 text-orange-600',
-  },
+const data = [
+  { name: 'Pzt', views: 400, scans: 240, amt: 2400 },
+  { name: 'Sal', views: 300, scans: 139, amt: 2210 },
+  { name: 'Çar', views: 200, scans: 980, amt: 2290 },
+  { name: 'Per', views: 278, scans: 390, amt: 2000 },
+  { name: 'Cum', views: 189, scans: 480, amt: 2181 },
+  { name: 'Cmt', views: 239, scans: 380, amt: 2500 },
+  { name: 'Paz', views: 349, scans: 430, amt: 2100 },
 ];
 
-const topClicked = PRODUCTS.slice(0, 5).map((p, i) => ({
-  name: p.name,
-  clicks: [89, 76, 64, 52, 41][i],
-}));
-
-const topCategories = CATEGORIES.slice(0, 5).map((c, i) => ({
-  name: c.title,
-  views: [312, 245, 198, 167, 134][i],
-}));
-
-const leastViewed = PRODUCTS.slice(-5).map((p, i) => ({
-  name: p.name,
-  views: [3, 5, 7, 9, 12][i],
-}));
-
-const devices = [
-  { name: 'iOS', percent: 42, icon: Smartphone },
-  { name: 'Android', percent: 35, icon: Smartphone },
-  { name: 'Windows', percent: 15, icon: Monitor },
-  { name: 'Mac', percent: 8, icon: Monitor },
-];
-
-const peakHours = [
-  { hour: '12:00', sessions: 89 },
-  { hour: '13:00', sessions: 124 },
-  { hour: '14:00', sessions: 76 },
-  { hour: '18:00', sessions: 95 },
-  { hour: '19:00', sessions: 156 },
-  { hour: '20:00', sessions: 187 },
-  { hour: '21:00', sessions: 143 },
-  { hour: '22:00', sessions: 67 },
-];
-
-const maxSessions = Math.max(...peakHours.map((h) => h.sessions));
-
-export function AnalyticsPage() {
+export const AnalyticsPage: React.FC = () => {
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-text">Analitik</h1>
-        <select className="px-3 py-2 rounded-lg border border-border text-sm bg-white focus:outline-none focus:border-primary">
-          <option>Son 7 gün</option>
-          <option>Son 30 gün</option>
-          <option>Son 90 gün</option>
-          <option>Tüm zamanlar</option>
-        </select>
+    <div className="space-y-10 animate-fade-in">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <h2 className="text-4xl font-black text-stone-900 tracking-tight mb-2">Performans Analizi</h2>
+          <p className="text-stone-500 font-medium">İşletmenizin dijital etkileşim verilerini buradan takip edebilirsiniz.</p>
+        </div>
+        <div className="flex gap-3">
+          <button className="px-5 py-3 bg-white border border-stone-200 rounded-2xl font-bold text-xs uppercase tracking-widest text-stone-600 flex items-center gap-2 hover:bg-stone-50 transition-all shadow-sm">
+            <Filter className="w-4 h-4" /> Filtrele
+          </button>
+          <button className="px-5 py-3 bg-stone-900 text-white rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-black transition-all shadow-xl shadow-stone-200">
+            <Download className="w-4 h-4" /> Dışa Aktar
+          </button>
+        </div>
       </div>
 
-      {/* Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="bg-white border border-border rounded-xl p-5"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div
-                className={`w-9 h-9 rounded-lg ${stat.color} flex items-center justify-center`}
-              >
-                <stat.icon size={18} />
+      {/* Top Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {[
+          { label: 'Toplam Görüntülenme', value: '18.4k', change: '+12.5%', icon: Eye, color: 'text-blue-500' },
+          { label: 'QR Tarama Sayısı', value: '4.2k', change: '+18.2%', icon: MousePointer2, color: 'text-primary' },
+          { label: 'Tekil Kullanıcı', value: '3.1k', change: '+4.3%', icon: Users, color: 'text-purple-500' },
+          { label: 'Ort. Oturum Süresi', value: '5m 12s', change: '-1.4%', icon: Clock, color: 'text-orange-500' },
+        ].map((stat, i) => (
+          <div key={i} className="bg-white p-8 rounded-[32px] border border-stone-100 shadow-sm">
+            <div className="flex justify-between items-start mb-6">
+              <div className="p-3 bg-stone-50 rounded-2xl">
+                <stat.icon className={`w-6 h-6 ${stat.color}`} />
               </div>
-              <span
-                className={`text-xs font-medium flex items-center gap-0.5 ${
-                  stat.trend === 'up' ? 'text-success' : 'text-danger'
-                }`}
-              >
-                {stat.trend === 'up' ? (
-                  <TrendingUp size={13} />
-                ) : (
-                  <TrendingDown size={13} />
-                )}
+              <div className={`flex items-center gap-1 text-[10px] font-black ${stat.change.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
                 {stat.change}
-              </span>
+                {stat.change.startsWith('+') ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+              </div>
             </div>
-            <p className="text-2xl font-bold text-text">{stat.value}</p>
-            <p className="text-xs text-text-muted mt-0.5">{stat.label}</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 mb-2">{stat.label}</p>
+            <h3 className="text-3xl font-black text-stone-900 tracking-tight">{stat.value}</h3>
           </div>
         ))}
       </div>
 
-      {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top Clicked Products */}
-        <div className="bg-white border border-border rounded-xl p-5">
-          <h3 className="text-sm font-semibold text-text mb-4">
-            En Çok Tıklanan Ürünler
-          </h3>
-          <div className="space-y-3">
-            {topClicked.map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <span className="text-xs font-bold text-text-muted w-5">
-                  {i + 1}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-text truncate">
-                      {item.name}
-                    </span>
-                    <span className="text-xs font-medium text-text-muted ml-2">
-                      {item.clicks}
-                    </span>
-                  </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full">
-                    <div
-                      className="h-full bg-primary rounded-full"
-                      style={{
-                        width: `${(item.clicks / topClicked[0].clicks) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Main Interaction Chart */}
+        <div className="bg-white rounded-[40px] p-10 border border-stone-100 shadow-sm">
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h3 className="text-xl font-black text-stone-900 tracking-tight">Haftalık Etkileşim</h3>
+              <p className="text-xs text-stone-400 font-bold uppercase tracking-widest mt-1">Görüntülenme & Tarama Karşılaştırması</p>
+            </div>
+            <div className="flex gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-primary rounded-full" />
+                <span className="text-[10px] font-bold text-stone-500 uppercase tracking-widest">Görüntülenme</span>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Top Viewed Categories */}
-        <div className="bg-white border border-border rounded-xl p-5">
-          <h3 className="text-sm font-semibold text-text mb-4">
-            En Çok Görüntülenen Kategoriler
-          </h3>
-          <div className="space-y-3">
-            {topCategories.map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <span className="text-xs font-bold text-text-muted w-5">
-                  {i + 1}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-text truncate">
-                      {item.name}
-                    </span>
-                    <span className="text-xs font-medium text-text-muted ml-2">
-                      {item.views}
-                    </span>
-                  </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full">
-                    <div
-                      className="h-full bg-green-500 rounded-full"
-                      style={{
-                        width: `${(item.views / topCategories[0].views) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-stone-200 rounded-full" />
+                <span className="text-[10px] font-bold text-stone-500 uppercase tracking-widest">Taramalar</span>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Second row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Least Viewed */}
-        <div className="bg-white border border-border rounded-xl p-5">
-          <h3 className="text-sm font-semibold text-text mb-4">
-            En Az Görüntülenen Ürünler
-          </h3>
-          <div className="space-y-2.5">
-            {leastViewed.map((item, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between py-1.5"
-              >
-                <span className="text-sm text-text truncate">{item.name}</span>
-                <span className="text-xs font-medium text-danger ml-2">
-                  {item.views} görüntüleme
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Avg Time & Devices */}
-        <div className="bg-white border border-border rounded-xl p-5 space-y-5">
-          <div>
-            <h3 className="text-sm font-semibold text-text mb-2">
-              Ortalama Menü Süresi
-            </h3>
-            <div className="flex items-center gap-2">
-              <Clock size={18} className="text-primary" />
-              <span className="text-2xl font-bold text-text">3dk 41sn</span>
             </div>
           </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-text mb-3">
-              Cihaz Dağılımı
-            </h3>
-            <div className="space-y-2.5">
-              {devices.map((device) => (
-                <div key={device.name} className="flex items-center gap-3">
-                  <device.icon size={15} className="text-text-muted" />
-                  <span className="text-sm text-text w-16">{device.name}</span>
-                  <div className="flex-1 h-2 bg-gray-100 rounded-full">
-                    <div
-                      className="h-full bg-primary/70 rounded-full"
-                      style={{ width: `${device.percent}%` }}
-                    />
-                  </div>
-                  <span className="text-xs font-medium text-text-muted w-8 text-right">
-                    %{device.percent}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={data}>
+                <defs>
+                  <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#C5A059" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#C5A059" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F2F2F2" />
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#A8A29E', fontSize: 10, fontWeight: 700 }}
+                  dy={10}
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#A8A29E', fontSize: 10, fontWeight: 700 }}
+                />
+                <Tooltip
+                  contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.1)' }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="views"
+                  stroke="#C5A059"
+                  strokeWidth={4}
+                  fillOpacity={1}
+                  fill="url(#colorViews)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Traffic Source */}
-        <div className="bg-white border border-border rounded-xl p-5">
-          <h3 className="text-sm font-semibold text-text mb-4">
-            Trafik Kaynakları
-          </h3>
-          <div className="space-y-3">
+        {/* Categories Breakdown */}
+        <div className="bg-white rounded-[40px] p-10 border border-stone-100 shadow-sm">
+          <h3 className="text-xl font-black text-stone-900 tracking-tight mb-10">En Çok İncelenen Kategoriler</h3>
+          <div className="space-y-8">
             {[
-              { source: 'QR Kod (Masa)', percent: 62, color: 'bg-primary' },
-              { source: 'QR Kod (Giriş)', percent: 21, color: 'bg-green-500' },
-              { source: 'Doğrudan Link', percent: 12, color: 'bg-orange-500' },
-              { source: 'Sosyal Medya', percent: 5, color: 'bg-purple-500' },
-            ].map((item) => (
-              <div key={item.source}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-text">{item.source}</span>
-                  <span className="text-xs font-medium text-text-muted">
-                    %{item.percent}
-                  </span>
+              { name: 'Ana Yemekler', value: 85, color: 'bg-primary' },
+              { name: 'Soğuk İçecekler', value: 65, color: 'bg-stone-800' },
+              { name: 'Tatlılar', value: 45, color: 'bg-stone-400' },
+              { name: 'Kahvaltılıklar', value: 30, color: 'bg-stone-200' },
+            ].map((cat, i) => (
+              <div key={i}>
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-sm font-bold text-stone-700">{cat.name}</span>
+                  <span className="text-xs font-black text-stone-900 tracking-widest">{cat.value}%</span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full">
+                <div className="w-full h-3 bg-stone-50 rounded-full overflow-hidden">
                   <div
-                    className={`h-full ${item.color} rounded-full`}
-                    style={{ width: `${item.percent}%` }}
+                    className={`h-full ${cat.color} rounded-full transition-all duration-1000`}
+                    style={{ width: `${cat.value}%` }}
                   />
                 </div>
               </div>
@@ -287,31 +163,33 @@ export function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Peak Hours */}
-      <div className="bg-white border border-border rounded-xl p-5">
-        <h3 className="text-sm font-semibold text-text mb-4">
-          Yoğun Saatler
-        </h3>
-        <div className="flex items-end gap-3 h-40">
-          {peakHours.map((item) => (
-            <div
-              key={item.hour}
-              className="flex-1 flex flex-col items-center gap-1.5"
-            >
-              <span className="text-[10px] font-medium text-text-muted">
-                {item.sessions}
-              </span>
-              <div
-                className="w-full bg-primary rounded-t-md transition-all group hover:bg-primary-hover"
-                style={{
-                  height: `${(item.sessions / maxSessions) * 100}%`,
-                }}
-              />
-              <span className="text-[10px] text-text-muted">{item.hour}</span>
+      {/* Detailed Table Placeholder */}
+      <div className="bg-white rounded-[40px] p-10 border border-stone-100 shadow-sm relative overflow-hidden group">
+        <div className="absolute inset-0 bg-stone-900/5 backdrop-blur-[2px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="bg-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
+            <TrendingUp className="w-5 h-5 text-primary" />
+            <span className="text-sm font-black uppercase tracking-widest text-stone-900">Yakında: Derinlemesine Raporlar</span>
+          </div>
+        </div>
+        <h3 className="text-xl font-black text-stone-900 tracking-tight mb-8">Ürün Bazlı Performans</h3>
+        <div className="space-y-6">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="flex items-center justify-between pb-6 border-b border-stone-50 last:border-0">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-stone-100 rounded-xl" />
+                <div>
+                  <h4 className="text-sm font-bold text-stone-800">Kozbeyli Kebabı</h4>
+                  <p className="text-[10px] text-stone-400 font-bold uppercase tracking-widest">Ana Yemekler</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-black text-stone-900">1.428</div>
+                <div className="text-[10px] text-green-500 font-bold uppercase tracking-widest">Görüntülenme</div>
+              </div>
             </div>
           ))}
         </div>
       </div>
     </div>
   );
-}
+};
