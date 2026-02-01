@@ -8,6 +8,7 @@ import { Search, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { ReviewModal } from './ReviewModal';
 import { MenuAssistant } from './MenuAssistant';
+import { CallWaiter } from './CallWaiter';
 import { ListHeader } from './ListHeader';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -198,6 +199,7 @@ export const DigitalMenu: React.FC = () => {
             )}
 
             <MenuAssistant />
+            {viewState !== 'LANDING' && <CallWaiter />}
         </div>
     );
 };

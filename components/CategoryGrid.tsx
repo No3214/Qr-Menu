@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Category } from '../services/MenuService';
+import { useLanguage } from '../context/LanguageContext';
 
 interface CategoryGridProps {
     categories: Category[];
@@ -14,6 +15,8 @@ interface CategoryGridProps {
  * - Small tiles (2 columns)
  */
 export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCategorySelect }) => {
+    const { t } = useLanguage();
+
     return (
         <div className="p-4 grid grid-cols-2 gap-3 pb-24">
             {categories.map((category, index) => {
@@ -50,7 +53,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
                             </h3>
                             {isLarge && (
                                 <p className="text-white/80 text-xs mt-1 line-clamp-1">
-                                    En lezzetli {category.title.toLowerCase()} çeşitlerimiz
+                                    {t('menu.categoryDesc', { category: category.title.toLowerCase() })}
                                 </p>
                             )}
                         </div>

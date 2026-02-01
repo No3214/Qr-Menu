@@ -1,8 +1,9 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Product } from '../services/MenuService';
-import { X, Share2, Info, Sparkles } from 'lucide-react';
+import { X, Share2, Info, Sparkles, Check } from 'lucide-react';
 import { getProductPairing } from '../services/geminiService';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ProductModalProps {
     product: Product | null;
@@ -10,6 +11,9 @@ interface ProductModalProps {
 }
 
 export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
+    const { t } = useLanguage();
+    const [copied, setCopied] = useState(false);
+
     useEffect(() => {
         if (product) {
             document.body.style.overflow = 'hidden';
@@ -24,6 +28,28 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
     if (!product) return null;
 
     const formattedPrice = new Intl.NumberFormat('tr-TR').format(product.price);
+
+    const handleShare = async () => {
+        if (!product) return;
+
+        const shareData = {
+            title: `Kozbeyli Konağı - ${product.title}`,
+            text: product.description,
+            url: window.location.href,
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(window.location.href);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            }
+        } catch (err) {
+            console.error('Error sharing:', err);
+        }
+    };
 
     return (
         <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center p-0 sm:p-4">
@@ -77,7 +103,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
 
                     {!product.is_active && (
                         <span className="inline-block px-3 py-1 mb-4 text-[10px] font-bold uppercase bg-stone-100 text-stone-500 rounded-full tracking-wider border border-stone-200">
-                            Tükendi
+                            {t('product.outOfStock')}
                         </span>
                     )}
 
@@ -101,13 +127,16 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                             <span>{product.category_id}</span>
                         </div>
 
-                        <button className="p-2 text-stone-400 hover:text-stone-900 transition-colors">
-                            <Share2 className="w-5 h-5" />
+                        <button
+                            onClick={handleShare}
+                            className={`p-2 transition-all duration-300 rounded-full ${copied ? 'bg-green-50 text-green-600' : 'text-stone-400 hover:text-stone-900 hover:bg-stone-50'}`}
+                        >
+                            {copied ? <Check className="w-5 h-5" /> : <Share2 className="w-5 h-5" />}
                         </button>
                     </div>
 
                     <button className="w-full mt-8 bg-primary text-white py-4.5 rounded-2xl font-bold text-lg shadow-lg shadow-primary/30 hover:bg-primary-hover active:scale-[0.98] transition-all duration-300">
-                        Siparişe Ekle
+                        {t('product.addToOrder')}
                     </button>
                 </div>
             </div>
@@ -116,6 +145,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
 };
 
 const AIPairing: React.FC<{ productName: string, category: string }> = ({ productName, category }) => {
+    const { t } = useLanguage();
     const [pairing, setPairing] = React.useState<{ pairing: string, reason: string } | null>(null);
     const [loading, setLoading] = React.useState(true);
 
@@ -149,7 +179,7 @@ const AIPairing: React.FC<{ productName: string, category: string }> = ({ produc
                 <div className="p-1 bg-primary/10 rounded-lg">
                     <Sparkles className="w-4 h-4 text-primary" />
                 </div>
-                <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider">Gurme Eşleşme ✨</h4>
+                <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider">{t('product.aiPairing')}</h4>
             </div>
             <p className="text-sm font-bold text-stone-800 mb-1">{pairing.pairing}</p>
             <p className="text-[11px] text-stone-500 leading-relaxed italic">"{pairing.reason}"</p>
