@@ -13,9 +13,6 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
-  PanelLeftClose,
-  PanelLeftOpen,
-  LayoutDashboard,
   QrCode
 } from 'lucide-react';
 

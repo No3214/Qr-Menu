@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Search,
   Check,
@@ -55,7 +55,7 @@ export function TranslationsPage() {
     ...PRODUCTS.map((p) => ({
       id: `prod-${p.id}`,
       type: 'product' as const,
-      originalName: p.name,
+      originalName: p.title,
       originalDesc: p.description,
       translations: {
         en: { name: '', description: '' },

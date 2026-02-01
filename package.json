@@ -13,7 +13,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@google/genai": "^0.14.1",
+    "@google/generative-ai": "^0.24.1",
     "@supabase/supabase-js": "^2.93.3",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.29.2",

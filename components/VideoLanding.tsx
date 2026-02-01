@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, Utensils, Award, Sparkles, MapPin, ArrowRight } from 'lucide-react';
+import { Utensils, Award, Sparkles, MapPin, ArrowRight } from 'lucide-react';
 
 interface VideoLandingProps {
     onEnter: () => void;
@@ -9,6 +9,15 @@ interface VideoLandingProps {
 export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
     const [scrolled, setScrolled] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [showCookies, setShowCookies] = useState(false);
+
+    useEffect(() => {
+        const cookiesAccepted = localStorage.getItem('cookiesAccepted');
+        if (!cookiesAccepted) {
+            const timer = setTimeout(() => setShowCookies(true), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, []);
 
     useEffect(() => {
         setIsLoaded(true);
@@ -117,6 +126,42 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                     <span className="text-[10px] font-black uppercase tracking-[0.3em]">Scroll</span>
                 </div>
             </div>
+
+            {/* Cookie Notice Modal */}
+            {showCookies && (
+                <div className="fixed bottom-6 left-6 right-6 md:left-auto md:right-8 md:w-[400px] z-[100] animate-premium-fade">
+                    <div className="bg-stone-900/95 backdrop-blur-xl border border-white/10 rounded-[32px] p-6 shadow-2xl">
+                        <div className="flex items-start gap-4">
+                            <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <Sparkles className="w-6 h-6 text-primary" />
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-white font-bold text-sm mb-1">Çerez Politikası</h3>
+                                <p className="text-white/60 text-[11px] leading-relaxed mb-4">
+                                    Size daha iyi bir deneyim sunabilmek için sitemizde çerezler kullanılmaktadır. Devam ederek çerez kullanımını kabul etmiş sayılırsınız.
+                                </p>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => {
+                                            localStorage.setItem('cookiesAccepted', 'true');
+                                            setShowCookies(false);
+                                        }}
+                                        className="flex-1 bg-primary text-stone-900 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white transition-colors"
+                                    >
+                                        Kabul Et
+                                    </button>
+                                    <button
+                                        onClick={() => setShowCookies(false)}
+                                        className="px-4 py-3 border border-white/10 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-white/5 transition-colors"
+                                    >
+                                        Kapat
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

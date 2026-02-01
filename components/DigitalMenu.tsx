@@ -26,13 +26,17 @@ export const DigitalMenu: React.FC = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    // Debounce search query
+    // Debounce search query & View Transition
     useEffect(() => {
+        if (searchQuery.trim().length > 0 && viewState === 'GRID') {
+            setViewState('LIST');
+        }
+
         const timer = setTimeout(() => {
             setDebouncedQuery(searchQuery);
         }, 300);
         return () => clearTimeout(timer);
-    }, [searchQuery]);
+    }, [searchQuery, viewState]);
 
     // Initial Data Fetch
     useEffect(() => {

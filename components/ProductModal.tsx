@@ -93,7 +93,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                     </div>
 
                     {/* AI Product Pairing */}
-                    <AIPairing productName={product.name} category={product.category} />
+                    <AIPairing productName={product.title} category={product.category} />
 
                     <div className="mt-10 pt-6 border-t border-stone-100 flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm font-medium text-stone-500 bg-stone-50 px-3 py-1.5 rounded-full">
