@@ -319,10 +319,10 @@ function AIChatSection() {
         </div>
         <Toggle defaultOn label="AI chat bot" />
       </div>
-      <InputField label={t('dash.settings.welcomeMessage')} defaultValue="Merhaba! Size nasıl yardımcı olabilirim?" />
+      <InputField label={t('dash.settings.welcomeMessage')} defaultValue={t('dash.settings.welcomeDefault')} />
       <div>
         <label className="block text-sm font-medium text-text mb-1.5">{t('dash.settings.botCharacter')}</label>
-        <textarea defaultValue="Kozbeyli Konağı'nın yardımcı asistanı olarak, menü hakkında bilgi verin. Nazik ve profesyonel olun." rows={3} className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 resize-none" />
+        <textarea defaultValue={t('dash.settings.botCharacterDefault')} rows={3} className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 resize-none" />
       </div>
       <div>
         <label className="block text-sm font-medium text-text mb-1.5">{t('dash.settings.aiModel')}</label>
@@ -343,8 +343,8 @@ function PDFSection() {
       <p className="text-sm text-text-muted">{t('dash.settings.pdfDesc')}</p>
       <div className="flex items-center justify-between py-3 border border-border rounded-lg px-4">
         <div>
-          <p className="text-sm font-medium text-text">Kozbeyli Konağı Menü.pdf</p>
-          <p className="text-xs text-text-muted">Son güncelleme: 20 Ocak 2025</p>
+          <p className="text-sm font-medium text-text">{t('dash.settings.pdfFileName')}</p>
+          <p className="text-xs text-text-muted">{t('dash.settings.pdfLastUpdate')}</p>
         </div>
         <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"><Download size={15} />{t('dash.settings.pdfDownload')}</button>
       </div>

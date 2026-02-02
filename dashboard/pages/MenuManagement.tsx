@@ -329,8 +329,8 @@ function ProductEditModal({
   const [selectedAllergens, setSelectedAllergens] = useState<Set<string>>(new Set());
   const [currency, setCurrency] = useState('TRY (₺)');
 
-  const dietaryTags = ['Vegan', 'Vejeteryan', 'Glutensiz', 'Laktoz İçermez', 'Organik', 'Halal'];
-  const allergenTags = ['Gluten', 'Süt', 'Yumurta', 'Fıstık', 'Soya', 'Balık', 'Kabuklu Deniz', 'Kereviz', 'Hardal', 'Susam'];
+  const dietaryTagKeys = ['dash.menu.diet.vegan', 'dash.menu.diet.vegetarian', 'dash.menu.diet.glutenFree', 'dash.menu.diet.lactoseFree', 'dash.menu.diet.organic', 'dash.menu.diet.halal'];
+  const allergenTagKeys = ['dash.menu.allergen.gluten', 'dash.menu.allergen.dairy', 'dash.menu.allergen.egg', 'dash.menu.allergen.peanut', 'dash.menu.allergen.soy', 'dash.menu.allergen.fish', 'dash.menu.allergen.shellfish', 'dash.menu.allergen.celery', 'dash.menu.allergen.mustard', 'dash.menu.allergen.sesame'];
 
   const toggleSet = (set: Set<string>, setFn: (s: Set<string>) => void, value: string) => {
     const next = new Set(set);
@@ -422,17 +422,17 @@ function ProductEditModal({
           <div>
             <label className="block text-sm font-medium text-text mb-2">{t('dash.menu.dietary')}</label>
             <div className="flex flex-wrap gap-2">
-              {dietaryTags.map((tag) => (
+              {dietaryTagKeys.map((key) => (
                 <button
-                  key={tag}
-                  onClick={() => toggleSet(selectedDietary, setSelectedDietary, tag)}
+                  key={key}
+                  onClick={() => toggleSet(selectedDietary, setSelectedDietary, key)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                    selectedDietary.has(tag)
+                    selectedDietary.has(key)
                       ? 'border-primary bg-primary/10 text-primary'
                       : 'border-border text-text-muted hover:border-primary hover:text-primary'
                   }`}
                 >
-                  {tag}
+                  {t(key)}
                 </button>
               ))}
             </div>
@@ -441,17 +441,17 @@ function ProductEditModal({
           <div>
             <label className="block text-sm font-medium text-text mb-2">{t('dash.menu.allergens')}</label>
             <div className="flex flex-wrap gap-2">
-              {allergenTags.map((allergen) => (
+              {allergenTagKeys.map((key) => (
                 <button
-                  key={allergen}
-                  onClick={() => toggleSet(selectedAllergens, setSelectedAllergens, allergen)}
+                  key={key}
+                  onClick={() => toggleSet(selectedAllergens, setSelectedAllergens, key)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                    selectedAllergens.has(allergen)
+                    selectedAllergens.has(key)
                       ? 'border-warning bg-warning/10 text-warning'
                       : 'border-border text-text-muted hover:border-warning hover:text-warning'
                   }`}
                 >
-                  {allergen}
+                  {t(key)}
                 </button>
               ))}
             </div>
@@ -610,7 +610,7 @@ function DisplayPreferencesTab() {
               <div className="space-y-1 mb-2">
                 {[1, 2, 3].map((i) => (<div key={i} className="h-4 rounded bg-gray-200" />))}
               </div>
-              <p className="text-xs font-medium text-text-muted">Liste</p>
+              <p className="text-xs font-medium text-text-muted">{t('dash.menu.listView')}</p>
             </button>
           </div>
         </div>

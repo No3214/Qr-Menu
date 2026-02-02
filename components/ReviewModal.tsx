@@ -68,8 +68,8 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl animate-in">
                 {/* Header */}
                 <div className="bg-primary/5 p-4 flex items-center justify-between border-b border-primary/10">
                     <h2 className="font-bold text-lg text-gray-800">{t('review.title')}</h2>
@@ -104,7 +104,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
                             ))}
                         </div>
                         {rating > 0 && (
-                            <span className="text-sm font-medium text-primary animate-in fade-in">
+                            <span className="text-sm font-medium text-primary animate-fade-in">
                                 {getRatingLabel(rating)}
                             </span>
                         )}

@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { generateTaglines } from '../services/geminiService';
 import toast from 'react-hot-toast';
+import { useLanguage } from '../context/LanguageContext';
 
 // --- TYPES & INTERFACES ---
 type LogoPlacement = 'center' | 'background';
@@ -173,6 +174,7 @@ const getContrastRatio = (hex1: string, hex2: string) => {
 };
 
 export const QRCodeEditor: React.FC = () => {
+  const { t } = useLanguage();
   // --- STATE ---
   const [activeTab, setActiveTab] = useState<TabId>('content');
 
@@ -421,7 +423,7 @@ export const QRCodeEditor: React.FC = () => {
     if (theme.bgScale) setBgImageScale(theme.bgScale);
     if (theme.bgOpacity) setBgOpacity(theme.bgOpacity);
 
-    toast.success(`Theme "${theme.name}" applied`);
+    toast.success(t('qr.themeApplied').replace('{name}', theme.name));
   };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -437,16 +439,16 @@ export const QRCodeEditor: React.FC = () => {
 
   const handleAIGenerate = async () => {
     if (!restaurantName) {
-      toast.error('Please enter a restaurant name first');
+      toast.error(t('qr.enterNameFirst'));
       return;
     }
     setIsGeneratingAI(true);
     try {
       const suggestions = await generateTaglines(restaurantName, vibe);
       setAiSuggestions(suggestions);
-      toast.success('AI suggestions generated!');
+      toast.success(t('qr.aiGenerated'));
     } catch (error) {
-      toast.error('Could not generate suggestions');
+      toast.error(t('qr.aiFailed'));
     } finally {
       setIsGeneratingAI(false);
     }
@@ -532,7 +534,7 @@ export const QRCodeEditor: React.FC = () => {
     link.download = `GrainQR_${Date.now()}.png`;
     link.href = finalCanvas.toDataURL('image/png');
     link.click();
-    toast.success("High-Res QR Downloaded");
+    toast.success(t('qr.downloaded'));
   };
 
   return (
@@ -561,10 +563,10 @@ export const QRCodeEditor: React.FC = () => {
 
           {/* Quick Templates */}
           {activeTab === 'design' && (
-            <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="mb-8 animate-in">
               <h3 className="text-sm font-serif font-semibold text-slate-300 mb-4 flex items-center gap-2">
                 <Wand2 className="w-4 h-4 text-gold-500" />
-                <span>Quick Presets</span>
+                <span>{t('qr.quickPresets')}</span>
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {THEMES.map((theme) => (
@@ -583,26 +585,26 @@ export const QRCodeEditor: React.FC = () => {
 
           {/* CONTENT TAB */}
           {activeTab === 'content' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
+            <div className="space-y-8 animate-in">
               <div className="flex bg-slate-800 rounded-xl p-1 border border-slate-700 w-full max-w-sm">
                 <button
                   onClick={() => setContentType('url')}
                   className={`flex-1 py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition-all ${contentType === 'url' ? 'bg-slate-700 text-white shadow-sm ring-1 ring-white/10' : 'text-slate-400 hover:text-slate-200'}`}
                 >
-                  <LinkIcon className="w-3.5 h-3.5" /> Website
+                  <LinkIcon className="w-3.5 h-3.5" /> {t('qr.website')}
                 </button>
                 <button
                   onClick={() => setContentType('wifi')}
                   className={`flex-1 py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition-all ${contentType === 'wifi' ? 'bg-slate-700 text-white shadow-sm ring-1 ring-white/10' : 'text-slate-400 hover:text-slate-200'}`}
                 >
-                  <Wifi className="w-3.5 h-3.5" /> WiFi
+                  <Wifi className="w-3.5 h-3.5" /> {t('qr.wifi')}
                 </button>
               </div>
 
               <div className="space-y-6">
                 {contentType === 'url' ? (
                   <div className="group">
-                    <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider ml-1">Destination URL</label>
+                    <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider ml-1">{t('qr.destinationUrl')}</label>
                     <input
                       type="text"
                       value={url}
@@ -614,15 +616,15 @@ export const QRCodeEditor: React.FC = () => {
                 ) : (
                   <div className="space-y-5 p-5 bg-slate-950/50 rounded-2xl border border-slate-800">
                     <div>
-                      <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">SSID</label>
+                      <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">{t('qr.ssid')}</label>
                       <input type="text" value={wifiSsid} onChange={(e) => setWifiSsid(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white" />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">Password</label>
+                      <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">{t('qr.password')}</label>
                       <input type="text" value={wifiPassword} onChange={(e) => setWifiPassword(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white" />
                     </div>
                     <div className="flex items-center justify-between pt-2">
-                      <span className="text-xs text-slate-400">Hidden Network</span>
+                      <span className="text-xs text-slate-400">{t('qr.hiddenNetwork')}</span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" checked={wifiHidden} onChange={(e) => setWifiHidden(e.target.checked)} className="sr-only peer" />
                         <div className="w-9 h-5 bg-slate-700 peer-focus:ring-2 peer-focus:ring-gold-500/30 rounded-full peer peer-checked:bg-gold-500 transition-colors">
@@ -635,28 +637,28 @@ export const QRCodeEditor: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider ml-1">Title</label>
+                    <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider ml-1">{t('qr.title')}</label>
                     <input type="text" value={restaurantName} onChange={(e) => setRestaurantName(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white" />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider ml-1">Subtitle</label>
+                    <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider ml-1">{t('qr.subtitle')}</label>
                     <input type="text" value={customLabel} onChange={(e) => setCustomLabel(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white" />
                   </div>
                 </div>
 
                 {/* Frame Text */}
                 <div>
-                  <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider ml-1">Frame Text</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider ml-1">{t('qr.frameText')}</label>
                   <input type="text" value={frameText} onChange={(e) => setFrameText(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white" placeholder="SCAN ME" />
                 </div>
 
                 {/* AI Tagline Generator */}
                 <div className="bg-slate-950/50 rounded-2xl p-5 border border-slate-800">
                   <h4 className="text-xs font-semibold text-slate-300 mb-3 flex items-center gap-2">
-                    <Wand2 className="w-3.5 h-3.5 text-gold-500" /> AI Tagline Generator
+                    <Wand2 className="w-3.5 h-3.5 text-gold-500" /> {t('qr.aiTaglineGenerator')}
                   </h4>
                   <div className="mb-3">
-                    <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Vibe / Atmosphere</label>
+                    <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wider">{t('qr.vibeAtmosphere')}</label>
                     <input type="text" value={vibe} onChange={(e) => setVibe(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm" placeholder="Elegant and Relaxing" />
                   </div>
                   <button
@@ -664,7 +666,7 @@ export const QRCodeEditor: React.FC = () => {
                     disabled={isGeneratingAI}
                     className="w-full py-2.5 bg-gold-500/20 text-gold-400 border border-gold-500/30 rounded-xl text-xs font-semibold hover:bg-gold-500/30 transition-colors disabled:opacity-50"
                   >
-                    {isGeneratingAI ? 'Generating...' : 'Generate Taglines'}
+                    {isGeneratingAI ? t('qr.generating') : t('qr.generateTaglines')}
                   </button>
                   {aiSuggestions.length > 0 && (
                     <div className="mt-3 space-y-2">
@@ -686,18 +688,18 @@ export const QRCodeEditor: React.FC = () => {
 
           {/* DESIGN TAB */}
           {activeTab === 'design' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+            <div className="space-y-8 animate-in">
               {/* Color & Gradient */}
               <div className="bg-slate-800/40 rounded-2xl p-6 border border-slate-700/50">
-                <h3 className="text-sm font-serif font-semibold text-slate-300 mb-5 flex items-center gap-2"><Palette className="w-4 h-4 text-gold-500" /> Appearance</h3>
+                <h3 className="text-sm font-serif font-semibold text-slate-300 mb-5 flex items-center gap-2"><Palette className="w-4 h-4 text-gold-500" /> {t('qr.appearance')}</h3>
 
                 <div className="grid grid-cols-2 gap-6 mb-6">
-                  <ColorPicker label="Foreground" value={fgColor} onChange={setFgColor} />
-                  <ColorPicker label="Background" value={bgColor} onChange={setBgColor} />
+                  <ColorPicker label={t('qr.foreground')} value={fgColor} onChange={setFgColor} />
+                  <ColorPicker label={t('qr.background')} value={bgColor} onChange={setBgColor} />
                 </div>
 
                 <div className="flex items-center justify-between py-2 border-t border-slate-700/50">
-                  <span className="text-sm text-slate-300">Use Gradient</span>
+                  <span className="text-sm text-slate-300">{t('qr.useGradient')}</span>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" checked={useGradient} onChange={(e) => setUseGradient(e.target.checked)} className="sr-only peer" />
                     <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:bg-gold-500 transition-colors"></div>
@@ -706,21 +708,21 @@ export const QRCodeEditor: React.FC = () => {
 
                 {useGradient && (
                   <div className="grid grid-cols-2 gap-6 mt-4 bg-slate-900/50 p-4 rounded-xl">
-                    <ColorPicker label="Gradient Start" value={gradientStart} onChange={setGradientStart} />
-                    <ColorPicker label="Gradient End" value={gradientEnd} onChange={setGradientEnd} />
+                    <ColorPicker label={t('qr.gradientStart')} value={gradientStart} onChange={setGradientStart} />
+                    <ColorPicker label={t('qr.gradientEnd')} value={gradientEnd} onChange={setGradientEnd} />
                   </div>
                 )}
               </div>
 
               {/* Logo Integration */}
               <div className="bg-slate-800/40 rounded-2xl p-6 border border-slate-700/50">
-                <h3 className="text-sm font-serif font-semibold text-slate-300 mb-5 flex items-center gap-2"><ImageIcon className="w-4 h-4 text-gold-500" /> Branding</h3>
+                <h3 className="text-sm font-serif font-semibold text-slate-300 mb-5 flex items-center gap-2"><ImageIcon className="w-4 h-4 text-gold-500" /> {t('qr.branding')}</h3>
 
                 <div className="flex gap-4 mb-6">
                   <label className="flex-1 cursor-pointer bg-slate-900 border border-dashed border-slate-700 rounded-xl flex items-center justify-center h-24 hover:border-gold-500/50 transition-colors">
                     <div className="text-center">
                       <Upload className="w-5 h-5 text-slate-500 mx-auto mb-2" />
-                      <span className="text-xs text-slate-400">Upload Logo</span>
+                      <span className="text-xs text-slate-400">{t('qr.uploadLogo')}</span>
                     </div>
                     <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
                   </label>
@@ -779,7 +781,7 @@ export const QRCodeEditor: React.FC = () => {
 
               {/* Advanced Dot Control (THE KOZBEYLI LOOK) */}
               <div className="bg-slate-800/40 rounded-2xl p-6 border border-slate-700/50">
-                <h3 className="text-sm font-serif font-semibold text-slate-300 mb-5 flex items-center gap-2"><Grid3X3 className="w-4 h-4 text-gold-500" /> Structure (The Stone Hotel Look)</h3>
+                <h3 className="text-sm font-serif font-semibold text-slate-300 mb-5 flex items-center gap-2"><Grid3X3 className="w-4 h-4 text-gold-500" /> {t('qr.structure')}</h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
@@ -816,7 +818,7 @@ export const QRCodeEditor: React.FC = () => {
 
           {/* FRAMES TAB (Restored) */}
           {activeTab === 'frames' && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+            <div className="animate-in">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
                 {FRAMES.map((frame) => (
                   <button
@@ -885,7 +887,7 @@ export const QRCodeEditor: React.FC = () => {
                       onChange={(e) => setShowAcrylicBase(e.target.checked)}
                       className="rounded bg-slate-800 border-slate-600 text-gold-500 focus:ring-gold-500"
                     />
-                    <label htmlFor="acrylicBase" className="text-xs text-slate-300 cursor-pointer">Show Wooden Base</label>
+                    <label htmlFor="acrylicBase" className="text-xs text-slate-300 cursor-pointer">{t('qr.showWoodenBase')}</label>
                   </div>
                 </div>
               )}
@@ -894,24 +896,24 @@ export const QRCodeEditor: React.FC = () => {
 
           {/* CHECK TAB (Restored) */}
           {activeTab === 'check' && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-500 space-y-6">
+            <div className="animate-in space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className={`p-4 rounded-xl border ${isContrastPoor ? 'bg-red-900/10 border-red-900/50' : 'bg-green-900/10 border-green-900/50'} text-center`}>
                   <Eye className={`w-6 h-6 mx-auto mb-2 ${isContrastPoor ? 'text-red-400' : 'text-green-400'}`} />
-                  <p className="text-xs text-slate-300 font-bold">Contrast</p>
-                  <p className={`text-[10px] ${isContrastPoor ? 'text-red-400' : 'text-green-400'}`}>{contrastRatio.toFixed(2)}:1 ({isContrastPoor ? 'Poor' : 'Good'})</p>
+                  <p className="text-xs text-slate-300 font-bold">{t('qr.contrast')}</p>
+                  <p className={`text-[10px] ${isContrastPoor ? 'text-red-400' : 'text-green-400'}`}>{contrastRatio.toFixed(2)}:1 ({isContrastPoor ? t('qr.poor') : t('qr.good')})</p>
                 </div>
 
                 <div className="p-4 rounded-xl border bg-slate-800 border-slate-700 text-center">
                   <Ruler className="w-6 h-6 mx-auto mb-2 text-gold-400" />
-                  <p className="text-xs text-slate-300 font-bold">Max Distance</p>
+                  <p className="text-xs text-slate-300 font-bold">{t('qr.maxDistance')}</p>
                   {/* Approx rule: Scan dist = 10x QR width */}
                   <p className="text-[10px] text-gold-400">~{printSizeCm * 10} cm</p>
                 </div>
               </div>
 
               <div className="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                <label className="text-[10px] text-slate-500 block mb-2">Print Size (cm)</label>
+                <label className="text-[10px] text-slate-500 block mb-2">{t('qr.printSize')}</label>
                 <input type="number" value={printSizeCm} onChange={(e) => setPrintSizeCm(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm text-white" />
               </div>
             </div>
@@ -963,7 +965,7 @@ export const QRCodeEditor: React.FC = () => {
             className="w-full bg-gradient-to-r from-gold-400 to-gold-600 hover:from-gold-300 hover:to-gold-500 text-slate-900 font-bold py-4 px-6 rounded-2xl shadow-xl flex items-center justify-center gap-3 transition-all"
           >
             <Download className="w-5 h-5" />
-            Download High-Res
+            {t('qr.downloadHighRes')}
           </button>
         </div>
       </div>

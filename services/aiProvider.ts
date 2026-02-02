@@ -151,14 +151,11 @@ export async function generateAIText(prompt: string): Promise<string> {
 
   for (const provider of providers) {
     try {
-      console.log(`[AI] Trying ${provider.name}...`);
       const result = await callProvider(provider, prompt);
       if (result) {
-        console.log(`[AI] Success with ${provider.name}`);
         return result;
       }
     } catch (error) {
-      console.warn(`[AI] ${provider.name} failed:`, error);
       lastError = error as Error;
     }
   }

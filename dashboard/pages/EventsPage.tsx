@@ -26,43 +26,48 @@ interface Event {
   status: 'upcoming' | 'ongoing' | 'past';
 }
 
-const sampleEvents: Event[] = [
+interface SampleEvent extends Omit<Event, 'title' | 'location'> {
+  titleKey: string;
+  locationKey: string;
+}
+
+const sampleEventsData: SampleEvent[] = [
   {
     id: '1',
-    title: 'Canlı Müzik Gecesi',
+    titleKey: 'dash.events.sample.liveMusic',
     date: '2026-02-15',
     time: '20:00',
-    location: 'Ana Salon',
+    locationKey: 'dash.events.sample.mainHall',
     categoryKey: 'dash.events.catMusic',
     capacity: 120,
     status: 'upcoming',
   },
   {
     id: '2',
-    title: 'Şef ile Yemek Atölyesi',
+    titleKey: 'dash.events.sample.chefWorkshop',
     date: '2026-02-20',
     time: '14:00',
-    location: 'Mutfak Stüdyo',
+    locationKey: 'dash.events.sample.kitchenStudio',
     categoryKey: 'dash.events.catWorkshop',
     capacity: 20,
     status: 'upcoming',
   },
   {
     id: '3',
-    title: 'Tadım Gecesi - İtalyan Şarapları',
+    titleKey: 'dash.events.sample.tastingNight',
     date: '2026-03-01',
     time: '19:00',
-    location: 'Şarap Mahzeni',
+    locationKey: 'dash.events.sample.wineCellar',
     categoryKey: 'dash.events.catTasting',
     capacity: 30,
     status: 'upcoming',
   },
   {
     id: '4',
-    title: 'Kahvaltı Festivali',
+    titleKey: 'dash.events.sample.breakfastFest',
     date: '2025-12-10',
     time: '09:00',
-    location: 'Bahçe',
+    locationKey: 'dash.events.sample.garden',
     categoryKey: 'dash.events.catFestival',
     capacity: 200,
     status: 'past',
@@ -73,6 +78,12 @@ export function EventsPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'past'>('all');
   const { t, language } = useLanguage();
+
+  const sampleEvents = sampleEventsData.map(e => ({
+    ...e,
+    title: t(e.titleKey),
+    location: t(e.locationKey),
+  }));
 
   const filtered =
     filter === 'all'
