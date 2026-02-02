@@ -9,75 +9,76 @@ import {
   Headphones,
   Mail,
 } from 'lucide-react';
-
-const quickActions = [
-  {
-    icon: UtensilsCrossed,
-    title: 'Kategoriler & Ürünler',
-    description: 'Menü kategorilerinizi ve ürünlerinizi yönetin',
-    to: '/dashboard/menu',
-    color: 'bg-blue-50 text-blue-600',
-  },
-  {
-    icon: Eye,
-    title: 'Görüntüleme Tercihleri',
-    description: 'Menünüzün görünümünü özelleştirin',
-    to: '/dashboard/menu?tab=display',
-    color: 'bg-purple-50 text-purple-600',
-  },
-  {
-    icon: Languages,
-    title: 'Çeviri Paneli',
-    description: 'Menünüzü farklı dillere çevirin',
-    to: '/dashboard/translations',
-    color: 'bg-green-50 text-green-600',
-  },
-  {
-    icon: Settings,
-    title: 'Ayarlar',
-    description: 'Restoran ve hesap ayarlarınızı düzenleyin',
-    to: '/dashboard/settings',
-    color: 'bg-orange-50 text-orange-600',
-  },
-  {
-    icon: Smartphone,
-    title: 'Demo Menü',
-    description: 'Menünüzün müşteri görünümünü önizleyin',
-    to: '/',
-    color: 'bg-teal-50 text-teal-600',
-  },
-  {
-    icon: GraduationCap,
-    title: 'Hızlı Eğitim',
-    description: 'Platform kullanım rehberini inceleyin',
-    to: '/dashboard/settings',
-    color: 'bg-pink-50 text-pink-600',
-  },
-];
+import { useLanguage } from '../../context/LanguageContext';
 
 export function HomePage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
+  const quickActions = [
+    {
+      icon: UtensilsCrossed,
+      titleKey: 'dash.action.categories',
+      descKey: 'dash.action.categoriesDesc',
+      to: '/dashboard/menu',
+      color: 'bg-blue-50 text-blue-600',
+    },
+    {
+      icon: Eye,
+      titleKey: 'dash.action.display',
+      descKey: 'dash.action.displayDesc',
+      to: '/dashboard/menu?tab=display',
+      color: 'bg-purple-50 text-purple-600',
+    },
+    {
+      icon: Languages,
+      titleKey: 'dash.action.translation',
+      descKey: 'dash.action.translationDesc',
+      to: '/dashboard/translations',
+      color: 'bg-green-50 text-green-600',
+    },
+    {
+      icon: Settings,
+      titleKey: 'dash.settings.title',
+      descKey: 'dash.action.settingsDesc',
+      to: '/dashboard/settings',
+      color: 'bg-orange-50 text-orange-600',
+    },
+    {
+      icon: Smartphone,
+      titleKey: 'dash.action.demo',
+      descKey: 'dash.action.demoDesc',
+      to: '/',
+      color: 'bg-teal-50 text-teal-600',
+    },
+    {
+      icon: GraduationCap,
+      titleKey: 'dash.action.tutorial',
+      descKey: 'dash.action.tutorialDesc',
+      to: '/dashboard/settings',
+      color: 'bg-pink-50 text-pink-600',
+    },
+  ];
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Welcome */}
       <div>
         <h1 className="text-2xl font-semibold text-text">
-          Hoş Geldiniz! 👋
+          {t('dash.welcome')} 👋
         </h1>
         <p className="text-text-muted mt-1">
-          Kozbeyli Konağı dijital menü yönetim paneline hoş geldiniz. Aşağıdaki
-          hızlı erişim kartlarını kullanarak işlemlerinize başlayabilirsiniz.
+          {t('dash.welcomeDesc')}
         </p>
       </div>
 
       {/* Quick Actions Grid */}
       <div>
-        <h2 className="text-lg font-semibold text-text mb-4">Hızlı Erişim</h2>
+        <h2 className="text-lg font-semibold text-text mb-4">{t('dash.quickAccess')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {quickActions.map((action) => (
             <button
-              key={action.title}
+              key={action.titleKey}
               onClick={() => navigate(action.to)}
               className="bg-white border border-border rounded-xl p-5 text-left hover:shadow-card hover:border-primary/20 transition-all group"
             >
@@ -87,10 +88,10 @@ export function HomePage() {
                 <action.icon size={20} />
               </div>
               <h3 className="font-medium text-[15px] text-text group-hover:text-primary transition-colors">
-                {action.title}
+                {t(action.titleKey)}
               </h3>
               <p className="text-[13px] text-text-muted mt-1">
-                {action.description}
+                {t(action.descKey)}
               </p>
             </button>
           ))}
@@ -104,10 +105,9 @@ export function HomePage() {
             <Headphones size={20} />
           </div>
           <div>
-            <h3 className="font-semibold text-text">Destek</h3>
+            <h3 className="font-semibold text-text">{t('dash.support')}</h3>
             <p className="text-[13px] text-text-muted mt-1">
-              Herhangi bir sorunuz veya sorununuz mu var? Destek ekibimizle
-              iletişime geçin.
+              {t('dash.supportDesc')}
             </p>
             <a
               href="mailto:info@kozbeylikonagi.com"

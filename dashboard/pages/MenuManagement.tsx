@@ -14,6 +14,7 @@ import {
   Star,
 } from 'lucide-react';
 import { CATEGORIES, PRODUCTS, type Product, type Category } from '../../services/MenuData';
+import { useLanguage } from '../../context/LanguageContext';
 import toast from 'react-hot-toast';
 
 type Tab = 'products' | 'recommendations' | 'display';
@@ -25,11 +26,12 @@ export function MenuManagement() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const { t } = useLanguage();
 
   const tabs = [
-    { id: 'products' as Tab, label: 'Kategoriler & Ürünler' },
-    { id: 'recommendations' as Tab, label: 'Öneriler' },
-    { id: 'display' as Tab, label: 'Görüntüleme Tercihleri' },
+    { id: 'products' as Tab, labelKey: 'dash.menu.tabProducts' },
+    { id: 'recommendations' as Tab, labelKey: 'dash.menu.tabRecommendations' },
+    { id: 'display' as Tab, labelKey: 'dash.menu.tabDisplay' },
   ];
 
   const filteredProducts = useMemo(() => {
@@ -56,7 +58,7 @@ export function MenuManagement() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-text">Menü Yönetimi</h1>
+        <h1 className="text-2xl font-semibold text-text">{t('dash.menu.title')}</h1>
       </div>
 
       {/* Tabs */}
@@ -72,7 +74,7 @@ export function MenuManagement() {
                   : 'border-transparent text-text-muted hover:text-text'
               }`}
             >
-              {tab.label}
+              {t(tab.labelKey)}
             </button>
           ))}
         </div>
@@ -117,6 +119,8 @@ function ProductsTab({
   editingProduct: Product | null;
   onEditProduct: (p: Product | null) => void;
 }) {
+  const { t } = useLanguage();
+
   return (
     <div className="flex flex-col lg:flex-row gap-6">
       {/* Category sidebar */}
@@ -129,7 +133,7 @@ function ProductsTab({
               : 'text-text-muted hover:bg-gray-50'
           }`}
         >
-          Tüm Kategoriler ({PRODUCTS.length})
+          {t('dash.menu.allCategories')} ({PRODUCTS.length})
         </button>
         {categories.map((cat) => {
           const count = PRODUCTS.filter((p) => p.category === cat.id).length;
@@ -149,11 +153,11 @@ function ProductsTab({
           );
         })}
         <button
-          onClick={() => toast.success('Kategori ekleme yakında aktif olacak')}
+          onClick={() => toast.success(t('dash.menu.categorySoon'))}
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-primary font-medium hover:bg-primary/5 transition-colors mt-3"
         >
           <Plus size={16} />
-          Kategori Ekle
+          {t('dash.menu.addCategory')}
         </button>
       </div>
 
@@ -168,18 +172,18 @@ function ProductsTab({
             />
             <input
               type="text"
-              placeholder="Ürün ara..."
+              placeholder={t('dash.menu.searchProduct')}
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
             />
           </div>
           <button
-            onClick={() => toast.success('Ürün ekleme yakında aktif olacak')}
+            onClick={() => toast.success(t('dash.menu.productSoon'))}
             className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
           >
             <Plus size={16} />
-            Ürün Ekle
+            {t('dash.menu.addProduct')}
           </button>
         </div>
 
@@ -190,16 +194,16 @@ function ProductsTab({
               <tr className="border-b border-border bg-gray-50/50">
                 <th className="w-10 px-3 py-3" />
                 <th className="text-left px-3 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
-                  Ürün
+                  {t('dash.menu.thProduct')}
                 </th>
                 <th className="text-left px-3 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
-                  Fiyat
+                  {t('dash.menu.thPrice')}
                 </th>
                 <th className="text-left px-3 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
-                  Durum
+                  {t('dash.menu.thStatus')}
                 </th>
                 <th className="text-right px-3 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
-                  İşlemler
+                  {t('dash.menu.thActions')}
                 </th>
               </tr>
             </thead>
@@ -247,12 +251,12 @@ function ProductsTab({
                     {product.isAvailable ? (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-success bg-green-50 px-2 py-1 rounded-full">
                         <Eye size={12} />
-                        Aktif
+                        {t('dash.menu.active')}
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-text-muted bg-gray-100 px-2 py-1 rounded-full">
                         <EyeOff size={12} />
-                        Pasif
+                        {t('dash.menu.inactive')}
                       </span>
                     )}
                   </td>
@@ -261,14 +265,14 @@ function ProductsTab({
                       <button
                         onClick={() => onEditProduct(product)}
                         className="p-1.5 rounded-lg hover:bg-gray-100 text-text-muted hover:text-primary transition-colors"
-                        title="Düzenle"
+                        title={t('dash.menu.edit')}
                       >
                         <Edit3 size={15} />
                       </button>
                       <button
-                        onClick={() => toast.success('Silme işlemi yakında aktif olacak')}
+                        onClick={() => toast.success(t('dash.menu.deleteSoon'))}
                         className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-danger transition-colors"
-                        title="Sil"
+                        title={t('dash.menu.delete')}
                       >
                         <Trash2 size={15} />
                       </button>
@@ -280,7 +284,7 @@ function ProductsTab({
                 <tr>
                   <td colSpan={5} className="px-3 py-12 text-center">
                     <p className="text-sm text-text-muted">
-                      Bu kategoride ürün bulunamadı.
+                      {t('dash.menu.noProducts')}
                     </p>
                   </td>
                 </tr>
@@ -290,7 +294,7 @@ function ProductsTab({
         </div>
 
         <p className="text-xs text-text-muted mt-3">
-          Toplam {products.length} ürün gösteriliyor
+          {t('dash.menu.totalProducts').replace('{count}', String(products.length))}
         </p>
       </div>
 
@@ -313,6 +317,7 @@ function ProductEditModal({
   product: Product;
   onClose: () => void;
 }) {
+  const { t } = useLanguage();
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(product.price.toString());
   const [description, setDescription] = useState(product.description);
@@ -323,6 +328,9 @@ function ProductEditModal({
   const [selectedDietary, setSelectedDietary] = useState<Set<string>>(new Set());
   const [selectedAllergens, setSelectedAllergens] = useState<Set<string>>(new Set());
   const [currency, setCurrency] = useState('TRY (₺)');
+
+  const dietaryTags = ['Vegan', 'Vejeteryan', 'Glutensiz', 'Laktoz İçermez', 'Organik', 'Halal'];
+  const allergenTags = ['Gluten', 'Süt', 'Yumurta', 'Fıstık', 'Soya', 'Balık', 'Kabuklu Deniz', 'Kereviz', 'Hardal', 'Susam'];
 
   const toggleSet = (set: Set<string>, setFn: (s: Set<string>) => void, value: string) => {
     const next = new Set(set);
@@ -335,10 +343,10 @@ function ProductEditModal({
       <div className="bg-white rounded-2xl shadow-modal w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-text">Ürün Düzenle</h2>
+          <h2 className="text-lg font-semibold text-text">{t('dash.menu.editProduct')}</h2>
           <button
             onClick={onClose}
-            aria-label="Kapat"
+            aria-label={t('dash.menu.cancel')}
             className="p-1.5 rounded-lg hover:bg-gray-100 text-text-muted"
           >
             <X size={20} />
@@ -347,11 +355,8 @@ function ProductEditModal({
 
         {/* Body */}
         <div className="px-6 py-5 space-y-5">
-          {/* Name */}
           <div>
-            <label className="block text-sm font-medium text-text mb-1.5">
-              Ürün Adı
-            </label>
+            <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.productName')}</label>
             <input
               type="text"
               value={name}
@@ -360,12 +365,9 @@ function ProductEditModal({
             />
           </div>
 
-          {/* Price & Currency */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-text mb-1.5">
-                Fiyat
-              </label>
+              <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.price')}</label>
               <input
                 type="number"
                 value={price}
@@ -374,9 +376,7 @@ function ProductEditModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text mb-1.5">
-                Para Birimi
-              </label>
+              <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.currency')}</label>
               <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary bg-white">
                 <option>TRY (₺)</option>
                 <option>USD ($)</option>
@@ -385,11 +385,8 @@ function ProductEditModal({
             </div>
           </div>
 
-          {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-text mb-1.5">
-              Açıklama
-            </label>
+            <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.description')}</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -398,96 +395,53 @@ function ProductEditModal({
             />
           </div>
 
-          {/* Image */}
           <div>
-            <label className="block text-sm font-medium text-text mb-1.5">
-              Ürün Görseli
-            </label>
+            <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.productImage')}</label>
             <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/30 transition-colors cursor-pointer">
               <ImageIcon size={24} className="mx-auto text-text-muted mb-2" />
-              <p className="text-sm text-text-muted">
-                Görsel yüklemek için tıklayın veya sürükleyin
-              </p>
-              <p className="text-xs text-text-muted mt-1">
-                PNG, JPG, WEBP (max 2MB)
-              </p>
+              <p className="text-sm text-text-muted">{t('dash.menu.imageUpload')}</p>
+              <p className="text-xs text-text-muted mt-1">{t('dash.menu.imageFormats')}</p>
             </div>
           </div>
 
-          {/* Nutrition row */}
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-text mb-1.5">
-                Kalori (kcal)
-              </label>
-              <input
-                type="number"
-                value={calories}
-                onChange={(e) => setCalories(e.target.value)}
-                placeholder="0"
-                className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-              />
+              <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.calories')}</label>
+              <input type="number" value={calories} onChange={(e) => setCalories(e.target.value)} placeholder="0" className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text mb-1.5">
-                Gram (g)
-              </label>
-              <input
-                type="number"
-                value={grams}
-                onChange={(e) => setGrams(e.target.value)}
-                placeholder="0"
-                className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-              />
+              <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.grams')}</label>
+              <input type="number" value={grams} onChange={(e) => setGrams(e.target.value)} placeholder="0" className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text mb-1.5">
-                Servis Süresi (dk)
-              </label>
-              <input
-                type="number"
-                value={servingTime}
-                onChange={(e) => setServingTime(e.target.value)}
-                placeholder="0"
-                className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-              />
+              <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.servingTime')}</label>
+              <input type="number" value={servingTime} onChange={(e) => setServingTime(e.target.value)} placeholder="0" className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20" />
             </div>
           </div>
 
-          {/* Dietary */}
           <div>
-            <label className="block text-sm font-medium text-text mb-2">
-              Diyet Kısıtlamaları
-            </label>
+            <label className="block text-sm font-medium text-text mb-2">{t('dash.menu.dietary')}</label>
             <div className="flex flex-wrap gap-2">
-              {['Vegan', 'Vejeteryan', 'Glutensiz', 'Laktoz İçermez', 'Organik', 'Halal'].map(
-                (tag) => (
-                  <button
-                    key={tag}
-                    onClick={() => toggleSet(selectedDietary, setSelectedDietary, tag)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                      selectedDietary.has(tag)
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border text-text-muted hover:border-primary hover:text-primary'
-                    }`}
-                  >
-                    {tag}
-                  </button>
-                )
-              )}
+              {dietaryTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => toggleSet(selectedDietary, setSelectedDietary, tag)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                    selectedDietary.has(tag)
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-border text-text-muted hover:border-primary hover:text-primary'
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Allergens */}
           <div>
-            <label className="block text-sm font-medium text-text mb-2">
-              Alerjenler
-            </label>
+            <label className="block text-sm font-medium text-text mb-2">{t('dash.menu.allergens')}</label>
             <div className="flex flex-wrap gap-2">
-              {[
-                'Gluten', 'Süt', 'Yumurta', 'Fıstık', 'Soya', 'Balık',
-                'Kabuklu Deniz', 'Kereviz', 'Hardal', 'Susam',
-              ].map((allergen) => (
+              {allergenTags.map((allergen) => (
                 <button
                   key={allergen}
                   onClick={() => toggleSet(selectedAllergens, setSelectedAllergens, allergen)}
@@ -503,13 +457,10 @@ function ProductEditModal({
             </div>
           </div>
 
-          {/* Availability toggle */}
           <div className="flex items-center justify-between py-2">
             <div>
-              <p className="text-sm font-medium text-text">Ürün Durumu</p>
-              <p className="text-xs text-text-muted">
-                Ürünü menüde göster/gizle
-              </p>
+              <p className="text-sm font-medium text-text">{t('dash.menu.productStatus')}</p>
+              <p className="text-xs text-text-muted">{t('dash.menu.showHide')}</p>
             </div>
             <button
               onClick={() => setIsAvailable(!isAvailable)}
@@ -532,17 +483,17 @@ function ProductEditModal({
             onClick={onClose}
             className="px-4 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-gray-50 transition-colors"
           >
-            İptal
+            {t('dash.menu.cancel')}
           </button>
           <button
             onClick={() => {
-              toast.success('Ürün kaydedildi');
+              toast.success(t('dash.menu.saved'));
               onClose();
             }}
             className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
           >
             <Save size={16} />
-            Kaydet
+            {t('dash.menu.save')}
           </button>
         </div>
       </div>
@@ -552,23 +503,22 @@ function ProductEditModal({
 
 /* ── Recommendations Tab ── */
 function RecommendationsTab() {
+  const { t } = useLanguage();
   const recommendedProducts = PRODUCTS.slice(0, 6);
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-text">Önerilen Ürünler</h2>
-          <p className="text-sm text-text-muted mt-0.5">
-            Müşterilere önerilecek özel ürünleri seçin
-          </p>
+          <h2 className="text-lg font-semibold text-text">{t('dash.menu.recommended')}</h2>
+          <p className="text-sm text-text-muted mt-0.5">{t('dash.menu.recommendedDesc')}</p>
         </div>
         <button
-          onClick={() => toast.success('Öneri ekleme yakında aktif olacak')}
+          onClick={() => toast.success(t('dash.menu.recommendSoon'))}
           className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
         >
           <Plus size={16} />
-          Öneri Ekle
+          {t('dash.menu.addRecommendation')}
         </button>
       </div>
 
@@ -591,15 +541,9 @@ function RecommendationsTab() {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-medium text-text truncate">
-                  {product.name}
-                </h3>
-                <p className="text-xs text-text-muted mt-0.5 line-clamp-2">
-                  {product.description}
-                </p>
-                <p className="text-sm font-semibold text-primary mt-2">
-                  ₺{product.price.toFixed(2)}
-                </p>
+                <h3 className="text-sm font-medium text-text truncate">{product.name}</h3>
+                <p className="text-xs text-text-muted mt-0.5 line-clamp-2">{product.description}</p>
+                <p className="text-sm font-semibold text-primary mt-2">₺{product.price.toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -611,93 +555,60 @@ function RecommendationsTab() {
 
 /* ── Display Preferences Tab ── */
 function DisplayPreferencesTab() {
+  const { t } = useLanguage();
+
   return (
     <div className="space-y-6 max-w-3xl">
-      {/* Restaurant Info */}
       <div className="bg-white border border-border rounded-xl p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-text">Restoran Bilgileri</h2>
-
+        <h2 className="text-lg font-semibold text-text">{t('dash.menu.restaurantInfo')}</h2>
         <div>
-          <label className="block text-sm font-medium text-text mb-1.5">
-            Restoran Adı
-          </label>
-          <input
-            type="text"
-            defaultValue="Kozbeyli Konağı"
-            className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-          />
+          <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.restaurantName')}</label>
+          <input type="text" defaultValue="Kozbeyli Konağı" className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20" />
         </div>
-
         <div>
-          <label className="block text-sm font-medium text-text mb-1.5">
-            Logo
-          </label>
+          <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.logo')}</label>
           <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/30 transition-colors cursor-pointer">
             <ImageIcon size={24} className="mx-auto text-text-muted mb-2" />
-            <p className="text-sm text-text-muted">Logo yükleyin</p>
+            <p className="text-sm text-text-muted">{t('dash.menu.logoUpload')}</p>
           </div>
         </div>
-
         <div>
-          <label className="block text-sm font-medium text-text mb-1.5">
-            Tanıtım Videosu URL
-          </label>
-          <input
-            type="url"
-            placeholder="https://youtube.com/..."
-            className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-          />
+          <label className="block text-sm font-medium text-text mb-1.5">{t('dash.menu.videoUrl')}</label>
+          <input type="url" placeholder="https://youtube.com/..." className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20" />
         </div>
       </div>
 
-      {/* Theme Settings */}
       <div className="bg-white border border-border rounded-xl p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-text">Tema Ayarları</h2>
-
+        <h2 className="text-lg font-semibold text-text">{t('dash.menu.themeSettings')}</h2>
         <div>
-          <label className="block text-sm font-medium text-text mb-2">
-            Renk Teması
-          </label>
+          <label className="block text-sm font-medium text-text mb-2">{t('dash.menu.colorTheme')}</label>
           <div className="flex gap-3">
             {[
-              { name: 'Varsayılan', color: '#4F6EF7' },
-              { name: 'Altın', color: '#C5A059' },
-              { name: 'Yeşil', color: '#16A34A' },
-              { name: 'Kırmızı', color: '#EF4444' },
-              { name: 'Mor', color: '#8B5CF6' },
+              { name: 'Default', color: '#4F6EF7' },
+              { name: 'Gold', color: '#C5A059' },
+              { name: 'Green', color: '#16A34A' },
+              { name: 'Red', color: '#EF4444' },
+              { name: 'Purple', color: '#8B5CF6' },
             ].map((theme) => (
-              <button
-                key={theme.name}
-                className="flex flex-col items-center gap-1.5 group"
-              >
-                <div
-                  className="w-10 h-10 rounded-full border-2 border-transparent group-hover:border-gray-300 transition-colors"
-                  style={{ backgroundColor: theme.color }}
-                />
+              <button key={theme.name} className="flex flex-col items-center gap-1.5 group">
+                <div className="w-10 h-10 rounded-full border-2 border-transparent group-hover:border-gray-300 transition-colors" style={{ backgroundColor: theme.color }} />
                 <span className="text-xs text-text-muted">{theme.name}</span>
               </button>
             ))}
           </div>
         </div>
-
         <div>
-          <label className="block text-sm font-medium text-text mb-2">
-            Kategori Görünümü
-          </label>
+          <label className="block text-sm font-medium text-text mb-2">{t('dash.menu.categoryView')}</label>
           <div className="flex gap-3">
             <button className="flex-1 border-2 border-primary rounded-xl p-3 text-center">
               <div className="grid grid-cols-3 gap-1 mb-2">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-6 rounded bg-gray-200" />
-                ))}
+                {[1, 2, 3].map((i) => (<div key={i} className="h-6 rounded bg-gray-200" />))}
               </div>
               <p className="text-xs font-medium text-primary">Grid</p>
             </button>
             <button className="flex-1 border-2 border-border rounded-xl p-3 text-center hover:border-gray-300 transition-colors">
               <div className="space-y-1 mb-2">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-4 rounded bg-gray-200" />
-                ))}
+                {[1, 2, 3].map((i) => (<div key={i} className="h-4 rounded bg-gray-200" />))}
               </div>
               <p className="text-xs font-medium text-text-muted">Liste</p>
             </button>
@@ -707,11 +618,11 @@ function DisplayPreferencesTab() {
 
       <div className="flex justify-end">
         <button
-          onClick={() => toast.success('Kaydedildi')}
+          onClick={() => toast.success(t('dash.settings.saved'))}
           className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
         >
           <Save size={16} />
-          Değişiklikleri Kaydet
+          {t('dash.menu.saveChanges')}
         </button>
       </div>
     </div>

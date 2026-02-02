@@ -24,10 +24,10 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
                 const isLarge = index % 3 === 0;
 
                 return (
-                    <div
+                    <button
                         key={category.id}
                         onClick={() => onCategorySelect(category.id)}
-                        className={`relative overflow-hidden rounded-xl shadow-card group cursor-pointer active:scale-[0.98] transition-all
+                        className={`relative overflow-hidden rounded-xl shadow-card group cursor-pointer active:scale-[0.98] transition-all text-left
               ${isLarge ? 'col-span-2 h-40' : 'col-span-1 h-32'}
             `}
                     >
@@ -64,7 +64,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
                                 <path d="M9 18l6-6-6-6" />
                             </svg>
                         </div>
-                    </div>
+                    </button>
                 );
             })}
 

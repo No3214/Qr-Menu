@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Send, X, Bot, Sparkles } from 'lucide-react';
 import { getChatResponse } from '../services/geminiService';
 import { useLanguage } from '../context/LanguageContext';
@@ -33,7 +33,10 @@ export const MenuAssistant: React.FC = () => {
         scrollToBottom();
     }, [messages]);
 
-    const suggestedPrompts = [t('assistant.prompt1'), t('assistant.prompt2'), t('assistant.prompt3'), t('assistant.prompt4')];
+    const suggestedPrompts = useMemo(
+        () => [t('assistant.prompt1'), t('assistant.prompt2'), t('assistant.prompt3'), t('assistant.prompt4')],
+        [t]
+    );
 
     const handleSend = async (directMessage?: string) => {
         const userMessage = (directMessage || input).trim();
