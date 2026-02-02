@@ -23,8 +23,7 @@ export const ReviewsPage: React.FC = () => {
       ]);
       setReviews(reviewsData);
       setStats(statsData);
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error(t('dash.reviews.loadError'));
     } finally {
       setLoading(false);

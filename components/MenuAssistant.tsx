@@ -11,9 +11,7 @@ interface Message {
 export const MenuAssistant: React.FC = () => {
     const { t, language } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', content: '' }
-    ]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -66,6 +64,7 @@ export const MenuAssistant: React.FC = () => {
                 <button
                     onClick={() => setIsOpen(true)}
                     className="fixed bottom-6 right-6 w-14 h-14 bg-stone-900 text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-[60] group"
+                    aria-label={t('assistant.title')}
                 >
                     <Bot className="w-6 h-6" />
                     <span className="absolute -top-1 -right-1 flex h-3 w-3">
@@ -93,7 +92,7 @@ export const MenuAssistant: React.FC = () => {
                                 <p className="text-[10px] text-stone-400">{t('assistant.subtitle')}</p>
                             </div>
                         </div>
-                        <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                        <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors" aria-label={t('close')}>
                             <X className="w-5 h-5" />
                         </button>
                     </div>
@@ -151,6 +150,7 @@ export const MenuAssistant: React.FC = () => {
                             onClick={() => handleSend()}
                             disabled={isLoading || !input.trim()}
                             className="w-11 h-11 bg-stone-900 text-white rounded-xl flex items-center justify-center disabled:opacity-50 transition-all hover:scale-105 active:scale-95"
+                            aria-label={t('assistant.send')}
                         >
                             <Send className="w-5 h-5" />
                         </button>

@@ -60,6 +60,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose, on
                                 <button
                                     onClick={onClose}
                                     className="p-2.5 bg-black/10 hover:bg-black/20 text-white rounded-full backdrop-blur-md transition-colors"
+                                    aria-label={t('close')}
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -81,96 +82,96 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose, on
                                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
                             </div>
 
-                    {/* Content Body */}
-                    <div className="px-6 py-8 -mt-6 relative bg-white rounded-t-[32px]">
-                        <div className="w-12 h-1 bg-stone-200 rounded-full mx-auto mb-6" />
+                            {/* Content Body */}
+                            <div className="px-6 py-8 -mt-6 relative bg-white rounded-t-[32px]">
+                                <div className="w-12 h-1 bg-stone-200 rounded-full mx-auto mb-6" />
 
-                        <div className="flex items-start justify-between gap-4 mb-3">
-                            <h2 className="text-3xl font-bold text-stone-900 leading-tight font-serif tracking-tight">
-                                {product.name}
-                            </h2>
-                        </div>
-
-                        {!product.isAvailable && (
-                            <span className="inline-block px-3 py-1 mb-4 text-[10px] font-bold uppercase bg-stone-100 text-stone-500 rounded-full tracking-wider border border-stone-200">
-                                {t('product.outOfStock')}
-                            </span>
-                        )}
-
-                        <div className="flex items-baseline gap-1 mb-8">
-                            <span className="text-4xl font-bold text-stone-900">{formattedPrice}</span>
-                            <span className="text-xl text-stone-400 font-medium">&#8378;</span>
-                        </div>
-
-                        <div className="prose prose-stone prose-sm">
-                            <p className="text-stone-600 text-base leading-relaxed font-medium">
-                                {product.description}
-                            </p>
-                        </div>
-
-                        {/* Notes */}
-                        {product.notes && product.notes.length > 0 && (
-                            <div className="mt-6 space-y-2.5">
-                                <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-2">
-                                    <MessageCircle className="w-3.5 h-3.5 text-primary" />
-                                    {t('product.notes')}
-                                </h4>
-                                <div className="space-y-2">
-                                    {product.notes.map((note, i) => (
-                                        <div key={i} className="flex items-start gap-2.5 bg-primary/5 border border-primary/10 rounded-xl px-3.5 py-2.5">
-                                            <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-                                            <p className="text-sm text-stone-600 leading-relaxed font-medium">{note}</p>
-                                        </div>
-                                    ))}
+                                <div className="flex items-start justify-between gap-4 mb-3">
+                                    <h2 className="text-3xl font-bold text-stone-900 leading-tight font-serif tracking-tight">
+                                        {product.name}
+                                    </h2>
                                 </div>
+
+                                {!product.isAvailable && (
+                                    <span className="inline-block px-3 py-1 mb-4 text-[10px] font-bold uppercase bg-stone-100 text-stone-500 rounded-full tracking-wider border border-stone-200">
+                                        {t('product.outOfStock')}
+                                    </span>
+                                )}
+
+                                <div className="flex items-baseline gap-1 mb-8">
+                                    <span className="text-4xl font-bold text-stone-900">{formattedPrice}</span>
+                                    <span className="text-xl text-stone-400 font-medium">&#8378;</span>
+                                </div>
+
+                                <div className="prose prose-stone prose-sm">
+                                    <p className="text-stone-600 text-base leading-relaxed font-medium">
+                                        {product.description}
+                                    </p>
+                                </div>
+
+                                {/* Notes */}
+                                {product.notes && product.notes.length > 0 && (
+                                    <div className="mt-6 space-y-2.5">
+                                        <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-2">
+                                            <MessageCircle className="w-3.5 h-3.5 text-primary" />
+                                            {t('product.notes')}
+                                        </h4>
+                                        <div className="space-y-2">
+                                            {product.notes.map((note, i) => (
+                                                <div key={i} className="flex items-start gap-2.5 bg-primary/5 border border-primary/10 rounded-xl px-3.5 py-2.5">
+                                                    <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                                                    <p className="text-sm text-stone-600 leading-relaxed font-medium">{note}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Öneriler - Cross-sell Pairing Cards */}
+                                <PairingRecommendations
+                                    productId={product.id}
+                                    onSelectProduct={onSelectProduct}
+                                />
+
+                                <div className="mt-10 pt-6 border-t border-stone-100 flex items-center justify-between">
+                                    <div className="flex items-center gap-2 text-sm font-medium text-stone-500 bg-stone-50 px-3 py-1.5 rounded-full">
+                                        <Info className="w-4 h-4" />
+                                        <span>{product.category}</span>
+                                    </div>
+
+                                    <button
+                                        onClick={async () => {
+                                            try {
+                                                if (navigator.share) {
+                                                    await navigator.share({
+                                                        title: product.name,
+                                                        text: `${product.name} - ${formattedPrice}₺`,
+                                                        url: window.location.href,
+                                                    });
+                                                } else {
+                                                    await navigator.clipboard.writeText(`${product.name} - ${formattedPrice}₺ | ${window.location.href}`);
+                                                    toast.success(t('product.shared'));
+                                                }
+                                            } catch { /* user cancelled share */ }
+                                        }}
+                                        className="p-2 text-stone-400 hover:text-stone-900 transition-colors"
+                                        aria-label={t('product.share')}
+                                    >
+                                        <Share2 className="w-5 h-5" />
+                                    </button>
+                                </div>
+
+                                <button
+                                    onClick={() => {
+                                        toast.success(t('product.addedToOrder'));
+                                        onClose();
+                                    }}
+                                    disabled={!product.isAvailable}
+                                    className="w-full mt-6 bg-stone-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-stone-900/20 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {product.isAvailable ? t('product.addToOrder') : t('product.outOfStock')}
+                                </button>
                             </div>
-                        )}
-
-                        {/* Öneriler - Cross-sell Pairing Cards */}
-                        <PairingRecommendations
-                            productId={product.id}
-                            onSelectProduct={onSelectProduct}
-                        />
-
-                        <div className="mt-10 pt-6 border-t border-stone-100 flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-sm font-medium text-stone-500 bg-stone-50 px-3 py-1.5 rounded-full">
-                                <Info className="w-4 h-4" />
-                                <span>{product.category}</span>
-                            </div>
-
-                            <button
-                                onClick={async () => {
-                                    try {
-                                        if (navigator.share) {
-                                            await navigator.share({
-                                                title: product.name,
-                                                text: `${product.name} - ${formattedPrice}₺`,
-                                                url: window.location.href,
-                                            });
-                                        } else {
-                                            await navigator.clipboard.writeText(`${product.name} - ${formattedPrice}₺ | ${window.location.href}`);
-                                            toast.success(t('product.shared'));
-                                        }
-                                    } catch { /* user cancelled share */ }
-                                }}
-                                className="p-2 text-stone-400 hover:text-stone-900 transition-colors"
-                                aria-label="Share"
-                            >
-                                <Share2 className="w-5 h-5" />
-                            </button>
-                        </div>
-
-                        <button
-                            onClick={() => {
-                                toast.success(t('product.addedToOrder'));
-                                onClose();
-                            }}
-                            disabled={!product.isAvailable}
-                            className="w-full mt-6 bg-stone-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-stone-900/20 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {product.isAvailable ? t('product.addToOrder') : t('product.outOfStock')}
-                        </button>
-                    </div>
                         </div>
                     </motion.div>
                 </div>
@@ -224,11 +225,11 @@ const PairingRecommendations: React.FC<{
                             {/* Image */}
                             <div className="relative h-28 bg-stone-100">
                                 {pairedProduct.image ? (
-                                    <img
+                                    <OptimizedImage
                                         src={pairedProduct.image}
                                         alt={pairedProduct.name}
-                                        loading="lazy"
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        wrapperClassName="w-full h-full"
+                                        className="group-hover:scale-105 transition-transform duration-300"
                                     />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-3xl"><span role="img" aria-label="food">🍽️</span></div>

@@ -242,7 +242,7 @@ function QRCodeSection() {
   const { t } = useLanguage();
   const [fgColor, setFgColor] = React.useState('#000000');
   const [bgColor, setBgColor] = React.useState('#FFFFFF');
-  const menuUrl = 'https://kozbeyli-konagi.vercel.app';
+  const menuUrl = import.meta.env.VITE_MENU_URL || 'https://kozbeyli-konagi.vercel.app';
 
   const downloadQR = (format: 'png' | 'svg') => {
     const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement | null;

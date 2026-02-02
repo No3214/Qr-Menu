@@ -10,6 +10,9 @@ interface LanguageContextType {
 
 const translations: Record<Language, Record<string, string>> = {
     tr: {
+        // Common
+        'close': 'Kapat',
+
         // VideoLanding
         'landing.title': 'Lezzeti Keşfet',
         'landing.subtitle': "Ege'nin en özel lezzetleri ve eşsiz sunumları sizi bekliyor.",
@@ -29,6 +32,7 @@ const translations: Record<Language, Record<string, string>> = {
         'product.addToOrder': 'Siparişe Ekle',
         'product.addedToOrder': 'Siparişe eklendi!',
         'product.shared': 'Kopyalandı!',
+        'product.share': 'Paylaş',
         'product.outOfStock': 'Tükendi',
         'product.notFound': 'Ürün bulunamadı.',
         'product.pairingTitle': 'Gurme Eşleşme',
@@ -59,6 +63,7 @@ const translations: Record<Language, Record<string, string>> = {
         'assistant.welcome': 'Merhaba! Ben Kozbeyli Konağı yapay zeka asistanıyım. Size menümüz hakkında nasıl yardımcı olabilirim?',
         'assistant.error': 'Üzgünüm, şu an yanıt veremiyorum. Lütfen daha sonra tekrar deneyin.',
         'assistant.placeholder': 'Sorunuzu buraya yazın...',
+        'assistant.send': 'Gönder',
         'assistant.tooltip': 'AI Garsona Sor',
         'assistant.title': 'Gurme AI',
         'assistant.subtitle': 'Kozbeyli Konağı Asistanı',
@@ -431,6 +436,9 @@ const translations: Record<Language, Record<string, string>> = {
         'menu': 'Menü',
     },
     en: {
+        // Common
+        'close': 'Close',
+
         // VideoLanding
         'landing.title': 'Discover Taste',
         'landing.subtitle': "The finest flavors and unique presentations of the Aegean await you.",
@@ -450,6 +458,7 @@ const translations: Record<Language, Record<string, string>> = {
         'product.addToOrder': 'Add to Order',
         'product.addedToOrder': 'Added to order!',
         'product.shared': 'Copied!',
+        'product.share': 'Share',
         'product.outOfStock': 'Out of Stock',
         'product.notFound': 'Product not found.',
         'product.pairingTitle': 'Gourmet Pairing',
@@ -480,6 +489,7 @@ const translations: Record<Language, Record<string, string>> = {
         'assistant.welcome': 'Hello! I am the AI assistant of Kozbeyli Konagi. How can I help you with our menu?',
         'assistant.error': 'Sorry, I cannot respond right now. Please try again later.',
         'assistant.placeholder': 'Type your question here...',
+        'assistant.send': 'Send',
         'assistant.tooltip': 'Ask AI Waiter',
         'assistant.title': 'Gourmet AI',
         'assistant.subtitle': 'Kozbeyli Konagi Assistant',

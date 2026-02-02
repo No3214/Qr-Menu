@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { LanguageProvider } from './context/LanguageContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Lazy load components for performance (Fixes INP issues on navigation)
 const DigitalMenu = React.lazy(() => import('./components/DigitalMenu').then(module => ({ default: module.DigitalMenu })));
@@ -20,7 +21,7 @@ const TranslationsPage = React.lazy(() => import('./dashboard/pages/Translations
  */
 export default function App() {
   return (
-    <>
+    <ErrorBoundary>
       <Toaster
         position="top-center"
         toastOptions={{
@@ -76,6 +77,6 @@ export default function App() {
           </Routes>
         </Suspense>
       </LanguageProvider>
-    </>
+    </ErrorBoundary>
   );
 }
