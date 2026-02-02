@@ -37,7 +37,6 @@ export const ReviewService = {
      */
     submitReview: async (rating: number, comment: string, customerName?: string) => {
         if (!isSupabaseConfigured()) {
-            console.warn('Supabase not configured, review saved locally');
             return {
                 id: Date.now().toString(),
                 rating,
@@ -66,7 +65,6 @@ export const ReviewService = {
      */
     getReviews: async () => {
         if (!isSupabaseConfigured()) {
-            console.warn('Supabase not configured, using mock reviews');
             return MOCK_REVIEWS;
         }
 
@@ -76,7 +74,6 @@ export const ReviewService = {
             .order('created_at', { ascending: false });
 
         if (error) {
-            console.error('Error fetching reviews:', error);
             return MOCK_REVIEWS;
         }
 
@@ -98,7 +95,6 @@ export const ReviewService = {
             .select('rating');
 
         if (error) {
-            console.error('Error fetching review stats:', error);
             const totalReviews = MOCK_REVIEWS.length;
             const sum = MOCK_REVIEWS.reduce((acc, curr) => acc + curr.rating, 0);
             return { average: Number((sum / totalReviews).toFixed(1)), total: totalReviews };

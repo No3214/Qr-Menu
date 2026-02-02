@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Product, PRODUCTS, PRODUCT_PAIRINGS } from '../services/MenuData';
 import { getProductPairings } from '../services/aiPairingService';
 import { X, Share2, Info, Sparkles, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { backdropVariants, modalSlideUp } from '../lib/animations';
+import { OptimizedImage } from './OptimizedImage';
 import toast from 'react-hot-toast';
 
 interface ProductModalProps {
@@ -25,50 +28,58 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose, on
         };
     }, [product]);
 
-    if (!product) return null;
-
-    const formattedPrice = new Intl.NumberFormat(language === 'tr' ? 'tr-TR' : 'en-US').format(product.price);
+    const formattedPrice = product ? new Intl.NumberFormat(language === 'tr' ? 'tr-TR' : 'en-US').format(product.price) : '';
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center p-0 sm:p-4">
-            {/* Backdrop */}
-            <div
-                className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm transition-all duration-300"
-                onClick={onClose}
-                aria-hidden="true"
-            />
+        <AnimatePresence>
+            {product && (
+                <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center p-0 sm:p-4">
+                    {/* Backdrop */}
+                    <motion.div
+                        variants={backdropVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm"
+                        onClick={onClose}
+                        aria-hidden="true"
+                    />
 
-            {/* Modal Content */}
-            <div
-                className="relative w-full max-w-lg bg-white rounded-t-[32px] sm:rounded-[32px] overflow-hidden shadow-2xl transform transition-transform animate-slide-up"
-                style={{ maxHeight: '92vh' }}
-            >
-                <div className="overflow-y-auto" style={{ maxHeight: '92vh' }}>
-                    {/* Close Button */}
-                    <div className="absolute top-4 right-4 z-20">
-                        <button
-                            onClick={onClose}
-                            className="p-2.5 bg-black/10 hover:bg-black/20 text-white rounded-full backdrop-blur-md transition-colors"
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
-                    </div>
-
-                    {/* Image Header */}
-                    <div className="relative h-80 bg-stone-100 flex-shrink-0">
-                        {product.image ? (
-                            <img
-                                src={product.image}
-                                alt={product.name}
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-stone-100 text-stone-300">
-                                <span className="text-6xl">&#127869;</span>
+                    {/* Modal Content */}
+                    <motion.div
+                        variants={modalSlideUp}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className="relative w-full max-w-lg bg-white rounded-t-[32px] sm:rounded-[32px] overflow-hidden shadow-2xl"
+                        style={{ maxHeight: '92vh' }}
+                    >
+                        <div className="overflow-y-auto" style={{ maxHeight: '92vh' }}>
+                            {/* Close Button */}
+                            <div className="absolute top-4 right-4 z-20">
+                                <button
+                                    onClick={onClose}
+                                    className="p-2.5 bg-black/10 hover:bg-black/20 text-white rounded-full backdrop-blur-md transition-colors"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
                             </div>
-                        )}
-                        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
-                    </div>
+
+                            {/* Image Header with blur-up */}
+                            <div className="relative h-80 bg-stone-100 flex-shrink-0">
+                                {product.image ? (
+                                    <OptimizedImage
+                                        src={product.image}
+                                        alt={product.name}
+                                        wrapperClassName="w-full h-full"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-stone-100 text-stone-300">
+                                        <span className="text-6xl" role="img" aria-label={product.name}>&#127869;</span>
+                                    </div>
+                                )}
+                                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
+                            </div>
 
                     {/* Content Body */}
                     <div className="px-6 py-8 -mt-6 relative bg-white rounded-t-[32px]">
@@ -160,9 +171,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose, on
                             {product.isAvailable ? t('product.addToOrder') : t('product.outOfStock')}
                         </button>
                     </div>
+                        </div>
+                    </motion.div>
                 </div>
-            </div>
-        </div>
+            )}
+        </AnimatePresence>
     );
 };
 
@@ -218,7 +231,7 @@ const PairingRecommendations: React.FC<{
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                     />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-3xl">🍽️</div>
+                                    <div className="w-full h-full flex items-center justify-center text-3xl"><span role="img" aria-label="food">🍽️</span></div>
                                 )}
                             </div>
 

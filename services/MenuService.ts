@@ -7,7 +7,6 @@ export const MenuService = {
      */
     getCategories: async (): Promise<Category[]> => {
         if (!isSupabaseConfigured()) {
-            console.warn('Supabase not configured, using mock data');
             return MOCK_CATEGORIES;
         }
 
@@ -18,7 +17,6 @@ export const MenuService = {
             .order('order', { ascending: true });
 
         if (error) {
-            console.error('Error fetching categories:', error);
             return MOCK_CATEGORIES;
         }
 
@@ -39,7 +37,6 @@ export const MenuService = {
             .eq('is_active', true);
 
         if (error) {
-            console.error('Error fetching products:', error);
             return MOCK_PRODUCTS;
         }
 

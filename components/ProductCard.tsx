@@ -1,7 +1,10 @@
 import React, { memo } from 'react';
+import { motion } from 'framer-motion';
 import { Product } from '../services/MenuData';
 import { Plus, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { fadeInUp } from '../lib/animations';
+import { OptimizedImage } from './OptimizedImage';
 
 interface ProductCardProps {
     product: Product;
@@ -13,17 +16,22 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
     const hasNotes = product.notes && product.notes.length > 0;
 
     return (
-        <div className={`group relative bg-white rounded-2xl p-3 sm:p-4 mb-4 border border-stone-100 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] transition-all hover:shadow-lg active:scale-[0.99] ${!product.isAvailable ? 'opacity-60 grayscale' : ''}`}>
+        <motion.div
+            variants={fadeInUp}
+            className={`group relative bg-white rounded-2xl p-3 sm:p-4 mb-4 border border-stone-100 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] hover:shadow-lg ${!product.isAvailable ? 'opacity-60 grayscale' : ''}`}
+            whileTap={{ scale: 0.99 }}
+            style={{ willChange: 'transform, opacity' }}
+        >
 
             <div className="flex gap-4">
-                {/* Image Area */}
+                {/* Image Area with blur-up */}
                 {product.image ? (
                     <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0">
-                        <img
+                        <OptimizedImage
                             src={product.image}
                             alt={product.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover rounded-xl shadow-sm"
+                            wrapperClassName="w-full h-full rounded-xl shadow-sm"
+                            className="rounded-xl"
                         />
                         {!product.isAvailable && (
                             <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
@@ -33,7 +41,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                     </div>
                 ) : (
                     <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-stone-50 flex items-center justify-center text-2xl border border-stone-100">
-                        🍽️
+                        <span role="img" aria-label={t('product.category')}>🍽️</span>
                     </div>
                 )}
 
@@ -72,7 +80,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                     ))}
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 });
 

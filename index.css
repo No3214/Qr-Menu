@@ -49,6 +49,17 @@
     @apply bg-white/80 backdrop-blur-md border-b border-white/20;
   }
 
+  .glass-strong {
+    @apply backdrop-blur-lg bg-white/40 border border-white/30 shadow-lg;
+  }
+
+  /* Hardware Acceleration for smooth animations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -57,4 +68,10 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+}
+
+/* Custom Selection Color */
+::selection {
+  background-color: #C5A059;
+  color: white;
 }

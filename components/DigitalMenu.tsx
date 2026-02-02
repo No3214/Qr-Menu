@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Category, Product } from '../services/MenuData';
 import { MenuService } from '../services/MenuService';
 import { CategoryNav } from './CategoryNav';
@@ -10,6 +11,7 @@ import { Search, ChevronLeft, X, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { ReviewModal } from './ReviewModal';
 import { MenuAssistant } from './MenuAssistant';
+import { staggerContainer } from '../lib/animations';
 
 type ViewState = 'LANDING' | 'GRID' | 'LIST';
 
@@ -47,8 +49,8 @@ export const DigitalMenu: React.FC = () => {
                 if (cats.length > 0) {
                     setActiveCategory(cats[0].id);
                 }
-            } catch (error) {
-                console.error("Failed to load menu data", error);
+            } catch {
+                // Fallback handled by MenuService returning mock data
             } finally {
                 setLoading(false);
             }
@@ -187,7 +189,13 @@ export const DigitalMenu: React.FC = () => {
             {viewState === 'LIST' && (
                 <>
                     <ListHeader />
-                    <div className="p-4 space-y-4 pb-24">
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        animate="show"
+                        key={activeCategory}
+                        className="p-4 space-y-4 pb-24"
+                    >
                         {filteredProducts.map(product => (
                             <div key={product.id} onClick={() => setSelectedProduct(product)}>
                                 <ProductCard product={product} />
@@ -198,7 +206,7 @@ export const DigitalMenu: React.FC = () => {
                                 <p>{t('product.notFound')}</p>
                             </div>
                         )}
-                    </div>
+                    </motion.div>
                 </>
             )}
 

@@ -11,6 +11,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+                serif: ['"Cormorant Garamond"', '"Playfair Display"', 'Georgia', 'serif'],
             },
             colors: {
                 // Blueprint Colors
