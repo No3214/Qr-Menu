@@ -32,6 +32,8 @@ const translations: Record<Language, Record<string, string>> = {
         'product.outOfStock': 'Tükendi',
         'product.notFound': 'Ürün bulunamadı.',
         'product.pairingTitle': 'Gurme Eşleşme',
+        'product.suggestions': 'Öneriler',
+        'product.why': 'Neden?',
         'product.notes': 'Açıklamalar',
         'product.category': 'Kategori',
 
@@ -430,6 +432,8 @@ const translations: Record<Language, Record<string, string>> = {
         'product.outOfStock': 'Out of Stock',
         'product.notFound': 'Product not found.',
         'product.pairingTitle': 'Gourmet Pairing',
+        'product.suggestions': 'Suggestions',
+        'product.why': 'Why?',
         'product.notes': 'Notes',
         'product.category': 'Category',
 

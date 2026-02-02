@@ -205,6 +205,7 @@ export const DigitalMenu: React.FC = () => {
             <ProductModal
                 product={selectedProduct}
                 onClose={() => setSelectedProduct(null)}
+                onSelectProduct={(p) => setSelectedProduct(p)}
             />
 
             {showReviewModal && <ReviewModal onClose={() => setShowReviewModal(false)} />}

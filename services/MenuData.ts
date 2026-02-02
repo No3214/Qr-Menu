@@ -157,3 +157,81 @@ export const PRODUCTS: Product[] = [
     { id: 'r1', name: 'Yeni Rakı (35 Cl)', description: 'Klasik Türk rakısı.', price: 900, category: 'raki', isAvailable: true, image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80' },
     { id: 'r2', name: 'Yeni Rakı (70 Cl)', description: 'Klasik Türk rakısı, 70lik.', price: 1700, category: 'raki', isAvailable: true, image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80' },
 ];
+
+/**
+ * Product pairing recommendations (cross-sell).
+ * Maps product ID to recommended product IDs with "why" reasons (TR/EN).
+ */
+export interface ProductPairingRec {
+    productId: string;
+    reason_tr: string;
+    reason_en: string;
+}
+
+export const PRODUCT_PAIRINGS: Record<string, ProductPairingRec[]> = {
+    // Gurme Serpme Kahvaltı
+    'k1': [
+        { productId: 'sc7', reason_tr: 'Türk kahvesi, serpme kahvaltının geleneksel tamamlayıcısıdır.', reason_en: 'Turkish coffee is the traditional complement to a full breakfast.' },
+        { productId: 'si8', reason_tr: 'Taze portakal suyu, kahvaltının ferahlatıcı başlangıcıdır.', reason_en: 'Fresh orange juice is a refreshing start to breakfast.' },
+    ],
+    // Izgara Pirzola
+    'ay1': [
+        { productId: 'sr4', reason_tr: 'Tanenleri ızgara etin yağlı dokusunu dengeler, meyvemsi notaları baharatlı ızgaraya eşlik eder.', reason_en: 'Tannins balance the rich texture of grilled meat, fruity notes complement the spiced char.' },
+        { productId: 'b4', reason_tr: 'Biberli roka ve ceviz, taze asidiyle etin ağırlığını güzel dengeler.', reason_en: 'Peppery arugula and walnut, with fresh acidity, beautifully balance the richness of the meat.' },
+    ],
+    // Konak Köfte
+    'ay2': [
+        { productId: 'sr1', reason_tr: 'Karasi üzümünün yoğun taneni, köftenin baharat yoğunluğuyla uyum sağlar.', reason_en: 'The intense tannins of Karasi grape harmonize with the spice intensity of the meatballs.' },
+        { productId: 'm6', reason_tr: 'Haydari\'nin serin yoğurt tadı, köftenin ağır lezzetini hafifletir.', reason_en: 'The cool yogurt flavor of Haydari lightens the rich taste of meatballs.' },
+    ],
+    // Konak Sac Kavurma
+    'ay3': [
+        { productId: 'sr2', reason_tr: 'Öküzgözü, sacda pişen etin derin aromalarıyla mükemmel bir ikili oluşturur.', reason_en: 'Öküzgözü pairs perfectly with the deep aromas of sautéed meat.' },
+        { productId: 'm1', reason_tr: 'Atom mezesinin acı biberi, sac kavurmanın yoğun etli lezzetini canlandırır.', reason_en: 'Atom\'s chili pepper enlivens the intense meaty flavor of the sautéed dish.' },
+    ],
+    // Lokum Bonfile
+    'ay4': [
+        { productId: 'sr4', reason_tr: 'Phokaia Blend\'in meyvemsi notaları, bonfilenin tereyağımsı yumuşaklığıyla uyum sağlar.', reason_en: 'Phokaia Blend\'s fruity notes pair perfectly with the buttery tenderness of the fillet.' },
+        { productId: 'as2', reason_tr: 'Kaşarlı mantarın kremalı dokusu, bonfileye zengin bir yan lezzet katar.', reason_en: 'The creamy texture of cheesy mushrooms adds a rich side flavor to the fillet.' },
+    ],
+    // Taş Fırın Karışık Pizza
+    'p2': [
+        { productId: 'br1', reason_tr: 'Blanc biranın narenciye notaları, pizzanın zengin peynir lezzetini tazelir.', reason_en: 'Blanc beer\'s citrus notes refresh the rich cheese flavors of pizza.' },
+        { productId: 'b4', reason_tr: 'Roka salatasının hafifliği, pizzanın yoğunluğunu dengeler.', reason_en: 'The lightness of arugula salad balances the richness of pizza.' },
+    ],
+    // Taş Fırın Margarita Pizza
+    'p3': [
+        { productId: 'sr5', reason_tr: 'Chardonnay\'ın meyvemsi tonu, margaritanın domates ve fesleğen tazeliğiyle örtüşür.', reason_en: 'Chardonnay\'s fruity tone matches the tomato and basil freshness of margherita.' },
+        { productId: 'br2', reason_tr: 'Carlsberg\'ın hafif malt tadı, margarita pizzayla mükemmel uyum sağlar.', reason_en: 'Carlsberg\'s light malt flavor pairs perfectly with margherita pizza.' },
+    ],
+    // Gurme Rustik Sandviç
+    'p1': [
+        { productId: 'si2', reason_tr: 'Ice Americano\'nun keskin kahve aroması, sandviçin zengin pesto ve peynir lezzetiyle dengelenir.', reason_en: 'Ice Americano\'s sharp coffee aroma balances the rich pesto and cheese of the sandwich.' },
+        { productId: 'b3', reason_tr: 'Patates kızartması, sandviçin klasik yol arkadaşıdır.', reason_en: 'French fries are the classic companion to a sandwich.' },
+    ],
+    // Rakı Eşlikçisi Peynir Tabağı
+    'pt1': [
+        { productId: 'r1', reason_tr: 'Peynir tabağı, rakının geleneksel sofra arkadaşıdır. Anason ve peynir uyumu eşsizdir.', reason_en: 'The cheese platter is rakı\'s traditional table companion. Anise and cheese pairing is unmatched.' },
+        { productId: 'm13', reason_tr: 'Vişneli yaprak sarmanın ekşi tatlı dengesi, peynir tabağına rafine bir lezzet katar.', reason_en: 'The sweet-sour balance of cherry stuffed vine leaves adds a refined flavor to the cheese platter.' },
+    ],
+    // Türk Yerli Peynir Şarap Tabağı
+    'pt2': [
+        { productId: 'sr6', reason_tr: 'Foça Karası-Merlot harmanı, yerli peynirlerin farklı tatlarını kucaklar.', reason_en: 'The Foça Karası-Merlot blend embraces the diverse flavors of local cheeses.' },
+        { productId: 'm5', reason_tr: 'Girit ezmesinin fesleğen aroması, peynir çeşitliliğine taze bir boyut ekler.', reason_en: 'The basil aroma of Cretan spread adds a fresh dimension to cheese variety.' },
+    ],
+    // Antakya Künefe
+    't2': [
+        { productId: 'sc7', reason_tr: 'Türk kahvesinin acı telvesi, künefenin yoğun şerbetli tatlılığını dengeler.', reason_en: 'Turkish coffee\'s bitter grounds balance the intense syrupy sweetness of künefe.' },
+        { productId: 't5', reason_tr: 'Vanilyalı dondurma, sıcak künefenin üzerinde eriyerek müthiş bir kontrast yaratır.', reason_en: 'Vanilla ice cream melts on hot künefe creating an incredible contrast.' },
+    ],
+    // Churros
+    't3': [
+        { productId: 'sc4', reason_tr: 'Espresso\'nun yoğun aroması, churrosun çıtır tatlılığıyla mükemmel bir ikili oluşturur.', reason_en: 'Espresso\'s intense aroma creates a perfect duo with the crispy sweetness of churros.' },
+        { productId: 'si3', reason_tr: 'Ice Latte\'nin sütlü serinliği, churrosla tatlı bir uyum yaratır.', reason_en: 'Ice Latte\'s milky coolness creates a sweet harmony with churros.' },
+    ],
+    // Füme Somon
+    'b5': [
+        { productId: 'sr5', reason_tr: 'Chardonnay\'ın tereyağımsı dokusu, füme somonun tütsülenmiş aromasıyla mükemmel eşleşir.', reason_en: 'Chardonnay\'s buttery texture pairs perfectly with smoked salmon\'s cured aroma.' },
+        { productId: 'si8', reason_tr: 'Portakal suyunun asidik tazeliği, somonun yağlı dokusunu keser.', reason_en: 'Orange juice\'s acidic freshness cuts through salmon\'s oily texture.' },
+    ],
+};

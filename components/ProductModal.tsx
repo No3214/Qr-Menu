@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import { Product } from '../services/MenuData';
+import { Product, PRODUCTS, PRODUCT_PAIRINGS } from '../services/MenuData';
 import { X, Share2, Info, Sparkles, MessageCircle } from 'lucide-react';
-import { getProductPairing } from '../services/geminiService';
 import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
 
 interface ProductModalProps {
     product: Product | null;
     onClose: () => void;
+    onSelectProduct?: (product: Product) => void;
 }
 
-export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
+export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose, onSelectProduct }) => {
     const { t, language } = useLanguage();
 
     useEffect(() => {
@@ -114,8 +114,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                             </div>
                         )}
 
-                        {/* AI Product Pairing */}
-                        <AIPairing productName={product.name} category={product.category} />
+                        {/* Öneriler - Cross-sell Pairing Cards */}
+                        <PairingRecommendations
+                            productId={product.id}
+                            onSelectProduct={onSelectProduct}
+                        />
 
                         <div className="mt-10 pt-6 border-t border-stone-100 flex items-center justify-between">
                             <div className="flex items-center gap-2 text-sm font-medium text-stone-500 bg-stone-50 px-3 py-1.5 rounded-full">
@@ -162,45 +165,77 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
     );
 };
 
-const AIPairing: React.FC<{ productName: string, category: string }> = ({ productName, category }) => {
-    const { t } = useLanguage();
-    const [pairing, setPairing] = React.useState<{ pairing: string, reason: string } | null>(null);
-    const [loading, setLoading] = React.useState(true);
+const PairingRecommendations: React.FC<{
+    productId: string;
+    onSelectProduct?: (product: Product) => void;
+}> = ({ productId, onSelectProduct }) => {
+    const { t, language } = useLanguage();
+    const pairings = PRODUCT_PAIRINGS[productId];
 
-    useEffect(() => {
-        const loadPairing = async () => {
-            setLoading(true);
-            try {
-                const data = await getProductPairing(productName, category);
-                setPairing(data);
-            } catch (error) {
-                console.error("Failed to load pairing", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadPairing();
-    }, [productName, category]);
+    if (!pairings || pairings.length === 0) return null;
 
-    if (loading) return (
-        <div className="mt-8 p-4 bg-stone-50 border border-stone-100 rounded-2xl animate-pulse">
-            <div className="h-4 w-24 bg-stone-200 rounded mb-2"></div>
-            <div className="h-3 w-full bg-stone-100 rounded"></div>
-        </div>
-    );
+    const pairedProducts = pairings
+        .map(p => {
+            const product = PRODUCTS.find(pr => pr.id === p.productId);
+            if (!product) return null;
+            return {
+                product,
+                reason: language === 'tr' ? p.reason_tr : p.reason_en,
+            };
+        })
+        .filter(Boolean) as { product: Product; reason: string }[];
 
-    if (!pairing) return null;
+    if (pairedProducts.length === 0) return null;
 
     return (
-        <div className="mt-8 p-4 bg-stone-50 border border-stone-100 rounded-2xl">
-            <div className="flex items-center gap-2 mb-2">
-                <div className="p-1 bg-primary/10 rounded-lg">
-                    <Sparkles className="w-4 h-4 text-primary" />
-                </div>
-                <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider">{t('product.pairingTitle')}</h4>
+        <div className="mt-8">
+            <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <h4 className="text-sm font-bold text-stone-900">{t('product.suggestions')}</h4>
             </div>
-            <p className="text-sm font-bold text-stone-800 mb-1">{pairing.pairing}</p>
-            <p className="text-[11px] text-stone-500 leading-relaxed italic">"{pairing.reason}"</p>
+
+            <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
+                {pairedProducts.map(({ product: pairedProduct, reason }) => {
+                    const pPrice = new Intl.NumberFormat(language === 'tr' ? 'tr-TR' : 'en-US').format(pairedProduct.price);
+
+                    return (
+                        <button
+                            key={pairedProduct.id}
+                            onClick={() => onSelectProduct?.(pairedProduct)}
+                            className="flex-shrink-0 w-48 bg-stone-50 border border-stone-100 rounded-2xl overflow-hidden text-left hover:border-primary/30 hover:shadow-md transition-all active:scale-[0.98] group"
+                        >
+                            {/* Image */}
+                            <div className="relative h-28 bg-stone-100">
+                                {pairedProduct.image ? (
+                                    <img
+                                        src={pairedProduct.image}
+                                        alt={pairedProduct.name}
+                                        loading="lazy"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-3xl">🍽️</div>
+                                )}
+                            </div>
+
+                            {/* Content */}
+                            <div className="p-3">
+                                <h5 className="text-sm font-bold text-stone-900 leading-tight mb-1.5 line-clamp-2">
+                                    {pairedProduct.name}
+                                </h5>
+                                <p className="text-[11px] text-stone-500 leading-snug mb-3 line-clamp-3">
+                                    <span className="font-bold text-primary">{t('product.why')}</span>{' '}
+                                    {reason}
+                                </p>
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-xs text-stone-400">₺</span>
+                                    <span className="text-base font-bold text-stone-900">{pPrice}</span>
+                                </div>
+                            </div>
+                        </button>
+                    );
+                })}
+            </div>
         </div>
     );
 };
