@@ -31,21 +31,24 @@ const data = [
   { name: 'Paz', views: 349, scans: 430, amt: 2100 },
 ];
 
+import { useLanguage } from '../../context/LanguageContext';
+
 export const AnalyticsPage: React.FC = () => {
+  const { t } = useLanguage();
   return (
     <div className="space-y-10 animate-fade-in">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h2 className="text-4xl font-black text-stone-900 tracking-tight mb-2">Performans Analizi</h2>
-          <p className="text-stone-500 font-medium">İşletmenizin dijital etkileşim verilerini buradan takip edebilirsiniz.</p>
+          <h2 className="text-4xl font-black text-stone-900 tracking-tight mb-2">{t('dash.analytics.title')}</h2>
+          <p className="text-stone-500 font-medium">{t('dash.analytics.subtitle')}</p>
         </div>
         <div className="flex gap-3">
           <button className="px-5 py-3 bg-white border border-stone-200 rounded-2xl font-bold text-xs uppercase tracking-widest text-stone-600 flex items-center gap-2 hover:bg-stone-50 transition-all shadow-sm">
-            <Filter className="w-4 h-4" /> Filtrele
+            <Filter className="w-4 h-4" /> {t('dash.analytics.filter')}
           </button>
           <button className="px-5 py-3 bg-stone-900 text-white rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-black transition-all shadow-xl shadow-stone-200">
-            <Download className="w-4 h-4" /> Dışa Aktar
+            <Download className="w-4 h-4" /> {t('dash.analytics.export')}
           </button>
         </div>
       </div>
@@ -53,10 +56,10 @@ export const AnalyticsPage: React.FC = () => {
       {/* Top Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Toplam Görüntülenme', value: '18.4k', change: '+12.5%', icon: Eye, color: 'text-blue-500' },
-          { label: 'QR Tarama Sayısı', value: '4.2k', change: '+18.2%', icon: MousePointer2, color: 'text-primary' },
-          { label: 'Tekil Kullanıcı', value: '3.1k', change: '+4.3%', icon: Users, color: 'text-purple-500' },
-          { label: 'Ort. Oturum Süresi', value: '5m 12s', change: '-1.4%', icon: Clock, color: 'text-orange-500' },
+          { label: t('dash.analytics.metric.views'), value: '18.4k', change: '+12.5%', icon: Eye, color: 'text-blue-500' },
+          { label: t('dash.analytics.metric.scans'), value: '4.2k', change: '+18.2%', icon: MousePointer2, color: 'text-primary' },
+          { label: t('dash.analytics.metric.users'), value: '3.1k', change: '+4.3%', icon: Users, color: 'text-purple-500' },
+          { label: t('dash.analytics.metric.duration'), value: '5m 12s', change: '-1.4%', icon: Clock, color: 'text-orange-500' },
         ].map((stat, i) => (
           <div key={i} className="bg-white p-8 rounded-[32px] border border-stone-100 shadow-sm">
             <div className="flex justify-between items-start mb-6">
@@ -80,17 +83,17 @@ export const AnalyticsPage: React.FC = () => {
         <div className="bg-white rounded-[40px] p-10 border border-stone-100 shadow-sm">
           <div className="flex items-center justify-between mb-10">
             <div>
-              <h3 className="text-xl font-black text-stone-900 tracking-tight">Haftalık Etkileşim</h3>
-              <p className="text-xs text-stone-400 font-bold uppercase tracking-widest mt-1">Görüntülenme & Tarama Karşılaştırması</p>
+              <h3 className="text-xl font-black text-stone-900 tracking-tight">{t('dash.analytics.chart.weekly')}</h3>
+              <p className="text-xs text-stone-400 font-bold uppercase tracking-widest mt-1">{t('dash.analytics.chart.weeklySub')}</p>
             </div>
             <div className="flex gap-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-primary rounded-full" />
-                <span className="text-[10px] font-bold text-stone-500 uppercase tracking-widest">Görüntülenme</span>
+                <span className="text-[10px] font-bold text-stone-500 uppercase tracking-widest">{t('dash.analytics.metric.views').split(' ').pop()}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-stone-200 rounded-full" />
-                <span className="text-[10px] font-bold text-stone-500 uppercase tracking-widest">Taramalar</span>
+                <span className="text-[10px] font-bold text-stone-500 uppercase tracking-widest">{t('dash.analytics.metric.scans').split(' ').pop()}</span>
               </div>
             </div>
           </div>
@@ -134,7 +137,7 @@ export const AnalyticsPage: React.FC = () => {
 
         {/* Categories Breakdown */}
         <div className="bg-white rounded-[40px] p-10 border border-stone-100 shadow-sm">
-          <h3 className="text-xl font-black text-stone-900 tracking-tight mb-10">En Çok İncelenen Kategoriler</h3>
+          <h3 className="text-xl font-black text-stone-900 tracking-tight mb-10">{t('dash.analytics.chart.categories')}</h3>
           <div className="space-y-8">
             {[
               { name: 'Ana Yemekler', value: 85, color: 'bg-primary' },
@@ -164,10 +167,10 @@ export const AnalyticsPage: React.FC = () => {
         <div className="absolute inset-0 bg-stone-900/5 backdrop-blur-[2px] z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
           <div className="bg-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
             <TrendingUp className="w-5 h-5 text-primary" />
-            <span className="text-sm font-black uppercase tracking-widest text-stone-900">Yakında: Derinlemesine Raporlar</span>
+            <span className="text-sm font-black uppercase tracking-widest text-stone-900">{t('dash.analytics.chart.comingSoon')}</span>
           </div>
         </div>
-        <h3 className="text-xl font-black text-stone-900 tracking-tight mb-8">Ürün Bazlı Performans</h3>
+        <h3 className="text-xl font-black text-stone-900 tracking-tight mb-8">{t('dash.analytics.chart.productPerformance')}</h3>
         <div className="space-y-6">
           {[1, 2, 3, 4].map(i => (
             <div key={i} className="flex items-center justify-between pb-6 border-b border-stone-50 last:border-0">
@@ -180,7 +183,7 @@ export const AnalyticsPage: React.FC = () => {
               </div>
               <div className="text-right">
                 <div className="text-sm font-black text-stone-900">1.428</div>
-                <div className="text-[10px] text-green-500 font-bold uppercase tracking-widest">Görüntülenme</div>
+                <div className="text-[10px] text-green-500 font-bold uppercase tracking-widest">{t('dash.analytics.metric.views').split(' ').pop()}</div>
               </div>
             </div>
           ))}

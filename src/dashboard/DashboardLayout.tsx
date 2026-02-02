@@ -16,19 +16,22 @@ import {
   QrCode
 } from 'lucide-react';
 
+import { useLanguage } from '../context/LanguageContext';
+
 export const DashboardLayout: React.FC = () => {
+  const { t } = useLanguage();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
   const navItems = [
-    { path: '/dashboard', icon: Home, label: 'Panel' },
-    { path: '/dashboard/menu', icon: MenuIcon, label: 'Menü Yönetimi' },
-    { path: '/dashboard/analytics', icon: BarChart3, label: 'Analizler' },
-    { path: '/dashboard/events', icon: Calendar, label: 'Etkinlikler' },
-    { path: '/dashboard/reviews', icon: MessageSquare, label: 'Değerlendirmeler' },
-    { path: '/dashboard/translations', icon: Globe, label: 'Çeviriler' },
-    { path: '/dashboard/qr-editor', icon: QrCode, label: 'QR Tasarımı' },
-    { path: '/dashboard/settings', icon: Settings, label: 'Ayarlar' },
+    { path: '/dashboard', icon: Home, label: t('dash.nav.panel') },
+    { path: '/dashboard/menu', icon: MenuIcon, label: t('dash.nav.menu') },
+    { path: '/dashboard/analytics', icon: BarChart3, label: t('dash.nav.analytics') },
+    { path: '/dashboard/events', icon: Calendar, label: t('dash.nav.events') },
+    { path: '/dashboard/reviews', icon: MessageSquare, label: t('dash.nav.reviews') },
+    { path: '/dashboard/translations', icon: Globe, label: t('dash.nav.translations') },
+    { path: '/dashboard/qr-editor', icon: QrCode, label: t('dash.nav.qr') },
+    { path: '/dashboard/settings', icon: Settings, label: t('dash.nav.settings') },
   ];
 
   return (
@@ -94,7 +97,7 @@ export const DashboardLayout: React.FC = () => {
             className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-stone-500 hover:text-white hover:bg-red-500/10 hover:text-red-500 transition-all group"
           >
             <LogOut className={`w-5 h-5 ${isSidebarOpen ? '' : 'mx-auto'}`} />
-            {isSidebarOpen && <span className="text-sm font-bold tracking-tight">Çıkış Yap</span>}
+            {isSidebarOpen && <span className="text-sm font-bold tracking-tight">{t('dash.nav.logout')}</span>}
           </button>
         </div>
       </aside>
@@ -104,9 +107,9 @@ export const DashboardLayout: React.FC = () => {
         {/* Header */}
         <header className="h-24 bg-white border-b border-stone-100 flex items-center justify-between px-10 flex-shrink-0">
           <div>
-            <h1 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">Current Workspace</h1>
+            <h1 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 mb-1">{t('dash.header.workspace')}</h1>
             <div className="flex items-center gap-2">
-              <span className="text-xl font-black text-stone-900">Ana Şube</span>
+              <span className="text-xl font-black text-stone-900">{t('dash.header.branch')}</span>
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
             </div>
           </div>

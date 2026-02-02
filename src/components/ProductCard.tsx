@@ -2,12 +2,14 @@
 import React, { memo } from 'react';
 import { Product } from '../services/MenuService';
 import { Plus } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ProductCardProps {
     product: Product;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
+    const { t } = useLanguage();
     const formattedPrice = new Intl.NumberFormat('tr-TR').format(product.price);
 
     return (
@@ -24,7 +26,9 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                         />
                         {!product.is_active && (
                             <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
-                                <span className="text-[10px] font-bold text-white uppercase tracking-wider border border-white/30 px-2 py-1 rounded-md backdrop-blur-sm">Tükendi</span>
+                                <span className="text-[10px] font-bold text-white uppercase tracking-wider border border-white/30 px-2 py-1 rounded-md backdrop-blur-sm">
+                                    {t('product.outOfStock')}
+                                </span>
                             </div>
                         )}
                     </div>

@@ -61,7 +61,10 @@ const mockEvents: Event[] = [
   }
 ];
 
+import { useLanguage } from '../../context/LanguageContext';
+
 export const EventsPage: React.FC = () => {
+  const { t } = useLanguage();
   const [events] = useState<Event[]>(mockEvents);
   const [filter, setFilter] = useState<'All' | 'Upcoming' | 'Past'>('All');
 
@@ -70,14 +73,14 @@ export const EventsPage: React.FC = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h2 className="text-4xl font-black text-stone-900 tracking-tight mb-2">Etkinlik Yönetimi</h2>
-          <p className="text-stone-500 font-medium">Restoran etkinlikleri ve özel duyuruları buradan yönetebilirsiniz.</p>
+          <h2 className="text-4xl font-black text-stone-900 tracking-tight mb-2">{t('dash.events.title')}</h2>
+          <p className="text-stone-500 font-medium">{t('dash.events.subtitle')}</p>
         </div>
         <button className="px-8 py-4 bg-stone-900 text-white rounded-[20px] font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-black transition-all shadow-xl shadow-stone-200 active:scale-95 group">
           <div className="p-1 bg-primary rounded-lg group-hover:rotate-90 transition-transform">
             <Plus className="w-4 h-4 text-stone-950" />
           </div>
-          Yeni Etkinlik Oluştur
+          {t('dash.events.create')}
         </button>
       </div>
 
@@ -89,7 +92,7 @@ export const EventsPage: React.FC = () => {
           </div>
           <div>
             <h4 className="text-2xl font-black text-stone-900">12</h4>
-            <p className="text-[10px] font-black uppercase tracking-widest text-stone-500">Bu Ayki Etkinlikler</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-stone-500">{t('dash.events.monthly')}</p>
           </div>
         </div>
         <div className="bg-stone-50 border border-stone-100 rounded-[32px] p-8 flex items-center gap-6">
@@ -98,7 +101,7 @@ export const EventsPage: React.FC = () => {
           </div>
           <div>
             <h4 className="text-2xl font-black text-stone-900">450+</h4>
-            <p className="text-[10px] font-black uppercase tracking-widest text-stone-500">Toplam Katılımcı</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-stone-500">{t('dash.events.attendees')}</p>
           </div>
         </div>
         <div className="bg-stone-900 rounded-[32px] p-8 flex items-center gap-6 text-white overflow-hidden relative">
@@ -107,7 +110,7 @@ export const EventsPage: React.FC = () => {
           </div>
           <div className="relative z-10">
             <h4 className="text-2xl font-black">94%</h4>
-            <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Memnuniyet Oranı</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">{t('dash.events.satisfaction')}</p>
           </div>
           <div className="absolute top-0 right-0 w-24 h-full bg-primary/10 -skew-x-12 translate-x-10" />
         </div>
@@ -122,7 +125,7 @@ export const EventsPage: React.FC = () => {
               onClick={() => setFilter(f as any)}
               className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${filter === f ? 'bg-stone-900 text-white shadow-lg' : 'text-stone-400 hover:text-stone-900 hover:bg-stone-50'}`}
             >
-              {f === 'All' ? 'Tümü' : f === 'Upcoming' ? 'Gelecek' : 'Geçmiş'}
+              {f === 'All' ? t('dash.events.filterAll') : f === 'Upcoming' ? t('dash.events.filterUpcoming') : t('dash.events.filterPast')}
             </button>
           ))}
         </div>
@@ -130,7 +133,7 @@ export const EventsPage: React.FC = () => {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
           <input
             type="text"
-            placeholder="Etkinlik ara..."
+            placeholder={t('dash.events.search')}
             className="w-full bg-stone-50 border border-stone-100 rounded-xl pl-12 pr-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none font-medium"
           />
         </div>

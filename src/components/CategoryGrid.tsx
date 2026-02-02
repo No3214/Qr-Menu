@@ -1,6 +1,6 @@
-
-import React from 'react';
+import React, { memo } from 'react';
 import { Category } from '../services/MenuService';
+import { useLanguage } from '../context/LanguageContext';
 
 interface CategoryGridProps {
     categories: Category[];
@@ -9,13 +9,13 @@ interface CategoryGridProps {
 
 /**
  * CategoryGrid - Mosaic Layout specified in Blueprint
- * Displays categories in a grid pattern:
- * - Large tiles (Full width)
- * - Small tiles (2 columns)
+ * Displays categories in a grid pattern
  */
-export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCategorySelect }) => {
+export const CategoryGrid: React.FC<CategoryGridProps> = memo(({ categories, onCategorySelect }) => {
+    const { t } = useLanguage();
+
     return (
-        <div className="p-4 grid grid-cols-2 gap-4 pb-24">
+        <div className="p-4 grid grid-cols-2 gap-4 pb-24 touch-manipulation">
             {categories.map((category, index) => {
                 // Pattern: 1 Full-width followed by 4 Half-width items (repeating every 5)
                 const isLarge = index % 5 === 0;
@@ -50,7 +50,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
                                 </h3>
                                 {isLarge && (
                                     <p className="text-white/70 text-[13px] mt-1.5 font-medium line-clamp-1 max-w-[80%]">
-                                        Mansion heritage: {category.title.toLowerCase()} Collection
+                                        {t('category.heritagePrefix')} {category.title.toLowerCase()} {t('category.heritageSuffix')}
                                     </p>
                                 )}
                             </div>
@@ -61,7 +61,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
 
                         {/* View Menu Indicator */}
                         <div className="absolute top-4 right-4 h-8 px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center gap-2 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-500">
-                            <span className="text-[10px] font-bold text-white uppercase tracking-widest whitespace-nowrap">Keşfet</span>
+                            <span className="text-[10px] font-bold text-white uppercase tracking-widest whitespace-nowrap">{t('landing.discover')}</span>
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M5 12h14m-7-7l7 7-7 7" />
                             </svg>
@@ -75,11 +75,13 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onCatego
                 <div className="flex flex-col items-center justify-center gap-3 opacity-30">
                     <div className="h-px w-12 bg-primary" />
                     <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-primary">Kozbeyli Konağı</span>
+                        <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-primary">{t('menu.restaurant')}</span>
                     </div>
-                    <span className="text-[9px] font-medium tracking-widest uppercase italic">Est. 1904</span>
+                    <span className="text-[9px] font-medium tracking-widest uppercase italic">{t('landing.foundedText')}</span>
                 </div>
             </div>
         </div>
     );
-};
+});
+
+CategoryGrid.displayName = 'CategoryGrid';

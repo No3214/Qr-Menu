@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Star, X, CheckCircle2, Heart, Award, Sparkles, MessageSquare } from 'lucide-react';
 import { ReviewService } from '../services/ReviewService';
+import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
 
 interface ReviewModalProps {
@@ -10,6 +11,7 @@ interface ReviewModalProps {
 }
 
 export const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => {
+    const { t } = useLanguage();
     const [rating, setRating] = useState(5);
     const [submitted, setSubmitted] = useState(false);
     const [comment, setComment] = useState('');
@@ -24,7 +26,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => 
         try {
             await ReviewService.submitReview(rating, comment, customerName);
             setSubmitted(true);
-            toast.success('Değerlendirmeniz iletildi!');
+            toast.success(t('review.success'));
             setTimeout(() => {
                 onClose();
                 setSubmitted(false);
@@ -34,7 +36,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => 
             }, 3000);
         } catch (error) {
             console.error(error);
-            toast.error('Değerlendirme gönderilemedi.');
+            toast.error(t('review.error'));
         } finally {
             setIsSubmitting(false);
         }
@@ -57,9 +59,9 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => 
                         <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
                             <CheckCircle2 className="w-12 h-12 text-primary" />
                         </div>
-                        <h2 className="text-4xl font-bold text-stone-900 mb-4 tracking-tight">Teşekkürler!</h2>
+                        <h2 className="text-4xl font-bold text-stone-900 mb-4 tracking-tight">{t('review.thanks')}</h2>
                         <p className="text-stone-500 font-bold max-w-[240px] mx-auto text-sm leading-relaxed">
-                            Değerli geri bildiriminizle Kozbeyli Konağı'nı daha da geliştireceğiz. ✨
+                            {t('review.thanksText')}
                         </p>
                     </div>
                 ) : (
@@ -80,8 +82,8 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => 
 
                         <div className="px-10 py-12">
                             <div className="text-center mb-10">
-                                <h2 className="text-3xl font-bold text-stone-900 mb-2">Deneyiminiz Nasıldı?</h2>
-                                <p className="text-stone-400 font-bold text-[10px] uppercase tracking-[0.2em]">Fikriniz Bizim İçin Çok Değerli</p>
+                                <h2 className="text-3xl font-bold text-stone-900 mb-2">{t('review.title')}</h2>
+                                <p className="text-stone-400 font-bold text-[10px] uppercase tracking-[0.2em]">{t('review.subtitle')}</p>
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-10">
@@ -102,10 +104,10 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => 
                                 {/* Quick Tags */}
                                 <div className="grid grid-cols-2 gap-3">
                                     {[
-                                        { label: 'Harika Lezzet', icon: Sparkles },
-                                        { label: 'Güleryüzlü Hizmet', icon: Heart },
-                                        { label: 'Şık Atmosfer', icon: Award },
-                                        { label: 'Hızlı Sunum', icon: MessageSquare }
+                                        { label: t('review.tag1'), icon: Sparkles },
+                                        { label: t('review.tag2'), icon: Heart },
+                                        { label: t('review.tag3'), icon: Award },
+                                        { label: t('review.tag4'), icon: MessageSquare }
                                     ].map(tag => (
                                         <button
                                             key={tag.label}
@@ -124,13 +126,13 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => 
                                         type="text"
                                         value={customerName}
                                         onChange={(e) => setCustomerName(e.target.value)}
-                                        placeholder="Adınız (Opsiyonel)"
+                                        placeholder={t('review.name')}
                                         className="w-full bg-stone-50 border-none rounded-2xl px-5 py-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                                     />
                                     <textarea
                                         value={comment}
                                         onChange={(e) => setComment(e.target.value)}
-                                        placeholder="Eklemek istediğiniz bir not var mı? (Opsiyonel)"
+                                        placeholder={t('review.comment')}
                                         className="w-full bg-stone-50 border-none rounded-2xl px-5 py-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none min-h-[120px] transition-all"
                                     />
                                 </div>
@@ -140,7 +142,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose }) => 
                                     disabled={isSubmitting}
                                     className="w-full bg-stone-900 text-white py-5 rounded-[20px] font-bold text-lg shadow-xl shadow-stone-200 hover:bg-black active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                                 >
-                                    {isSubmitting ? 'Gönderiliyor...' : 'Değerlendirmeyi Gönder'} <CheckCircle2 className="w-5 h-5 text-primary" />
+                                    {isSubmitting ? t('review.submitting') : t('review.submit')} <CheckCircle2 className="w-5 h-5 text-primary" />
                                 </button>
                             </form>
                         </div>

@@ -32,7 +32,10 @@ type TranslationItem = {
   translations: Record<string, { name: string; description: string }>;
 };
 
+import { useLanguage } from '../../context/LanguageContext';
+
 export function TranslationsPage() {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLang, setSelectedLang] = useState('en');
   const [editingItem, setEditingItem] = useState<string | null>(null);
@@ -77,10 +80,10 @@ export function TranslationsPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-text">Çeviri Yönetimi</h1>
+        <h1 className="text-2xl font-semibold text-text">{t('dash.trans.title')}</h1>
         <button className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
           <Languages size={16} />
-          Otomatik Çevir
+          {t('dash.trans.auto')}
         </button>
       </div>
 
@@ -108,7 +111,7 @@ export function TranslationsPage() {
               />
             </div>
             <p className="text-[10px] text-text-muted mt-1">
-              %{lang.progress} tamamlandı
+              {t('dash.trans.completed').replace('{progress}', lang.progress.toString())}
             </p>
           </div>
         ))}
@@ -125,7 +128,7 @@ export function TranslationsPage() {
             />
             <input
               type="text"
-              placeholder="Ürün veya kategori ara..."
+              placeholder={t('dash.trans.search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2 rounded-lg border border-border text-sm focus:outline-none focus:border-primary"
@@ -149,16 +152,16 @@ export function TranslationsPage() {
           <thead>
             <tr className="border-b border-border bg-gray-50/50">
               <th className="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
-                Tür
+                {t('dash.trans.table.type')}
               </th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
-                Orijinal (Türkçe)
+                {t('dash.trans.table.original')}
               </th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
-                Çeviri ({supportedLanguages.find((l) => l.code === selectedLang)?.nativeName})
+                {t('dash.trans.table.translation')} ({supportedLanguages.find((l) => l.code === selectedLang)?.nativeName})
               </th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
-                Durum
+                {t('dash.trans.table.status')}
               </th>
               <th className="w-12 px-4 py-3" />
             </tr>
@@ -181,7 +184,7 @@ export function TranslationsPage() {
                         : 'bg-purple-50 text-purple-600'
                         }`}
                     >
-                      {item.type === 'category' ? 'Kategori' : 'Ürün'}
+                      {item.type === 'category' ? t('dash.trans.type.category') : t('dash.trans.type.product')}
                     </span>
                   </td>
                   <td className="px-4 py-3">
@@ -199,7 +202,7 @@ export function TranslationsPage() {
                       <input
                         type="text"
                         defaultValue={translation?.name || ''}
-                        placeholder="Çeviri girin..."
+                        placeholder={t('dash.trans.search')}
                         className="w-full px-2 py-1.5 rounded border border-primary text-sm focus:outline-none"
                         autoFocus
                       />
@@ -207,7 +210,7 @@ export function TranslationsPage() {
                       <p className="text-sm text-text">{translation.name}</p>
                     ) : (
                       <p className="text-sm text-text-muted italic">
-                        Çeviri yok
+                        {t('dash.trans.noTranslation')}
                       </p>
                     )}
                   </td>
@@ -215,11 +218,11 @@ export function TranslationsPage() {
                     {hasTranslation ? (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-success">
                         <Check size={12} />
-                        Tamamlandı
+                        {t('dash.trans.status.done')}
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-warning">
-                        Bekliyor
+                        {t('dash.trans.status.pending')}
                       </span>
                     )}
                   </td>
@@ -242,7 +245,7 @@ export function TranslationsPage() {
         {filtered.length === 0 && (
           <div className="text-center py-12">
             <Languages size={40} className="mx-auto text-gray-300 mb-3" />
-            <p className="text-sm text-text-muted">Sonuç bulunamadı.</p>
+            <p className="text-sm text-text-muted">{t('dash.trans.noResults')}</p>
           </div>
         )}
       </div>

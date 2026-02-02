@@ -10,10 +10,10 @@ interface Message {
 }
 
 export const MenuAssistant: React.FC = () => {
-    const { } = useLanguage();
+    const { t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', content: 'Merhaba! Ben Kozbeyli Konağı yapay zeka asistanıyım. Size menümüz hakkında nasıl yardımcı olabilirim?' }
+        { role: 'assistant', content: t('assistant.welcome') }
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ export const MenuAssistant: React.FC = () => {
             const response = await getChatResponse(userMessage, "User is viewing the digital menu of Kozbeyli Konağı.");
             setMessages(prev => [...prev, { role: 'assistant', content: response }]);
         } catch (error) {
-            setMessages(prev => [...prev, { role: 'assistant', content: 'Üzgünüm, şu an yanıt veremiyorum. Lütfen daha sonra tekrar deneyin.' }]);
+            setMessages(prev => [...prev, { role: 'assistant', content: t('assistant.error') }]);
         } finally {
             setIsLoading(false);
         }
@@ -60,7 +60,7 @@ export const MenuAssistant: React.FC = () => {
                     </span>
                     {/* Tooltip */}
                     <div className="absolute right-full mr-3 px-3 py-1 bg-white text-stone-900 text-xs font-bold rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-stone-100 italic">
-                        AI Garsona Sor ✨
+                        {t('assistant.tooltip')}
                     </div>
                 </button>
             )}
@@ -75,8 +75,8 @@ export const MenuAssistant: React.FC = () => {
                                 <Sparkles className="w-5 h-5 text-primary" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-sm">Gurme AI</h3>
-                                <p className="text-[10px] text-stone-400">Kozbeyli Konağı Asistanı</p>
+                                <h3 className="font-bold text-sm">{t('assistant.name')}</h3>
+                                <p className="text-[10px] text-stone-400">{t('assistant.role')}</p>
                             </div>
                         </div>
                         <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
@@ -113,10 +113,10 @@ export const MenuAssistant: React.FC = () => {
                     {/* Suggested Prompts */}
                     <div className="px-4 py-2 bg-stone-50 overflow-x-auto flex gap-2 no-scrollbar">
                         {[
-                            "Konağın Hikayesi",
-                            "Ne yemeliyim?",
-                            "Tatlı önerisi",
-                            "Sıcak içecekler"
+                            t('assistant.prompt1'),
+                            t('assistant.prompt2'),
+                            t('assistant.prompt3'),
+                            t('assistant.prompt4')
                         ].map(prompt => (
                             <button
                                 key={prompt}
@@ -135,7 +135,7 @@ export const MenuAssistant: React.FC = () => {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                            placeholder="Sorunuzu buraya yazın..."
+                            placeholder={t('assistant.placeholder')}
                             className="flex-1 bg-stone-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
                         />
                         <button

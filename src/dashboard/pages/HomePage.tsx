@@ -8,7 +8,10 @@ import {
   ChevronRight
 } from 'lucide-react';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 export const HomePage: React.FC = () => {
+  const { t } = useLanguage();
   return (
     <div className="space-y-10 animate-fade-in">
       {/* Welcome Section */}
@@ -16,18 +19,18 @@ export const HomePage: React.FC = () => {
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full mb-6 border border-white/10">
             <Sparkles className="w-3 h-3 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-widest">System Operational</span>
+            <span className="text-[9px] font-black uppercase tracking-widest">{t('dash.home.operational')}</span>
           </div>
           <h2 className="text-5xl font-black tracking-tight mb-4">
-            Hoşgeldiniz,<br />
+            {t('dash.home.welcome')}<br />
             <span className="text-primary italic">Kozbeyli Konağı</span>
           </h2>
           <p className="text-stone-400 font-medium text-lg mb-8 leading-relaxed">
-            Dijital menü yönetim paneliniz hazır. Bugün için toplam 1.284 menü görüntülenmesi gerçekleşti.
+            {t('dash.home.summary').replace('{views}', '1.284')}
           </p>
           <div className="flex gap-4">
-            <button className="bg-white text-stone-900 px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-primary hover:text-white transition-all">Hızlı Rapor</button>
-            <button className="bg-white/5 border border-white/10 px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-white/10 transition-all">Destek</button>
+            <button className="bg-white text-stone-900 px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-primary hover:text-white transition-all">{t('dash.home.quickReport')}</button>
+            <button className="bg-white/5 border border-white/10 px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-white/10 transition-all">{t('dash.home.support')}</button>
           </div>
         </div>
         {/* Decorative Elements */}
@@ -38,10 +41,10 @@ export const HomePage: React.FC = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Günlük İzlenme', value: '1.2k', change: '+12%', icon: Users },
-          { label: 'Aktif Sepetler', value: '42', change: '+5%', icon: Clock },
-          { label: 'Ort. Süre', value: '4m 12s', change: '-2%', icon: TrendingUp },
-          { label: 'Geri Dönüş', value: '89%', change: '+1%', icon: StarIcon },
+          { label: t('dash.home.stat.daily'), value: '1.2k', change: '+12%', icon: Users },
+          { label: t('dash.home.stat.carts'), value: '42', change: '+5%', icon: Clock },
+          { label: t('dash.home.stat.avgTime'), value: '4m 12s', change: '-2%', icon: TrendingUp },
+          { label: t('dash.home.stat.conversion'), value: '89%', change: '+1%', icon: StarIcon },
         ].map((stat, i) => (
           <div key={i} className="bg-white p-6 rounded-[24px] border border-stone-100 shadow-sm hover:shadow-md transition-all">
             <div className="flex justify-between items-start mb-4">
@@ -63,8 +66,8 @@ export const HomePage: React.FC = () => {
         {/* Upcoming Events */}
         <div className="bg-white rounded-[32px] p-8 border border-stone-100">
           <div className="flex justify-between items-center mb-8">
-            <h3 className="text-xl font-black tracking-tight text-stone-900">Yaklaşan Etkinlikler</h3>
-            <button className="text-primary text-[10px] font-black uppercase tracking-widest">Tümünü Gör</button>
+            <h3 className="text-xl font-black tracking-tight text-stone-900">{t('dash.home.events.title')}</h3>
+            <button className="text-primary text-[10px] font-black uppercase tracking-widest">{t('dash.home.events.all')}</button>
           </div>
           <div className="space-y-4">
             {[1, 2, 3].map(i => (
@@ -85,12 +88,12 @@ export const HomePage: React.FC = () => {
 
         {/* Activity Feed */}
         <div className="bg-white rounded-[32px] p-8 border border-stone-100">
-          <h3 className="text-xl font-black tracking-tight text-stone-900 mb-8">Sistem Hareketleri</h3>
+          <h3 className="text-xl font-black tracking-tight text-stone-900 mb-8">{t('dash.home.activity.title')}</h3>
           <div className="space-y-6">
             {[
-              { type: 'Update', msg: 'Menüde 3 yeni ürün güncellendi.', time: '12dk önce' },
-              { type: 'Review', msg: 'Yeni bir 5 yıldızlı yorum alındı.', time: '1sa önce' },
-              { type: 'System', msg: 'QR Kod tasarımı güncellendi.', time: '2sa önce' },
+              { type: t('dash.home.activity.update'), msg: 'Menüde 3 yeni ürün güncellendi.', time: '12dk önce' },
+              { type: t('dash.home.activity.review'), msg: 'Yeni bir 5 yıldızlı yorum alındı.', time: '1sa önce' },
+              { type: t('dash.home.activity.system'), msg: 'QR Kod tasarımı güncellendi.', time: '2sa önce' },
             ].map((act, i) => (
               <div key={i} className="flex gap-4">
                 <div className="w-2 h-2 bg-primary rounded-full mt-2" />

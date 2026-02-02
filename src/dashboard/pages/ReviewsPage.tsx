@@ -3,7 +3,10 @@ import { Star, MessageSquare, Check, Trash2, Clock } from 'lucide-react';
 import { ReviewService, Review } from '../../services/ReviewService';
 import toast from 'react-hot-toast';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 export const ReviewsPage: React.FC = () => {
+  const { t } = useLanguage();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [stats, setStats] = useState({ average: 0, total: 0 });
   const [loading, setLoading] = useState(true);
@@ -23,32 +26,32 @@ export const ReviewsPage: React.FC = () => {
       setStats(statsData);
     } catch (error) {
       console.error(error);
-      toast.error('Yorumlar yüklenemedi.');
+      toast.error(t('dash.reviews.error'));
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Bu yorumu silmek istediğinize emin misiniz?')) return;
+    if (!window.confirm(t('dash.reviews.deleteConfirm'))) return;
     try {
       await ReviewService.deleteReview(id);
-      toast.success('Yorum silindi.');
+      toast.success(t('dash.reviews.deleteSuccess'));
       loadData();
     } catch (error) {
       console.error(error);
-      toast.error('Yorum silinemedi.');
+      toast.error(t('dash.reviews.deleteError'));
     }
   };
 
   const handleToggleApproval = async (id: string, currentStatus: boolean) => {
     try {
       await ReviewService.toggleApproval(id, currentStatus);
-      toast.success(currentStatus ? 'Onay kaldırıldı.' : 'Yorum onaylandı.');
+      toast.success(currentStatus ? t('dash.reviews.approveRevoke') : t('dash.reviews.approveSuccess'));
       loadData();
     } catch (error) {
       console.error(error);
-      toast.error('İşlem başarısız.');
+      toast.error(t('assistant.error'));
     }
   };
 
@@ -65,8 +68,8 @@ export const ReviewsPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Değerlendirmeler</h1>
-          <p className="text-gray-500">Müşteri yorumları ve puanları.</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('dash.reviews.title')}</h1>
+          <p className="text-gray-500">{t('dash.reviews.subtitle')}</p>
         </div>
       </div>
 
@@ -77,7 +80,7 @@ export const ReviewsPage: React.FC = () => {
             <Star size={24} fill="currentColor" />
           </div>
           <div>
-            <p className="text-sm text-gray-500">Ortalama Puan</p>
+            <p className="text-sm text-gray-500">{t('dash.reviews.avg')}</p>
             <h2 className="text-2xl font-bold text-gray-900">{stats.average} / 5.0</h2>
           </div>
         </div>
@@ -87,7 +90,7 @@ export const ReviewsPage: React.FC = () => {
             <MessageSquare size={24} />
           </div>
           <div>
-            <p className="text-sm text-gray-500">Toplam Yorum</p>
+            <p className="text-sm text-gray-500">{t('dash.reviews.total')}</p>
             <h2 className="text-2xl font-bold text-gray-900">{stats.total}</h2>
           </div>
         </div>
@@ -95,11 +98,11 @@ export const ReviewsPage: React.FC = () => {
 
       {/* Reviews List */}
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Son Yorumlar</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4">{t('dash.reviews.recent')}</h2>
         {loading ? (
-          <div className="text-center py-10 text-gray-500">Yükleniyor...</div>
+          <div className="text-center py-10 text-gray-500">{t('dash.reviews.loading')}</div>
         ) : reviews.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">Henüz hiç yorum yapılmamış.</div>
+          <div className="text-center py-10 text-gray-500">{t('dash.reviews.empty')}</div>
         ) : (
           <div className="space-y-4">
             {reviews.map((review) => (
@@ -134,7 +137,7 @@ export const ReviewsPage: React.FC = () => {
                       {(review.customer_name?.[0] || 'M').toUpperCase()}
                     </div>
                     <span className="text-sm font-medium text-gray-600">
-                      {review.customer_name || 'Misafir'}
+                      {review.customer_name || t('dash.reviews.guest')}
                     </span>
                   </div>
 
@@ -142,14 +145,14 @@ export const ReviewsPage: React.FC = () => {
                     <button
                       onClick={() => handleToggleApproval(review.id, review.is_approved)}
                       className={`p-1.5 rounded-lg transition-colors ${review.is_approved ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400 hover:text-green-600'}`}
-                      title={review.is_approved ? 'Onayı Kaldır' : 'Onayla'}
+                      title={review.is_approved ? t('dash.reviews.approveRevoke') : t('dash.reviews.approveSuccess')}
                     >
                       <Check size={16} />
                     </button>
                     <button
                       onClick={() => handleDelete(review.id)}
                       className="p-1.5 bg-red-50 text-red-400 hover:text-red-600 rounded-lg transition-colors"
-                      title="Sil"
+                      title={t('close')}
                     >
                       <Trash2 size={16} />
                     </button>

@@ -11,11 +11,13 @@ import { MenuAssistant } from './MenuAssistant';
 import { ListHeader } from './ListHeader';
 import { CookieConsent } from './CookieConsent';
 import { motion, AnimatePresence } from 'framer-motion';
+import { RecommendationCarousel } from './RecommendationCarousel';
 
 type ViewState = 'LANDING' | 'GRID' | 'LIST';
 
 export const DigitalMenu: React.FC = () => {
     const { t, language, setLanguage } = useLanguage();
+    const [_, startTransition] = React.useTransition();
     const [viewState, setViewState] = useState<ViewState>('LANDING');
     const [showReviewModal, setShowReviewModal] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
@@ -68,9 +70,11 @@ export const DigitalMenu: React.FC = () => {
 
     // Handle Category Selection from Grid
     const handleCategorySelect = (id: string) => {
-        setActiveCategory(id);
         setViewState('LIST');
-        window.scrollTo(0, 0);
+        startTransition(() => {
+            setActiveCategory(id);
+        });
+        window.scrollTo({ top: 0, behavior: 'auto' });
     };
 
     // Filter Products
@@ -88,7 +92,7 @@ export const DigitalMenu: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-bg overflow-x-hidden">
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
                 {viewState === 'LANDING' ? (
                     <motion.div
                         key="landing"
@@ -105,7 +109,7 @@ export const DigitalMenu: React.FC = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
                     >
                         <header className="px-6 pt-10 pb-6 bg-surface/90 backdrop-blur-xl sticky top-0 z-20 border-b border-primary/5 shadow-sm">
                             <div className="flex items-center justify-between mb-6">
@@ -158,7 +162,7 @@ export const DigitalMenu: React.FC = () => {
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
                     >
                         <ListHeader
                             categories={categories}
@@ -171,14 +175,20 @@ export const DigitalMenu: React.FC = () => {
                             setActiveCategory={setActiveCategory}
                         />
                         <div className="p-4 space-y-4 pb-24">
-                            {filteredProducts.map(product => (
-                                <motion.div
-                                    key={product.id}
-                                    onClick={() => setSelectedProduct(product)}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <ProductCard product={product} />
-                                </motion.div>
+                            {filteredProducts.map((product, idx) => (
+                                <React.Fragment key={product.id}>
+                                    <motion.div
+                                        onClick={() => setSelectedProduct(product)}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        <ProductCard product={product} />
+                                    </motion.div>
+
+                                    {/* Smart Recommendation Break: Insert after 2nd product if we have enough items */}
+                                    {idx === 1 && filteredProducts.length > 3 && (
+                                        <RecommendationCarousel seedProduct={filteredProducts[0]} />
+                                    )}
+                                </React.Fragment>
                             ))}
                             {filteredProducts.length === 0 && (
                                 <div className="text-center py-10 text-gray-400">

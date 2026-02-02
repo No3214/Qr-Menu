@@ -176,5 +176,126 @@ export const MenuService = {
             console.error('Bulk Insert Error:', error);
             throw error;
         }
+    },
+
+    /**
+     * Product Management
+     */
+    addProduct: async (product: Omit<Product, 'id'>): Promise<Product | null> => {
+        if (!isSupabaseConfigured()) return null;
+        const { data, error } = await supabase
+            .from('products')
+            .insert([{
+                title: product.title,
+                description: product.description,
+                price: product.price,
+                category_id: product.category,
+                is_active: product.isAvailable,
+                image: product.image
+            }])
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error adding product:', error);
+            return null;
+        }
+        return {
+            id: data.id,
+            title: data.title,
+            description: data.description,
+            price: data.price,
+            category: data.category_id,
+            isAvailable: data.is_active,
+            image: data.image
+        };
+    },
+
+    updateProduct: async (id: string, product: Partial<Product>): Promise<boolean> => {
+        if (!isSupabaseConfigured()) return false;
+        const updates: any = {};
+        if (product.title !== undefined) updates.title = product.title;
+        if (product.description !== undefined) updates.description = product.description;
+        if (product.price !== undefined) updates.price = product.price;
+        if (product.category !== undefined) updates.category_id = product.category;
+        if (product.isAvailable !== undefined) updates.is_active = product.isAvailable;
+        if (product.image !== undefined) updates.image = product.image;
+
+        const { error } = await supabase
+            .from('products')
+            .update(updates)
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error updating product:', error);
+            return false;
+        }
+        return true;
+    },
+
+    deleteProduct: async (id: string): Promise<boolean> => {
+        if (!isSupabaseConfigured()) return false;
+        const { error } = await supabase
+            .from('products')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting product:', error);
+            return false;
+        }
+        return true;
+    },
+
+    /**
+     * Category Management
+     */
+    addCategory: async (category: Omit<Category, 'id'>): Promise<Category | null> => {
+        if (!isSupabaseConfigured()) return null;
+        const { data, error } = await supabase
+            .from('categories')
+            .insert([{
+                title: category.title,
+                slug: category.slug,
+                description: category.description,
+                image: category.image,
+                is_active: true
+            }])
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error adding category:', error);
+            return null;
+        }
+        return data as Category;
+    },
+
+    updateCategory: async (id: string, category: Partial<Category>): Promise<boolean> => {
+        if (!isSupabaseConfigured()) return false;
+        const { error } = await supabase
+            .from('categories')
+            .update(category)
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error updating category:', error);
+            return false;
+        }
+        return true;
+    },
+
+    deleteCategory: async (id: string): Promise<boolean> => {
+        if (!isSupabaseConfigured()) return false;
+        const { error } = await supabase
+            .from('categories')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting category:', error);
+            return false;
+        }
+        return true;
     }
 };

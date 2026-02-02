@@ -1,20 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #8B735B;
-  /* Earthy Umber */
-  --color-primary-hover: #725D4A;
-  --color-accent: #D4AF37;
-  /* Aged Gold */
-  --color-accent-hover: #B8962F;
-  --color-bg: #FAFAF6;
-  /* Warm Marble */
-  --color-surface: #FFFFFF;
-  --color-text: #2D2A26;
-  /* Deep Charcoal */
-  --color-text-muted: #7A7572;
-  /* Warm Slate */
-  --color-border: #E8E6E1;
+  --color-primary: #434b45;
+  /* Deep Sage Charcoal from Logo */
+  --color-primary-hover: #3d443e;
+  --color-accent: #8b735b;
+  /* Earthy Umber for warm contrast */
+  --color-accent-hover: #725d4a;
+  --color-bg: #d6d3cb;
+  /* Exact Logo Background */
+  --color-surface: #e5e2db;
+  --color-text: #434b45;
+  /* Brand Dark */
+  --color-text-muted: #737b75;
+  --color-border: #c9c5bc;
 }
 
 @layer base {
