@@ -12,6 +12,7 @@ import {
   Save,
   X,
   Star,
+  MessageCircle,
 } from 'lucide-react';
 import { CATEGORIES, PRODUCTS, type Product, type Category } from '../../services/MenuData';
 import { useLanguage } from '../../context/LanguageContext';
@@ -328,6 +329,8 @@ function ProductEditModal({
   const [selectedDietary, setSelectedDietary] = useState<Set<string>>(new Set());
   const [selectedAllergens, setSelectedAllergens] = useState<Set<string>>(new Set());
   const [currency, setCurrency] = useState('TRY (₺)');
+  const [notes, setNotes] = useState<string[]>(product.notes || []);
+  const [newNote, setNewNote] = useState('');
 
   const dietaryTagKeys = ['dash.menu.diet.vegan', 'dash.menu.diet.vegetarian', 'dash.menu.diet.glutenFree', 'dash.menu.diet.lactoseFree', 'dash.menu.diet.organic', 'dash.menu.diet.halal'];
   const allergenTagKeys = ['dash.menu.allergen.gluten', 'dash.menu.allergen.dairy', 'dash.menu.allergen.egg', 'dash.menu.allergen.peanut', 'dash.menu.allergen.soy', 'dash.menu.allergen.fish', 'dash.menu.allergen.shellfish', 'dash.menu.allergen.celery', 'dash.menu.allergen.mustard', 'dash.menu.allergen.sesame'];
@@ -454,6 +457,61 @@ function ProductEditModal({
                   {t(key)}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Notes / Açıklamalar */}
+          <div>
+            <label className="block text-sm font-medium text-text mb-2 flex items-center gap-2">
+              <MessageCircle size={14} className="text-primary" />
+              {t('dash.menu.notes')}
+            </label>
+            <p className="text-xs text-text-muted mb-3">{t('dash.menu.notesDesc')}</p>
+
+            {/* Existing notes */}
+            <div className="space-y-2 mb-3">
+              {notes.map((note, i) => (
+                <div key={i} className="flex items-center gap-2 bg-primary/5 border border-primary/10 rounded-lg px-3 py-2">
+                  <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center flex-shrink-0">{i + 1}</span>
+                  <span className="flex-1 text-sm text-text">{note}</span>
+                  <button
+                    onClick={() => setNotes(notes.filter((_, idx) => idx !== i))}
+                    className="p-1 text-text-muted hover:text-danger transition-colors rounded"
+                    aria-label={t('dash.menu.removeNote')}
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Add new note */}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={newNote}
+                onChange={(e) => setNewNote(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && newNote.trim()) {
+                    setNotes([...notes, newNote.trim()]);
+                    setNewNote('');
+                  }
+                }}
+                placeholder={t('dash.menu.notePlaceholder')}
+                className="flex-1 px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+              />
+              <button
+                onClick={() => {
+                  if (newNote.trim()) {
+                    setNotes([...notes, newNote.trim()]);
+                    setNewNote('');
+                  }
+                }}
+                disabled={!newNote.trim()}
+                className="px-4 py-2.5 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Plus size={16} />
+              </button>
             </div>
           </div>
 

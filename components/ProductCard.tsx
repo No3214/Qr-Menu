@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Product } from '../services/MenuData';
-import { Plus } from 'lucide-react';
+import { Plus, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface ProductCardProps {
@@ -10,6 +10,7 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
     const { t, language } = useLanguage();
     const formattedPrice = new Intl.NumberFormat(language === 'tr' ? 'tr-TR' : 'en-US').format(product.price);
+    const hasNotes = product.notes && product.notes.length > 0;
 
     return (
         <div className={`group relative bg-white rounded-2xl p-3 sm:p-4 mb-4 border border-stone-100 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] transition-all hover:shadow-lg active:scale-[0.99] ${!product.isAvailable ? 'opacity-60 grayscale' : ''}`}>
@@ -59,6 +60,18 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                     </div>
                 </div>
             </div>
+
+            {/* Notes */}
+            {hasNotes && (
+                <div className="mt-3 pt-3 border-t border-stone-100 space-y-1.5">
+                    {product.notes!.map((note, i) => (
+                        <div key={i} className="flex items-start gap-2">
+                            <MessageCircle className="w-3 h-3 text-primary mt-0.5 flex-shrink-0" />
+                            <p className="text-[11px] text-stone-500 leading-snug font-medium">{note}</p>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 });

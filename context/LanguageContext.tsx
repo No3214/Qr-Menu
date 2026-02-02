@@ -32,6 +32,7 @@ const translations: Record<Language, Record<string, string>> = {
         'product.outOfStock': 'Tükendi',
         'product.notFound': 'Ürün bulunamadı.',
         'product.pairingTitle': 'Gurme Eşleşme',
+        'product.notes': 'Açıklamalar',
         'product.category': 'Kategori',
 
         // Review
@@ -171,6 +172,10 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.menu.productSoon': 'Ürün ekleme yakında aktif olacak',
         'dash.menu.deleteSoon': 'Silme işlemi yakında aktif olacak',
         'dash.menu.recommendSoon': 'Öneri ekleme yakında aktif olacak',
+        'dash.menu.notes': 'Açıklamalar / Notlar',
+        'dash.menu.notesDesc': 'Ürün altında gösterilecek ek bilgiler ekleyin. Birden fazla eklenebilir.',
+        'dash.menu.notePlaceholder': 'Açıklama yazın ve Enter\'a basın...',
+        'dash.menu.removeNote': 'Notu kaldır',
 
         // Dashboard - AnalyticsPage
         'dash.analytics.title': 'Analitik',
@@ -425,6 +430,7 @@ const translations: Record<Language, Record<string, string>> = {
         'product.outOfStock': 'Out of Stock',
         'product.notFound': 'Product not found.',
         'product.pairingTitle': 'Gourmet Pairing',
+        'product.notes': 'Notes',
         'product.category': 'Category',
 
         // Review
@@ -564,6 +570,10 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.menu.productSoon': 'Add product coming soon',
         'dash.menu.deleteSoon': 'Delete coming soon',
         'dash.menu.recommendSoon': 'Add recommendation coming soon',
+        'dash.menu.notes': 'Notes / Explanations',
+        'dash.menu.notesDesc': 'Add extra information to show below the product. Multiple notes can be added.',
+        'dash.menu.notePlaceholder': 'Type a note and press Enter...',
+        'dash.menu.removeNote': 'Remove note',
 
         // Dashboard - AnalyticsPage
         'dash.analytics.title': 'Analytics',

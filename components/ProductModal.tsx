@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Product } from '../services/MenuData';
-import { X, Share2, Info, Sparkles } from 'lucide-react';
+import { X, Share2, Info, Sparkles, MessageCircle } from 'lucide-react';
 import { getProductPairing } from '../services/geminiService';
 import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
@@ -95,6 +95,24 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                                 {product.description}
                             </p>
                         </div>
+
+                        {/* Notes */}
+                        {product.notes && product.notes.length > 0 && (
+                            <div className="mt-6 space-y-2.5">
+                                <h4 className="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-2">
+                                    <MessageCircle className="w-3.5 h-3.5 text-primary" />
+                                    {t('product.notes')}
+                                </h4>
+                                <div className="space-y-2">
+                                    {product.notes.map((note, i) => (
+                                        <div key={i} className="flex items-start gap-2.5 bg-primary/5 border border-primary/10 rounded-xl px-3.5 py-2.5">
+                                            <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                                            <p className="text-sm text-stone-600 leading-relaxed font-medium">{note}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* AI Product Pairing */}
                         <AIPairing productName={product.name} category={product.category} />
