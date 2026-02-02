@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { ArrowRight, Globe, MapPin, Award, Utensils, Sparkles } from 'lucide-react';
+import { ArrowRight, Globe, MapPin, Award } from 'lucide-react';
 
 interface VideoLandingProps {
     onEnter: () => void;

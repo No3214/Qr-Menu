@@ -52,7 +52,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
         <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center p-0 sm:p-4">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm transition-all duration-300"
+                className="absolute inset-0 bg-primary/60 backdrop-blur-sm transition-all duration-300"
                 onClick={onClose}
                 aria-hidden="true"
             />

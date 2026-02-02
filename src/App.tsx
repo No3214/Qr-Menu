@@ -26,15 +26,15 @@ export default function App() {
         toastOptions={{
           duration: 3000,
           style: {
-            background: '#1E293B',
+            background: '#434b45',
             color: '#fff',
-            borderRadius: '12px',
+            borderRadius: '16px',
             fontSize: '14px',
-            fontWeight: '500',
+            fontWeight: '600',
           },
           success: {
             iconTheme: {
-              primary: '#C5A059',
+              primary: '#8b735b',
               secondary: '#fff',
             },
           },
