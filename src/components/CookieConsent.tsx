@@ -23,13 +23,13 @@ export const CookieConsent: React.FC = () => {
 
     return (
         <div className="fixed bottom-6 inset-x-6 z-50 animate-premium-fade">
-            <div className="max-w-xl mx-auto bg-stone-900/95 backdrop-blur-xl border border-white/10 p-6 rounded-[32px] shadow-2xl flex flex-col sm:flex-row items-center gap-6">
-                <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-                    <ShieldCheck className="w-6 h-6 text-primary" />
+            <div className="max-w-xl mx-auto bg-primary/95 backdrop-blur-xl border border-white/10 p-6 rounded-[32px] shadow-2xl flex flex-col sm:flex-row items-center gap-6">
+                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <ShieldCheck className="w-6 h-6 text-accent" />
                 </div>
 
                 <div className="flex-1 text-center sm:text-left">
-                    <p className="text-white/90 text-[13px] font-medium leading-relaxed">
+                    <p className="text-white/90 text-[13px] font-bold leading-relaxed tracking-tight">
                         {t('cookie.text')}
                     </p>
                 </div>
@@ -37,7 +37,7 @@ export const CookieConsent: React.FC = () => {
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                     <button
                         onClick={handleAccept}
-                        className="flex-1 sm:flex-none bg-white text-stone-900 px-8 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all active:scale-95"
+                        className="flex-1 sm:flex-none bg-accent text-white px-8 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-accent-hover transition-all active:scale-95 shadow-lg shadow-black/20"
                     >
                         {t('cookie.accept')}
                     </button>

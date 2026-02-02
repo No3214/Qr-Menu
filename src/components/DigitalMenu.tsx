@@ -145,7 +145,14 @@ export const DigitalMenu: React.FC = () => {
                                 <input
                                     type="text"
                                     value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        setSearchQuery(val);
+                                        if (val.trim().length > 0 && viewState === 'GRID') {
+                                            setViewState('LIST');
+                                            setIsSearchOpen(true);
+                                        }
+                                    }}
                                     placeholder={t('menu.search')}
                                     className="w-full h-12 pl-11 pr-4 bg-primary/[0.03] border border-primary/[0.05] rounded-xl text-sm outline-none focus:ring-2 focus:ring-accent/10 focus:bg-white focus:border-accent/30 transition-all font-medium"
                                 />

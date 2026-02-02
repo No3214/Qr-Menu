@@ -1,6 +1,7 @@
 
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { LanguageContext } from '../context/LanguageContext';
 
 interface Props {
     children?: ReactNode;
@@ -37,30 +38,40 @@ export class ErrorBoundary extends Component<Props, State> {
     public render() {
         if (this.state.hasError) {
             return (
-                <div className="min-h-screen bg-stone-50 flex items-center justify-center p-6 text-center">
-                    <div className="max-w-md w-full bg-white rounded-[2rem] shadow-2xl p-10 border border-stone-100 animate-in fade-in zoom-in duration-500">
-                        <div className="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                            <AlertTriangle className="w-10 h-10 text-amber-500" />
-                        </div>
+                <LanguageContext.Consumer>
+                    {(context) => {
+                        const t = context?.t || ((key: string) => key);
 
-                        <h1 className="text-2xl font-bold text-stone-900 mb-2">Beklenmedik Bir Hata</h1>
-                        <p className="text-stone-500 text-sm mb-8 leading-relaxed">
-                            Üzgünüz, bir şeyler yanlış gitti. Menüyü tekrar yüklemeyi deneyebilir misiniz?
-                        </p>
+                        return (
+                            <div className="min-h-screen bg-bg flex items-center justify-center p-6 text-center">
+                                <div className="max-w-md w-full bg-surface rounded-[2rem] shadow-2xl p-10 border border-primary/10 animate-in fade-in zoom-in duration-500">
+                                    <div className="w-20 h-20 bg-accent/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                                        <AlertTriangle className="w-10 h-10 text-accent" />
+                                    </div>
 
-                        <button
-                            onClick={this.handleReset}
-                            className="w-full h-14 bg-stone-900 text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-stone-200"
-                        >
-                            <RefreshCw className="w-5 h-5" />
-                            Yeniden Başlat
-                        </button>
+                                    <h1 className="text-2xl font-black text-text mb-2 uppercase tracking-tight">
+                                        {t('error.title')}
+                                    </h1>
+                                    <p className="text-text-muted text-sm mb-8 leading-relaxed font-medium">
+                                        {t('error.subtitle')}
+                                    </p>
 
-                        <p className="mt-8 text-[10px] text-stone-300 uppercase tracking-widest font-bold">
-                            Kozbeyli Konağı • Premium Support
-                        </p>
-                    </div>
-                </div>
+                                    <button
+                                        onClick={this.handleReset}
+                                        className="w-full h-14 bg-primary text-white rounded-2xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20"
+                                    >
+                                        <RefreshCw className="w-5 h-5" />
+                                        {t('error.reset')}
+                                    </button>
+
+                                    <p className="mt-8 text-[10px] text-text/30 uppercase tracking-[0.3em] font-black">
+                                        Kozbeyli Konağı • Premium Support
+                                    </p>
+                                </div>
+                            </div>
+                        );
+                    }}
+                </LanguageContext.Consumer>
             );
         }
 

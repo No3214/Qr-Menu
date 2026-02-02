@@ -5,7 +5,7 @@ type Language = 'tr' | 'en';
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
-    t: (key: string) => string;
+    t: (key: string, variables?: Record<string, string | number>) => string;
 }
 
 const translations: Record<Language, Record<string, string>> = {
@@ -24,6 +24,8 @@ const translations: Record<Language, Record<string, string>> = {
         'landing.history': 'Tarihi Mekan',
         'landing.foundedText': 'Est. 1904',
         'landing.discover': 'Keşfet',
+        'landing.location': 'KONUM',
+        'landing.googleReview': 'GOOGLE YORUMLAR',
 
         // CategoryGrid
         'category.heritagePrefix': 'Mansion mirası:',
@@ -340,6 +342,11 @@ const translations: Record<Language, Record<string, string>> = {
         // Cookies
         'cookie.text': 'Size daha iyi hizmet sunabilmek için çerezleri kullanıyoruz.',
         'cookie.accept': 'Kabul Et',
+
+        // ErrorBoundary
+        'error.title': 'Beklenmedik Bir Hata',
+        'error.subtitle': 'Üzgünüz, bir şeyler yanlış gitti. Menüyü tekrar yüklemeyi deneyebilir misiniz?',
+        'error.reset': 'Yeniden Başlat',
     },
     en: {
         // VideoLanding
@@ -638,10 +645,15 @@ const translations: Record<Language, Record<string, string>> = {
         // Cookies
         'cookie.text': 'We use cookies to provide you with a better service.',
         'cookie.accept': 'Accept',
+
+        // ErrorBoundary
+        'error.title': 'Unexpected Error',
+        'error.subtitle': "Sorry, something went wrong. Could you please try reloading the menu?",
+        'error.reset': 'Restart Menu',
     }
 };
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [language, setLanguageState] = useState<Language>(() => {
@@ -657,8 +669,14 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setLanguageState(lang);
     };
 
-    const t = (key: string): string => {
-        return translations[language][key] || key;
+    const t = (key: string, variables?: Record<string, string | number>): string => {
+        let translation = translations[language][key] || key;
+        if (variables) {
+            Object.entries(variables).forEach(([name, value]) => {
+                translation = translation.replace(new RegExp(`{${name}}`, 'g'), String(value));
+            });
+        }
+        return translation;
     };
 
     return (
