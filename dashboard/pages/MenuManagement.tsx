@@ -11,11 +11,24 @@ import {
   ImageIcon,
   Save,
   X,
-  Star,
   MessageCircle,
+  Sparkles,
+  Loader2,
+  RefreshCw,
+  Zap,
+  ChevronRight,
 } from 'lucide-react';
 import { CATEGORIES, PRODUCTS, type Product, type Category } from '../../services/MenuData';
 import { useLanguage } from '../../context/LanguageContext';
+import {
+  loadAIPairings,
+  generatePairingsForProduct,
+  generateAllPairings,
+  saveProductPairings,
+  removeProductPairings,
+  type StoredPairings,
+} from '../../services/aiPairingService';
+import { getAvailableProviders } from '../../services/aiProvider';
 import toast from 'react-hot-toast';
 
 type Tab = 'products' | 'recommendations' | 'display';
@@ -561,51 +574,246 @@ function ProductEditModal({
 
 /* ── Recommendations Tab ── */
 function RecommendationsTab() {
-  const { t } = useLanguage();
-  const recommendedProducts = PRODUCTS.slice(0, 6);
+  const { t, language } = useLanguage();
+  const [pairings, setPairings] = useState<StoredPairings>(loadAIPairings);
+  const [generatingId, setGeneratingId] = useState<string | null>(null);
+  const [generatingAll, setGeneratingAll] = useState(false);
+  const [progress, setProgress] = useState({ current: 0, total: 0, name: '' });
+  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+
+  const providers = getAvailableProviders();
+  const hasAI = providers.length > 0;
+
+  const pairedCount = Object.keys(pairings).length;
+  const totalProducts = PRODUCTS.filter(p => p.isAvailable).length;
+
+  const handleGenerateSingle = async (product: Product) => {
+    if (!hasAI) {
+      toast.error(t('dash.rec.noAI'));
+      return;
+    }
+    setGeneratingId(product.id);
+    try {
+      const recs = await generatePairingsForProduct(product);
+      if (recs.length > 0) {
+        saveProductPairings(product.id, recs);
+        setPairings(loadAIPairings());
+        toast.success(t('dash.rec.generated').replace('{name}', product.name));
+      } else {
+        toast.error(t('dash.rec.noResults'));
+      }
+    } catch {
+      toast.error(t('dash.rec.error'));
+    }
+    setGeneratingId(null);
+  };
+
+  const handleGenerateAll = async () => {
+    if (!hasAI) {
+      toast.error(t('dash.rec.noAI'));
+      return;
+    }
+    setGeneratingAll(true);
+    try {
+      const result = await generateAllPairings((current, total, name) => {
+        setProgress({ current, total, name });
+      });
+      setPairings(loadAIPairings());
+      toast.success(
+        t('dash.rec.allDone')
+          .replace('{success}', String(result.success))
+          .replace('{failed}', String(result.failed))
+      );
+    } catch {
+      toast.error(t('dash.rec.error'));
+    }
+    setGeneratingAll(false);
+    setProgress({ current: 0, total: 0, name: '' });
+  };
+
+  const handleRemove = (productId: string) => {
+    removeProductPairings(productId);
+    setPairings(loadAIPairings());
+    toast.success(t('dash.rec.removed'));
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-text">{t('dash.menu.recommended')}</h2>
-          <p className="text-sm text-text-muted mt-0.5">{t('dash.menu.recommendedDesc')}</p>
-        </div>
-        <button
-          onClick={() => toast.success(t('dash.menu.recommendSoon'))}
-          className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors"
-        >
-          <Plus size={16} />
-          {t('dash.menu.addRecommendation')}
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {recommendedProducts.map((product) => (
-          <div
-            key={product.id}
-            className="bg-white border border-border rounded-xl p-4 hover:shadow-card transition-shadow"
-          >
-            <div className="flex items-start gap-3">
-              <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
-                {product.image ? (
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <Star size={18} className="text-warning" />
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-medium text-text truncate">{product.name}</h3>
-                <p className="text-xs text-text-muted mt-0.5 line-clamp-2">{product.description}</p>
-                <p className="text-sm font-semibold text-primary mt-2">₺{product.price.toFixed(2)}</p>
-              </div>
+    <div className="space-y-6">
+      {/* Header + AI Status */}
+      <div className="bg-white border border-border rounded-xl p-6">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Sparkles size={20} className="text-primary" />
+              <h2 className="text-lg font-semibold text-text">{t('dash.rec.title')}</h2>
+            </div>
+            <p className="text-sm text-text-muted">{t('dash.rec.desc')}</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${hasAI ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'}`}>
+              <Zap size={12} />
+              {hasAI ? t('dash.rec.aiActive').replace('{provider}', providers[0]) : t('dash.rec.aiInactive')}
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Stats */}
+        <div className="flex items-center gap-6 mt-4 pt-4 border-t border-border">
+          <div>
+            <p className="text-2xl font-bold text-text">{pairedCount}</p>
+            <p className="text-xs text-text-muted">{t('dash.rec.paired')}</p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-text">{totalProducts - pairedCount}</p>
+            <p className="text-xs text-text-muted">{t('dash.rec.unpaired')}</p>
+          </div>
+          <div className="flex-1" />
+          <button
+            onClick={handleGenerateAll}
+            disabled={generatingAll || !hasAI || pairedCount >= totalProducts}
+            className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {generatingAll ? (
+              <>
+                <Loader2 size={16} className="animate-spin" />
+                {t('dash.rec.generating')} ({progress.current}/{progress.total})
+              </>
+            ) : (
+              <>
+                <Sparkles size={16} />
+                {t('dash.rec.generateAll')}
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Progress bar during bulk generation */}
+        {generatingAll && progress.total > 0 && (
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-xs text-text-muted mb-1">
+              <span>{progress.name}</span>
+              <span>{Math.round((progress.current / progress.total) * 100)}%</span>
+            </div>
+            <div className="w-full bg-gray-100 rounded-full h-2">
+              <div
+                className="bg-primary rounded-full h-2 transition-all duration-300"
+                style={{ width: `${(progress.current / progress.total) * 100}%` }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Product List */}
+      <div className="bg-white border border-border rounded-xl overflow-hidden">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-border bg-gray-50/50">
+              <th className="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
+                {t('dash.menu.thProduct')}
+              </th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
+                {t('dash.rec.pairings')}
+              </th>
+              <th className="text-right px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wide">
+                {t('dash.menu.thActions')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {PRODUCTS.filter(p => p.isAvailable).map((product) => {
+              const productPairings = pairings[product.id] || [];
+              const hasPairings = productPairings.length > 0;
+              const isGenerating = generatingId === product.id;
+              const isExpanded = selectedProduct === product.id;
+
+              return (
+                <tr key={product.id} className="border-b border-border last:border-0">
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => setSelectedProduct(isExpanded ? null : product.id)}
+                      className="flex items-center gap-3 text-left w-full group"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                        {product.image ? (
+                          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <ImageIcon size={16} className="text-gray-400" />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-text truncate group-hover:text-primary transition-colors">
+                          {product.name}
+                        </p>
+                        <p className="text-xs text-text-muted">{product.category} · ₺{product.price}</p>
+                      </div>
+                      <ChevronRight size={14} className={`text-text-muted transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                    </button>
+
+                    {/* Expanded: show pairings */}
+                    {isExpanded && hasPairings && (
+                      <div className="mt-3 ml-13 space-y-2 pl-[52px]">
+                        {productPairings.map((rec, i) => {
+                          const paired = PRODUCTS.find(p => p.id === rec.productId);
+                          if (!paired) return null;
+                          return (
+                            <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-2">
+                              <div className="w-8 h-8 rounded-md bg-gray-100 shrink-0 overflow-hidden">
+                                {paired.image ? (
+                                  <img src={paired.image} alt={paired.name} className="w-full h-full object-cover" />
+                                ) : (
+                                  <ImageIcon size={12} className="text-gray-400" />
+                                )}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs font-medium text-text truncate">{paired.name}</p>
+                                <p className="text-[11px] text-text-muted truncate">
+                                  {language === 'tr' ? rec.reason_tr : rec.reason_en}
+                                </p>
+                              </div>
+                              <span className="text-xs font-medium text-text-muted shrink-0">₺{paired.price}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    {hasPairings ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-green-700 bg-green-50 px-2 py-1 rounded-full">
+                        <Sparkles size={10} />
+                        {productPairings.length} {t('dash.rec.recommendation')}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-text-muted">{t('dash.rec.noPairings')}</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-1">
+                      <button
+                        onClick={() => handleGenerateSingle(product)}
+                        disabled={isGenerating || generatingAll || !hasAI}
+                        className="p-1.5 rounded-lg hover:bg-primary/10 text-text-muted hover:text-primary transition-colors disabled:opacity-40"
+                        title={hasPairings ? t('dash.rec.regenerate') : t('dash.rec.generate')}
+                      >
+                        {isGenerating ? <Loader2 size={15} className="animate-spin" /> : <RefreshCw size={15} />}
+                      </button>
+                      {hasPairings && (
+                        <button
+                          onClick={() => handleRemove(product.id)}
+                          className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-danger transition-colors"
+                          title={t('dash.menu.delete')}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );

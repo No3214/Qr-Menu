@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Product, PRODUCTS, PRODUCT_PAIRINGS } from '../services/MenuData';
+import { getProductPairings } from '../services/aiPairingService';
 import { X, Share2, Info, Sparkles, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
@@ -170,7 +171,10 @@ const PairingRecommendations: React.FC<{
     onSelectProduct?: (product: Product) => void;
 }> = ({ productId, onSelectProduct }) => {
     const { t, language } = useLanguage();
-    const pairings = PRODUCT_PAIRINGS[productId];
+
+    // Prefer AI-generated pairings, fallback to hardcoded
+    const aiPairings = getProductPairings(productId);
+    const pairings = aiPairings.length > 0 ? aiPairings : PRODUCT_PAIRINGS[productId];
 
     if (!pairings || pairings.length === 0) return null;
 
