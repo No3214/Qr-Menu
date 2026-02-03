@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* Tailwind v4 border compatibility fix */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: hsl(var(--border, 20 5.9% 90%));
+    border-style: solid;
+  }
+}
+
 @theme {
   --color-primary: #434b45;
   /* Deep Sage Charcoal from Logo */
