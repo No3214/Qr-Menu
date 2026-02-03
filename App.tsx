@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { LanguageProvider } from './context/LanguageContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { CookieConsent } from './components/CookieConsent';
 
 // Lazy load components for performance (Fixes INP issues on navigation)
 const DigitalMenu = React.lazy(() => import('./components/DigitalMenu').then(module => ({ default: module.DigitalMenu })));
@@ -76,6 +77,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
+        <CookieConsent />
       </LanguageProvider>
     </ErrorBoundary>
   );

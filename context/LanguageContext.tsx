@@ -12,6 +12,11 @@ const translations: Record<Language, Record<string, string>> = {
     tr: {
         // Common
         'close': 'Kapat',
+        'nav.back': 'Geri',
+
+        // Cookie Consent
+        'cookie.text': 'Bu site, deneyiminizi iyileştirmek için çerezler kullanır. Devam ederek çerez politikamızı kabul etmiş olursunuz.',
+        'cookie.accept': 'Kabul Et',
 
         // VideoLanding
         'landing.title': 'Lezzeti Keşfet',
@@ -77,10 +82,6 @@ const translations: Record<Language, Record<string, string>> = {
         'sidebar.location': 'Konum',
         'sidebar.call': 'Ara',
         'sidebar.rateUs': 'Değerlendir',
-
-        // Cookie
-        'cookie.message': 'Bu site deneyiminizi iyileştirmek için çerezler kullanır.',
-        'cookie.accept': 'Kabul Et',
 
         // Dashboard - Sidebar Nav
         'dash.home': 'Ana Sayfa',
@@ -438,6 +439,11 @@ const translations: Record<Language, Record<string, string>> = {
     en: {
         // Common
         'close': 'Close',
+        'nav.back': 'Back',
+
+        // Cookie Consent
+        'cookie.text': 'This site uses cookies to improve your experience. By continuing, you accept our cookie policy.',
+        'cookie.accept': 'Accept',
 
         // VideoLanding
         'landing.title': 'Discover Taste',
@@ -503,10 +509,6 @@ const translations: Record<Language, Record<string, string>> = {
         'sidebar.location': 'Location',
         'sidebar.call': 'Call',
         'sidebar.rateUs': 'Rate Us',
-
-        // Cookie
-        'cookie.message': 'This site uses cookies to improve your experience.',
-        'cookie.accept': 'Accept',
 
         // Dashboard - Sidebar Nav
         'dash.home': 'Home',
