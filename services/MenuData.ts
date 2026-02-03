@@ -1,6 +1,21 @@
 // Dietary flags for products
 export type DietaryFlag = 'VEGAN' | 'VEGETARIAN' | 'GLUTEN_FREE' | 'HIGH_PROTEIN' | 'CONTAINS_NUTS' | 'SPICY';
 
+// Allergen types (Foost platform compatible)
+export type Allergen =
+    | 'GLUTEN'
+    | 'DAIRY'
+    | 'EGGS'
+    | 'NUTS'
+    | 'PEANUTS'
+    | 'SHELLFISH'
+    | 'FISH'
+    | 'SOY'
+    | 'SESAME'
+    | 'CELERY'
+    | 'MUSTARD'
+    | 'SULPHITES';
+
 export interface Product {
     id: string;
     name: string;
@@ -15,6 +30,8 @@ export interface Product {
     weight?: string;          // e.g., "250g", "2 kişilik"
     prepTime?: number;        // minutes
     dietaryFlags?: DietaryFlag[];
+    // Allergen information (Foost compatible)
+    allergens?: Allergen[];   // List of allergens in product
     // Media & popularity (Foost features)
     videoUrl?: string;        // Product video URL
     isPopular?: boolean;      // Popular/featured product
@@ -49,11 +66,11 @@ export const CATEGORIES: Category[] = [
 
 export const PRODUCTS: Product[] = [
     // KAHVALTI
-    { id: 'k1', name: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', price: 650, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', notes: ['2 kişilik servis edilir', 'Taze sıkılmış portakal suyu dahildir', 'Glutensiz ekmek talep edilebilir'], calories: 1200, weight: '2 kişilik', prepTime: 15, dietaryFlags: ['VEGETARIAN'], isPopular: true },
+    { id: 'k1', name: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', price: 650, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', notes: ['2 kişilik servis edilir', 'Taze sıkılmış portakal suyu dahildir', 'Glutensiz ekmek talep edilebilir'], calories: 1200, weight: '2 kişilik', prepTime: 15, dietaryFlags: ['VEGETARIAN'], allergens: ['GLUTEN', 'DAIRY', 'EGGS', 'NUTS'], isPopular: true },
 
     // EKSTRALAR
-    { id: 'e1', name: '2 Adet Fransız Tereyağlı Kruvasan', description: 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan.', price: 300, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80' },
-    { id: 'e2', name: 'Çikolata Kreması', description: 'Ünlü fındık ve kakao bazlı kremalı bir sürülebilir tatlı.', price: 80, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&q=80' },
+    { id: 'e1', name: '2 Adet Fransız Tereyağlı Kruvasan', description: 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan.', price: 300, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80', allergens: ['GLUTEN', 'DAIRY', 'EGGS'] },
+    { id: 'e2', name: 'Çikolata Kreması', description: 'Ünlü fındık ve kakao bazlı kremalı bir sürülebilir tatlı.', price: 80, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&q=80', allergens: ['NUTS', 'DAIRY'] },
     { id: 'e3', name: 'Dulce De Leche', description: 'Tatlı ve yoğun kremamsı bir sos, karamelize süt tadıyla öne çıkar.', price: 100, category: 'ekstralar', isAvailable: true, image: 'https://plus.unsplash.com/premium_photo-1675279435422-77291a13e551?auto=format&fit=crop&q=80' },
     { id: 'e4', name: 'Fesleğenli Domatesli Ciabatta', description: 'İtalya kökenli ciabatta ekmeği fesleğen ve domatesle aromalandırılarak sunulur. 4 Adet servis edilir.', price: 300, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1529312266912-b33cf6227e2f?auto=format&fit=crop&q=80' },
     { id: 'e5', name: 'Kare Rustik Ekmek', description: 'Kare şeklinde hazırlanmış rustik ekmek. Geleneksel yöntemle mayalanıp fırında pişirilir.', price: 300, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1509440159596-0249088b7280?auto=format&fit=crop&q=80' },
@@ -71,11 +88,11 @@ export const PRODUCTS: Product[] = [
     { id: 'b2', name: 'Kızarmış Tavuk Ve Baharatlı Patates Kızartması', description: 'Tavuk parçaları kızartılıp baharatlanır ve yanında patates kızartması sunulur.', price: 500, category: 'baslangic', isAvailable: true, image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80' },
     { id: 'b3', name: 'Patates Kızartması', description: 'Taze patateslerden kızartılmış lezzetli bir garnitür. Baharatlı veya sade tercih edilebilir.', price: 300, category: 'baslangic', isAvailable: true, image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&q=80' },
     { id: 'b4', name: 'Roka Salatası', description: 'Roka Beyaz Peynir Tarla Domates ve Ceviz üzeri Balsamik Glaze ile Servis Edilir.', price: 350, category: 'baslangic', isAvailable: true, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80', calories: 280, weight: '250g', dietaryFlags: ['VEGETARIAN', 'GLUTEN_FREE', 'CONTAINS_NUTS'] },
-    { id: 'b5', name: 'Rustik Ekmek Üstü Füme Somon', description: 'Füme somon parçaları, rustik ekmek üzerinde sunulur ve taze aromalarla zenginleştirilir.', price: 450, category: 'baslangic', isAvailable: true, image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80' },
+    { id: 'b5', name: 'Rustik Ekmek Üstü Füme Somon', description: 'Füme somon parçaları, rustik ekmek üzerinde sunulur ve taze aromalarla zenginleştirilir.', price: 450, category: 'baslangic', isAvailable: true, image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80', allergens: ['FISH', 'GLUTEN'] },
 
     // TAŞ FIRIN PIZZA VE SANDVİÇ
     { id: 'p1', name: 'Gurme Rustik Sandviç', description: 'Taze pişirilen rustik baget, beyaz peynir, domates, roka, pesto sos ve zeytinyağı ile hazırlanır patates kızartması ile sıcak servis edilir.', price: 450, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80' },
-    { id: 'p2', name: 'Taş Fırın Karışık Pizza', description: 'Taş fırında pişirilmiş, farklı malzemelerle zenginleştirilmiş roka, parmesan ve acılı zeytinyağı ile sunulan doyurucu bir karışık pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80', calories: 850, weight: '30cm', prepTime: 20, dietaryFlags: ['SPICY'], isPopular: true },
+    { id: 'p2', name: 'Taş Fırın Karışık Pizza', description: 'Taş fırında pişirilmiş, farklı malzemelerle zenginleştirilmiş roka, parmesan ve acılı zeytinyağı ile sunulan doyurucu bir karışık pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80', calories: 850, weight: '30cm', prepTime: 20, dietaryFlags: ['SPICY'], allergens: ['GLUTEN', 'DAIRY'], isPopular: true },
     { id: 'p3', name: 'Taş Fırın Margarita Pizza', description: 'Taş fırında pişirilmiş, taze roka, parmesan peyniri ve acılı zeytinyağı ile sunulan geleneksel bir Margarita Pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&q=80' },
 
     // PEYNİR TABAĞI
@@ -84,7 +101,7 @@ export const PRODUCTS: Product[] = [
 
     // TATLI
     { id: 't1', name: '2\'Li Çikolatalı Mini Berliner', description: 'İki adet mini çikolatalı berliner tatlı hamur topudur.', price: 200, category: 'tatli', isAvailable: true, image: 'https://images.unsplash.com/photo-1601614769062-859187399945?auto=format&fit=crop&q=80' },
-    { id: 't2', name: 'Antakya Künefe', description: 'Geleneksel bir Türk tatlısı. İncecik tel kadayıf arasında eriyen peynir ve şerbetiyle sıcak servis edilir.', price: 350, category: 'tatli', isAvailable: true, image: 'https://images.unsplash.com/photo-1594520771801-b552b96c8c4c?auto=format&fit=crop&q=80' },
+    { id: 't2', name: 'Antakya Künefe', description: 'Geleneksel bir Türk tatlısı. İncecik tel kadayıf arasında eriyen peynir ve şerbetiyle sıcak servis edilir.', price: 350, category: 'tatli', isAvailable: true, image: 'https://images.unsplash.com/photo-1594520771801-b552b96c8c4c?auto=format&fit=crop&q=80', allergens: ['GLUTEN', 'DAIRY'] },
     { id: 't3', name: 'Churros', description: 'Klasik İspanyol tatlısı olarak kızartılmış hamur çubukları. Çilek Reçeli, Vişne Reçeli veya Nutella ile servis edilir.', price: 400, category: 'tatli', isAvailable: true, image: 'https://images.unsplash.com/photo-1624300626442-164a696de23a?auto=format&fit=crop&q=80' },
     { id: 't4', name: 'Fransız Tereyağlı Kruvasan (Sade)', description: 'Çıtır kruvasan, file bademlerle zenginleştirilmiştir. Çilek Reçeli, Vişne Reçeli veya Nutella ile servis edilir.', price: 300, category: 'tatli', isAvailable: true, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80' },
     { id: 't5', name: 'Vanilyalı Dondurma (2 Top)', description: 'Klasik vanilya lezzetiyle iki top dondurma sunumu.', price: 200, category: 'tatli', isAvailable: true, image: 'https://images.unsplash.com/photo-1576506295286-5cda18df43e7?auto=format&fit=crop&q=80' },

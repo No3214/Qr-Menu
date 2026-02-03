@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Product, PRODUCTS, PRODUCT_PAIRINGS, DietaryFlag } from '../services/MenuData';
+import { Product, PRODUCTS, PRODUCT_PAIRINGS, DietaryFlag, Allergen } from '../services/MenuData';
 import { ChevronUp, ChevronDown, ArrowRight, Info, Flame, Clock, Scale, Leaf, Wheat, Dumbbell, AlertTriangle, Play, Star } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { fadeInUp, hoverScale } from '../lib/animations';
@@ -32,6 +32,22 @@ const DIETARY_KEYS: Record<DietaryFlag, string> = {
     'SPICY': 'dietary.spicy',
 };
 
+// Allergen translation key mapping
+const ALLERGEN_KEYS: Record<Allergen, string> = {
+    'GLUTEN': 'allergen.gluten',
+    'DAIRY': 'allergen.dairy',
+    'EGGS': 'allergen.eggs',
+    'NUTS': 'allergen.nuts',
+    'PEANUTS': 'allergen.peanuts',
+    'SHELLFISH': 'allergen.shellfish',
+    'FISH': 'allergen.fish',
+    'SOY': 'allergen.soy',
+    'SESAME': 'allergen.sesame',
+    'CELERY': 'allergen.celery',
+    'MUSTARD': 'allergen.mustard',
+    'SULPHITES': 'allergen.sulphites',
+};
+
 export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplore }) => {
     const { t, language } = useLanguage();
     const formattedPrice = new Intl.NumberFormat(language === 'tr' ? 'tr-TR' : 'en-US').format(product.price);
@@ -56,6 +72,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
     const hasPairings = pairedProducts && pairedProducts.length > 0;
     const hasNutritionalInfo = product.calories || product.weight || product.prepTime;
     const hasDietaryFlags = product.dietaryFlags && product.dietaryFlags.length > 0;
+    const hasAllergens = product.allergens && product.allergens.length > 0;
     const hasVideo = Boolean(product.videoUrl);
 
     return (
@@ -205,6 +222,17 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
                                 <span className="font-medium">{product.weight}</span>
                             </div>
                         )}
+                    </div>
+                )}
+
+                {/* Allergen Info */}
+                {hasAllergens && (
+                    <div className="flex items-start gap-1.5 mb-4 text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg">
+                        <AlertTriangle className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <span className="font-medium">{t('allergen.contains')}: </span>
+                            <span>{product.allergens!.map(a => t(ALLERGEN_KEYS[a])).join(', ')}</span>
+                        </div>
                     </div>
                 )}
 
