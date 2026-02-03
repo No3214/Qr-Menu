@@ -45,6 +45,10 @@ const translations: Record<Language, Record<string, string>> = {
         'product.why': 'Neden?',
         'product.notes': 'Açıklamalar',
         'product.category': 'Kategori',
+        'product.explore': 'Keşfet',
+        'product.showMore': 'Devamını Gör',
+        'product.showLess': 'Daha Az',
+        'product.info': 'Bilgi',
 
         // Review
         'review.title': 'Değerlendir',
@@ -472,6 +476,10 @@ const translations: Record<Language, Record<string, string>> = {
         'product.why': 'Why?',
         'product.notes': 'Notes',
         'product.category': 'Category',
+        'product.explore': 'Explore',
+        'product.showMore': 'Show More',
+        'product.showLess': 'Show Less',
+        'product.info': 'Info',
 
         // Review
         'review.title': 'Rate Us',

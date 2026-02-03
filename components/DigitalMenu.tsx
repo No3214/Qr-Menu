@@ -203,9 +203,11 @@ export const DigitalMenu: React.FC = () => {
                         className="p-4 space-y-4 pb-24"
                     >
                         {filteredProducts.map(product => (
-                            <div key={product.id} onClick={() => setSelectedProduct(product)}>
-                                <ProductCard product={product} />
-                            </div>
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                                onExplore={setSelectedProduct}
+                            />
                         ))}
                         {filteredProducts.length === 0 && (
                             <div className="text-center py-10 text-gray-400">
