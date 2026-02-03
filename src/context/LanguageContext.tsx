@@ -67,7 +67,6 @@ const translations: Record<Language, Record<string, string>> = {
         // Floating Action Button
         'fab.review': 'Değerlendir',
         'fab.help': 'Yardım',
-        'fab.callWaiter': 'Garson Çağır',
 
         // Review Modal
         'review.title': 'Deneyiminiz Nasıldı?',
@@ -425,7 +424,6 @@ const translations: Record<Language, Record<string, string>> = {
         // Floating Action Button
         'fab.review': 'Review',
         'fab.help': 'Help',
-        'fab.callWaiter': 'Call Waiter',
 
         // Review Modal
         'review.title': 'How Was Your Experience?',

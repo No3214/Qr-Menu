@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, X, MessageCircle, Star, HelpCircle } from 'lucide-react';
+import { Sparkles, X, Star, HelpCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface FloatingActionButtonProps {
@@ -9,7 +9,7 @@ interface FloatingActionButtonProps {
 
 /**
  * FloatingActionButton - Floating action button with quick actions
- * Shows sparkle icon, expands to show quick actions
+ * Shows sparkle icon, expands to show quick actions (review, help)
  */
 export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     onFeedback,
@@ -47,13 +47,6 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                             {t('fab.help')}
                         </button>
                     )}
-                    <button
-                        onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl shadow-lg border border-stone-100 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
-                    >
-                        <MessageCircle className="w-4 h-4 text-green-500" />
-                        {t('fab.callWaiter')}
-                    </button>
                 </div>
             )}
 
