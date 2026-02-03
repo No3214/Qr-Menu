@@ -117,6 +117,7 @@ const translations: Record<Language, Record<string, string>> = {
         // Dashboard - Sidebar Nav
         'dash.home': 'Ana Sayfa',
         'dash.menuManagement': 'Menü Yönetimi',
+        'dash.aiRecommendations': 'AI Öneriler',
         'dash.events': 'Etkinlik Tanıtımı',
         'dash.analytics': 'Analitik',
         'dash.reviews': 'Yorumlar',
@@ -128,6 +129,18 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.dbActive': 'Veritabanı: Aktif',
         'dash.dbDemo': 'Veritabanı: Demo',
         'dash.backToMenu': 'Menüye Dön',
+
+        // Dashboard - Stats (Foost style)
+        'dash.stats.totalProducts': 'Toplam Ürün',
+        'dash.stats.categories': 'Kategoriler',
+        'dash.stats.popularItems': 'Popüler Ürünler',
+
+        // Dashboard - AI Insights (Foost style)
+        'dash.ai.title': 'AI Önerileri',
+        'dash.ai.suggestion': 'Künefe tatlısı genellikle akşam saatlerinde tercih ediliyor. Türk kahvesi ile eşleştirme önerisini menüye eklemeyi düşünün.',
+        'dash.ai.applySuggestion': 'Öneriyi Uygula',
+        'dash.ai.poweredBy': 'Yapay zeka destekli öneri sistemi',
+        'dash.action.aiDesc': 'AI ile ürün eşleştirme önerileri oluşturun',
 
         // Dashboard - Reviews Page
         'dash.reviews.title': 'Değerlendirmeler',
@@ -575,6 +588,7 @@ const translations: Record<Language, Record<string, string>> = {
         // Dashboard - Sidebar Nav
         'dash.home': 'Home',
         'dash.menuManagement': 'Menu Management',
+        'dash.aiRecommendations': 'AI Recommendations',
         'dash.events': 'Events',
         'dash.analytics': 'Analytics',
         'dash.reviews': 'Reviews',
@@ -586,6 +600,18 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.dbActive': 'Database: Active',
         'dash.dbDemo': 'Database: Demo',
         'dash.backToMenu': 'Back to Menu',
+
+        // Dashboard - Stats (Foost style)
+        'dash.stats.totalProducts': 'Total Products',
+        'dash.stats.categories': 'Categories',
+        'dash.stats.popularItems': 'Popular Items',
+
+        // Dashboard - AI Insights (Foost style)
+        'dash.ai.title': 'AI Insights',
+        'dash.ai.suggestion': 'Künefe dessert is usually preferred in the evening. Consider adding Turkish coffee pairing suggestion to the menu.',
+        'dash.ai.applySuggestion': 'Apply Suggestion',
+        'dash.ai.poweredBy': 'AI-powered recommendation system',
+        'dash.action.aiDesc': 'Generate product pairing suggestions with AI',
 
         // Dashboard - Reviews Page
         'dash.reviews.title': 'Reviews',
