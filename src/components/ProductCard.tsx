@@ -39,9 +39,9 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                 )}
 
                 {/* Content Area */}
-                <div className="flex-1 flex flex-col justify-between min-w-0 py-0.5">
+                <div className="flex-1 flex flex-col justify-between min-w-0 py-0.5 font-sans">
                     <div>
-                        <h3 className="text-[17px] font-bold text-text leading-tight mb-1 group-hover:text-primary transition-colors duration-300">
+                        <h3 className="text-[17px] font-bold text-text leading-tight mb-1 group-hover:text-primary transition-colors duration-300 font-serif">
                             {product.title}
                         </h3>
                         <p className="text-[13px] text-text-muted line-clamp-2 leading-relaxed font-medium opacity-85">
@@ -51,8 +51,8 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
 
                     <div className="flex items-center justify-between mt-2.5">
                         <div className="flex items-baseline gap-0.5">
-                            <span className="text-[19px] font-extrabold text-text tracking-tight">{formattedPrice}</span>
-                            <span className="text-[11px] font-bold text-primary/60 uppercase ml-0.5">₺</span>
+                            <span className="text-[19px] font-extrabold text-text tracking-tight font-sans">{formattedPrice}</span>
+                            <span className="text-[11px] font-bold text-primary/60 uppercase ml-0.5 font-sans">₺</span>
                         </div>
 
                         <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center text-primary shadow-sm border border-primary/10 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-300">

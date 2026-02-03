@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 @theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Montserrat", sans-serif;
+
   --color-primary: #434b45;
   /* Deep Sage Charcoal from Logo */
   --color-primary-hover: #3d443e;

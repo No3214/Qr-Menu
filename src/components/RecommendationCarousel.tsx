@@ -30,13 +30,23 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({ 
                 );
 
                 if (matched) {
-                    setRecommendations([{ product: matched, reason: aiData.reason }]);
-                } else {
-                    // Fallback: Pick 2 random products from a different category
-                    const fallbacks = allProducts
-                        .filter(p => p.id !== seedProduct.id && p.category !== seedProduct.category)
+                    // Combine matched with some variety
+                    const others = allProducts
+                        .filter(p => p.id !== seedProduct.id && p.id !== matched.id)
+                        .sort(() => 0.5 - Math.random())
                         .slice(0, 2)
                         .map(p => ({ product: p, reason: t('product.pairingText') }));
+
+                    setRecommendations([{ product: matched, reason: aiData.reason }, ...others]);
+                } else {
+                    // Fallback: Pick 3 products (prefer same category if possible)
+                    const sameCat = allProducts.filter(p => p.id !== seedProduct.id && p.category === seedProduct.category);
+                    const diffCat = allProducts.filter(p => p.id !== seedProduct.id && p.category !== seedProduct.category);
+
+                    const fallbacks = [...sameCat, ...diffCat]
+                        .slice(0, 3)
+                        .map(p => ({ product: p, reason: t('product.pairingText') }));
+
                     setRecommendations(fallbacks);
                 }
             } catch (error) {
@@ -56,7 +66,7 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({ 
             <div className="px-4 mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-accent" />
-                    <h3 className="text-sm font-black text-text uppercase tracking-widest">{t('dash.menu.tab.recommendations')}</h3>
+                    <h3 className="text-sm font-bold text-text uppercase tracking-widest font-sans">{t('menu.recommendations')}</h3>
                 </div>
             </div>
 
@@ -77,18 +87,18 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({ 
                                 <img src={rec.product.image} alt={rec.product.title} className="w-full h-full object-cover" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h4 className="font-bold text-sm text-text truncate">{rec.product.title}</h4>
+                                <h4 className="font-bold text-sm text-text truncate font-serif">{rec.product.title}</h4>
                                 <p className="text-[10px] text-accent font-black mt-0.5">₺{rec.product.price}</p>
                             </div>
                         </div>
                         <div className="mt-3 p-3 bg-stone-50 rounded-xl relative">
-                            <p className="text-[11px] text-text-muted leading-relaxed italic">
-                                <span className="font-black text-text not-italic uppercase mr-1">Neden?</span>
+                            <p className="text-[11px] text-text-muted leading-relaxed italic font-sans">
+                                <span className="font-bold text-text not-italic uppercase mr-1">{t('menu.pairingReason')}</span>
                                 {rec.reason}
                             </p>
                         </div>
-                        <div className="mt-3 flex items-center justify-end text-[10px] font-black text-primary uppercase tracking-widest gap-1 group">
-                            <span>Ekle</span>
+                        <div className="mt-3 flex items-center justify-end text-[10px] font-bold text-primary uppercase tracking-widest gap-1 group font-sans">
+                            <span>{t('menu.addToOrderShort')}</span>
                             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
                         </div>
                     </motion.div>
