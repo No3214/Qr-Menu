@@ -85,3 +85,23 @@ export const gridTile: Variants = {
     transition: { type: 'spring', stiffness: 80, damping: 15 },
   },
 };
+
+// Interactive hover effect for dish cards (Foost style)
+export const hoverScale: Variants = {
+  initial: { scale: 1 },
+  hover: {
+    scale: 1.02,
+    boxShadow: "0px 10px 20px rgba(0,0,0,0.1)",
+    transition: { duration: 0.3 }
+  }
+};
+
+// Slide up animation for cards (Foost style)
+export const slideUp: Variants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 100, damping: 20 }
+  }
+};

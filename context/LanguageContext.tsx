@@ -59,6 +59,9 @@ const translations: Record<Language, Record<string, string>> = {
         'dietary.highProtein': 'Yüksek Protein',
         'dietary.containsNuts': 'Fındık/Fıstık İçerir',
         'dietary.spicy': 'Acılı',
+        // Product badges
+        'product.popular': 'Popüler',
+        'product.watchVideo': 'Video İzle',
 
         // Review
         'review.title': 'Değerlendir',
@@ -500,6 +503,9 @@ const translations: Record<Language, Record<string, string>> = {
         'dietary.highProtein': 'High Protein',
         'dietary.containsNuts': 'Contains Nuts',
         'dietary.spicy': 'Spicy',
+        // Product badges
+        'product.popular': 'Popular',
+        'product.watchVideo': 'Watch Video',
 
         // Review
         'review.title': 'Rate Us',

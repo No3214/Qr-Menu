@@ -15,6 +15,9 @@ export interface Product {
     weight?: string;          // e.g., "250g", "2 kişilik"
     prepTime?: number;        // minutes
     dietaryFlags?: DietaryFlag[];
+    // Media & popularity (Foost features)
+    videoUrl?: string;        // Product video URL
+    isPopular?: boolean;      // Popular/featured product
 }
 
 export interface Category {
@@ -46,7 +49,7 @@ export const CATEGORIES: Category[] = [
 
 export const PRODUCTS: Product[] = [
     // KAHVALTI
-    { id: 'k1', name: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', price: 650, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', notes: ['2 kişilik servis edilir', 'Taze sıkılmış portakal suyu dahildir', 'Glutensiz ekmek talep edilebilir'], calories: 1200, weight: '2 kişilik', prepTime: 15, dietaryFlags: ['VEGETARIAN'] },
+    { id: 'k1', name: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', price: 650, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', notes: ['2 kişilik servis edilir', 'Taze sıkılmış portakal suyu dahildir', 'Glutensiz ekmek talep edilebilir'], calories: 1200, weight: '2 kişilik', prepTime: 15, dietaryFlags: ['VEGETARIAN'], isPopular: true },
 
     // EKSTRALAR
     { id: 'e1', name: '2 Adet Fransız Tereyağlı Kruvasan', description: 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan.', price: 300, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80' },
@@ -72,7 +75,7 @@ export const PRODUCTS: Product[] = [
 
     // TAŞ FIRIN PIZZA VE SANDVİÇ
     { id: 'p1', name: 'Gurme Rustik Sandviç', description: 'Taze pişirilen rustik baget, beyaz peynir, domates, roka, pesto sos ve zeytinyağı ile hazırlanır patates kızartması ile sıcak servis edilir.', price: 450, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80' },
-    { id: 'p2', name: 'Taş Fırın Karışık Pizza', description: 'Taş fırında pişirilmiş, farklı malzemelerle zenginleştirilmiş roka, parmesan ve acılı zeytinyağı ile sunulan doyurucu bir karışık pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80', calories: 850, weight: '30cm', prepTime: 20, dietaryFlags: ['SPICY'] },
+    { id: 'p2', name: 'Taş Fırın Karışık Pizza', description: 'Taş fırında pişirilmiş, farklı malzemelerle zenginleştirilmiş roka, parmesan ve acılı zeytinyağı ile sunulan doyurucu bir karışık pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80', calories: 850, weight: '30cm', prepTime: 20, dietaryFlags: ['SPICY'], isPopular: true },
     { id: 'p3', name: 'Taş Fırın Margarita Pizza', description: 'Taş fırında pişirilmiş, taze roka, parmesan peyniri ve acılı zeytinyağı ile sunulan geleneksel bir Margarita Pizza.', price: 500, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&q=80' },
 
     // PEYNİR TABAĞI

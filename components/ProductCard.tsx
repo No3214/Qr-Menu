@@ -1,9 +1,9 @@
 import React, { memo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product, PRODUCTS, PRODUCT_PAIRINGS, DietaryFlag } from '../services/MenuData';
-import { ChevronUp, ChevronDown, ArrowRight, Info, Flame, Clock, Scale, Leaf, Wheat, Dumbbell, AlertTriangle } from 'lucide-react';
+import { ChevronUp, ChevronDown, ArrowRight, Info, Flame, Clock, Scale, Leaf, Wheat, Dumbbell, AlertTriangle, Play, Star } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { fadeInUp } from '../lib/animations';
+import { fadeInUp, hoverScale } from '../lib/animations';
 import { OptimizedImage } from './OptimizedImage';
 import { getProductPairings } from '../services/aiPairingService';
 
@@ -36,6 +36,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
     const { t, language } = useLanguage();
     const formattedPrice = new Intl.NumberFormat(language === 'tr' ? 'tr-TR' : 'en-US').format(product.price);
     const [isExpanded, setIsExpanded] = useState(true);
+    const [showVideo, setShowVideo] = useState(false);
 
     // Get pairings - prefer AI-generated, fallback to hardcoded
     const aiPairings = getProductPairings(product.id);
@@ -55,32 +56,58 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
     const hasPairings = pairedProducts && pairedProducts.length > 0;
     const hasNutritionalInfo = product.calories || product.weight || product.prepTime;
     const hasDietaryFlags = product.dietaryFlags && product.dietaryFlags.length > 0;
+    const hasVideo = Boolean(product.videoUrl);
 
     return (
         <motion.div
             variants={fadeInUp}
-            className="bg-white mb-6"
+            initial="initial"
+            whileHover="hover"
+            className="bg-white mb-6 rounded-2xl overflow-hidden"
             style={{ willChange: 'transform, opacity' }}
         >
-            {/* Main Product Image - Full Width */}
-            {product.image && (
-                <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden mb-4">
-                    <OptimizedImage
-                        src={product.image}
-                        alt={product.name}
-                        wrapperClassName="w-full h-full"
-                        className="object-cover"
-                    />
-                    {/* Dietary Badges on Image */}
+            {/* Main Product Image/Video - Full Width */}
+            {(product.image || hasVideo) && (
+                <motion.div
+                    className="relative w-full aspect-[16/9] overflow-hidden"
+                    variants={hoverScale}
+                >
+                    {showVideo && product.videoUrl ? (
+                        <video
+                            src={product.videoUrl}
+                            className="w-full h-full object-cover"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                        />
+                    ) : (
+                        <OptimizedImage
+                            src={product.image!}
+                            alt={product.name}
+                            wrapperClassName="w-full h-full"
+                            className="object-cover"
+                        />
+                    )}
+
+                    {/* Popular Badge - Top Right */}
+                    {product.isPopular && (
+                        <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg">
+                            <Star className="w-3.5 h-3.5 fill-current" />
+                            {t('product.popular')}
+                        </div>
+                    )}
+
+                    {/* Dietary Badges - Top Left */}
                     {hasDietaryFlags && (
-                        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[60%]">
                             {product.dietaryFlags!.map((flag) => {
                                 const config = DIETARY_ICONS[flag];
                                 const Icon = config.icon;
                                 return (
                                     <span
                                         key={flag}
-                                        className={`${config.bg} ${config.color} px-2 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-sm`}
+                                        className={`${config.bg} ${config.color} px-2 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-sm backdrop-blur-sm`}
                                         title={t(DIETARY_KEYS[flag])}
                                     >
                                         <Icon className="w-3 h-3" />
@@ -90,11 +117,40 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
                             })}
                         </div>
                     )}
-                </div>
+
+                    {/* Video Play Button - Center */}
+                    {hasVideo && !showVideo && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowVideo(true);
+                            }}
+                            className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors group"
+                            aria-label={t('product.watchVideo')}
+                        >
+                            <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                                <Play className="w-7 h-7 text-stone-900 ml-1" fill="currentColor" />
+                            </div>
+                        </button>
+                    )}
+
+                    {/* Stop Video Button */}
+                    {showVideo && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowVideo(false);
+                            }}
+                            className="absolute bottom-3 right-3 px-3 py-1.5 bg-black/70 text-white text-xs font-medium rounded-full hover:bg-black/90 transition-colors"
+                        >
+                            ✕
+                        </button>
+                    )}
+                </motion.div>
             )}
 
             {/* Product Info */}
-            <div className="px-1">
+            <div className="px-4 py-4">
                 {/* Title Row with Toggle */}
                 <div className="flex items-center gap-2 mb-2">
                     <button
@@ -153,7 +209,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
                 )}
 
                 {/* Price and Explore Button */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-4">
                     <div className="flex items-baseline gap-0.5">
                         <span className="text-sm text-stone-400">₺</span>
                         <span className="text-2xl font-bold text-stone-900">{formattedPrice}</span>
@@ -222,9 +278,11 @@ const RecommendationCard: React.FC<RecommendationCardProps> = memo(({ product, r
     const displayReason = showFullReason ? reason : reason.slice(0, maxLength);
 
     return (
-        <div
-            className="flex-shrink-0 w-44 bg-white border border-stone-200 rounded-2xl overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+        <motion.div
+            className="flex-shrink-0 w-44 bg-white border border-stone-200 rounded-2xl overflow-hidden cursor-pointer"
             onClick={() => onExplore?.(product)}
+            whileHover={{ scale: 1.02, boxShadow: "0px 8px 16px rgba(0,0,0,0.08)" }}
+            transition={{ duration: 0.2 }}
         >
             {/* Image */}
             {product.image && (
@@ -235,6 +293,11 @@ const RecommendationCard: React.FC<RecommendationCardProps> = memo(({ product, r
                         wrapperClassName="w-full h-full"
                         className="object-cover"
                     />
+                    {product.isPopular && (
+                        <div className="absolute top-2 right-2 bg-amber-500 text-white p-1 rounded-full">
+                            <Star className="w-2.5 h-2.5 fill-current" />
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -270,7 +333,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = memo(({ product, r
                     <span className="text-base font-bold text-stone-900">{formattedPrice}</span>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 });
 
