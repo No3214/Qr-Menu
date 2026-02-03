@@ -180,7 +180,7 @@ export const QRCodeEditor: React.FC = () => {
 
   // Content
   const [contentType, setContentType] = useState<ContentType>('url');
-  const [url, setUrl] = useState('https://menu.kozbeylikonagi.com');
+  const [url, setUrl] = useState(import.meta.env.VITE_MENU_URL || 'https://kozbeyli-konagi.vercel.app');
   const [wifiSsid, setWifiSsid] = useState('');
   const [wifiPassword, setWifiPassword] = useState('');
   const [wifiHidden, setWifiHidden] = useState(false);
@@ -258,8 +258,7 @@ export const QRCodeEditor: React.FC = () => {
         errorCorrectionLevel: qrEcLevel,
         maskPattern: undefined
       });
-    } catch (e) {
-      console.error("QR Gen Error", e);
+    } catch {
       return;
     }
 

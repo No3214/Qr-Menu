@@ -1,6 +1,26 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { CATEGORIES as MOCK_CATEGORIES, PRODUCTS as MOCK_PRODUCTS, Category, Product } from './MenuData';
 
+// Database row types for type-safe mapping
+interface DbProduct {
+    id: string;
+    name: string;
+    description: string;
+    price: number | string;
+    category_id: string;
+    is_available?: boolean;
+    image?: string;
+}
+
+// DbCategory can be used for type-safe category mapping when needed
+// interface DbCategory {
+//     id: string;
+//     name: string;
+//     description?: string;
+//     image?: string;
+//     order?: number;
+// }
+
 export const MenuService = {
     /**
      * Fetch all categories
@@ -40,7 +60,7 @@ export const MenuService = {
             return MOCK_PRODUCTS;
         }
 
-        return data.map((item: any) => ({
+        return (data as DbProduct[]).map((item) => ({
             id: item.id,
             name: item.name,
             description: item.description,
@@ -48,7 +68,7 @@ export const MenuService = {
             category: item.category_id,
             isAvailable: item.is_available ?? true,
             image: item.image,
-        })) as Product[];
+        }));
     },
 
     /**
@@ -68,7 +88,7 @@ export const MenuService = {
 
         if (error) return [];
 
-        return data.map((item: any) => ({
+        return (data as DbProduct[]).map((item) => ({
             id: item.id,
             name: item.name,
             description: item.description,
@@ -76,6 +96,6 @@ export const MenuService = {
             category: item.category_id,
             isAvailable: item.is_available ?? true,
             image: item.image,
-        })) as Product[];
+        }));
     }
 };
