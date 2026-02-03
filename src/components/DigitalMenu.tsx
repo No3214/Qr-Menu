@@ -12,6 +12,7 @@ import { ListHeader } from './ListHeader';
 import { CookieConsent } from './CookieConsent';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RecommendationCarousel } from './RecommendationCarousel';
+import { fadeInUp, slideInRight } from '../utils/animations';
 
 type ViewState = 'LANDING' | 'GRID' | 'LIST';
 
@@ -98,26 +99,26 @@ export const DigitalMenu: React.FC = () => {
                         key="landing"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                        exit={{ opacity: 0, y: -40, filter: 'blur(10px)' }}
+                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                     >
                         <VideoLanding onEnter={() => setViewState('GRID')} />
                     </motion.div>
                 ) : viewState === 'GRID' ? (
                     <motion.div
                         key="grid"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        variants={fadeInUp}
+                        initial="hidden"
+                        animate="show"
+                        exit={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
                     >
                         <header className="px-6 pt-10 pb-6 bg-surface/90 backdrop-blur-xl sticky top-0 z-20 border-b border-primary/5 shadow-sm">
                             <div className="flex items-center justify-between mb-6">
                                 <div>
-                                    <h1 className="text-2xl font-extrabold text-text tracking-tight uppercase">{t('menu.welcome')}</h1>
+                                    <h1 className="text-2xl font-bold text-text tracking-tight uppercase">{t('menu.welcome')}</h1>
                                     <div className="flex items-center gap-2 mt-0.5">
                                         <div className="h-px w-4 bg-accent" />
-                                        <p className="text-[11px] font-bold text-accent uppercase tracking-[0.2em]">{t('menu.restaurant')}</p>
+                                        <p className="text-[11px] font-bold text-accent uppercase tracking-[0.2em] font-sans">{t('menu.restaurant')}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
@@ -166,10 +167,10 @@ export const DigitalMenu: React.FC = () => {
                 ) : (
                     <motion.div
                         key="list"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.25, ease: "easeOut" }}
+                        variants={slideInRight}
+                        initial="hidden"
+                        animate="show"
+                        exit="exit"
                     >
                         <ListHeader
                             categories={categories}

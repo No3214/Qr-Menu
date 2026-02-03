@@ -26,7 +26,7 @@ export default function App() {
         toastOptions={{
           duration: 3000,
           style: {
-            background: '#434b45',
+            background: '#1A1A1A',
             color: '#fff',
             borderRadius: '16px',
             fontSize: '14px',
@@ -34,7 +34,7 @@ export default function App() {
           },
           success: {
             iconTheme: {
-              primary: '#8b735b',
+              primary: '#C5A059',
               secondary: '#fff',
             },
           },

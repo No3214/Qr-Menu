@@ -5,6 +5,8 @@ import { X, Share2, Info, Sparkles, Plus } from 'lucide-react';
 import { getProductPairing } from '../services/geminiService';
 import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
+import { OptimizedImage } from './ui/OptimizedImage';
+import { formatPrice } from '../lib/utils';
 
 interface ProductModalProps {
     product: Product | null;
@@ -46,8 +48,6 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
         }
     };
 
-    const formattedPrice = new Intl.NumberFormat('tr-TR').format(product.price);
-
     return (
         <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center p-0 sm:p-4">
             {/* Backdrop */}
@@ -75,10 +75,10 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                 {/* Image Header */}
                 <div className="relative h-80 bg-stone-100">
                     {product.image ? (
-                        <img
+                        <OptimizedImage
                             src={product.image}
                             alt={product.title}
-                            className="w-full h-full object-cover"
+                            containerClassName="w-full h-full"
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-stone-100 text-stone-300">
@@ -93,23 +93,23 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                     <div className="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-8" />
 
                     <div className="flex items-start justify-between gap-4 mb-4">
-                        <h2 className="text-3xl font-bold text-text leading-tight tracking-tight">
+                        <h2 className="text-3xl font-semibold text-text leading-tight tracking-tight">
                             {product.title}
                         </h2>
                     </div>
 
                     {!product.is_active && (
-                        <span className="inline-block px-3 py-1 mb-4 text-[10px] font-bold uppercase bg-stone-100 text-stone-500 rounded-full tracking-wider border border-stone-200">
+                        <span className="inline-block px-3 py-1 mb-4 text-[10px] font-bold font-sans uppercase bg-primary/5 text-text-muted rounded-full tracking-wider border border-primary/10">
                             {t('product.outOfStock')}
                         </span>
                     )}
 
-                    <div className="flex items-baseline gap-1 mb-8">
-                        <span className="text-4xl font-bold text-stone-900">{formattedPrice}</span>
+                    <div className="flex items-baseline gap-1 mb-8 font-sans">
+                        <span className="text-4xl font-bold text-stone-900">{formatPrice(product.price)}</span>
                         <span className="text-xl text-stone-400 font-medium">₺</span>
                     </div>
 
-                    <div className="prose prose-stone prose-sm">
+                    <div className="prose prose-stone prose-sm font-sans">
                         <p className="text-stone-600 text-base leading-relaxed font-medium">
                             {product.description}
                         </p>
@@ -229,17 +229,22 @@ const AIPairing: React.FC<{ productName: string, category: string, onProductSele
                 >
                     <div className="w-20 h-20 flex-shrink-0 overflow-hidden rounded-xl bg-stone-50">
                         {matchedProduct.image ? (
-                            <img src={matchedProduct.image} alt={matchedProduct.title} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                            <OptimizedImage
+                                src={matchedProduct.image}
+                                alt={matchedProduct.title}
+                                containerClassName="w-full h-full"
+                                className="transition-transform group-hover:scale-110"
+                            />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-xl">🍽️</div>
                         )}
                     </div>
                     <div className="flex-1 py-0.5 space-y-1">
                         <div className="flex items-center justify-between">
-                            <h5 className="font-bold text-text text-sm group-hover:text-primary transition-colors">{matchedProduct.title}</h5>
-                            <span className="text-xs font-bold text-primary">{matchedProduct.price}₺</span>
+                            <h5 className="font-semibold text-text text-sm group-hover:text-primary transition-colors">{matchedProduct.title}</h5>
+                            <span className="text-xs font-bold font-sans text-primary">{matchedProduct.price}₺</span>
                         </div>
-                        <p className="text-[12px] text-text-muted leading-snug line-clamp-2 italic font-medium opacity-80">
+                        <p className="text-[12px] text-text-muted leading-snug line-clamp-2 italic font-medium font-sans opacity-80">
                             "{pairing.reason}"
                         </p>
                         <div className="pt-1 flex items-center gap-1.5 text-[10px] font-bold text-accent uppercase tracking-wider">

@@ -1,22 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #434b45;
-  /* Deep Sage Charcoal from Logo */
-  --color-primary-hover: #3d443e;
-  --color-accent: #8b735b;
-  /* Earthy Umber for warm contrast */
-  --color-accent-hover: #725d4a;
-  --color-bg: #d6d3cb;
-  /* Exact Logo Background */
-  --color-surface: #e5e2db;
-  --color-text: #434b45;
+  --color-primary: #1A1A1A;
+  /* Eerie Black */
+  --color-primary-hover: #000000;
+  --color-accent: #C5A059;
+  /* Kozbeyli Gold */
+  --color-accent-hover: #B08D22;
+  --color-bg: #F4F1EA;
+  /* Alabaster Stone */
+  --color-surface: #FFFFFF;
+  --color-text: #1A1A1A;
   /* Brand Dark */
-  --color-text-muted: #737b75;
-  --color-border: #c9c5bc;
+  --color-text-muted: #4A4A4A;
+  --color-border: #E5E2DB;
+
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Montserrat", "Inter", sans-serif;
 }
 
 @layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;

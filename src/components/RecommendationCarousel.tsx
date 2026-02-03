@@ -4,6 +4,7 @@ import { getProductPairing } from '../services/geminiService';
 import { useLanguage } from '../context/LanguageContext';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { OptimizedImage } from './ui/OptimizedImage';
 
 interface RecommendationCarouselProps {
     seedProduct: Product;
@@ -74,7 +75,11 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({ 
                     >
                         <div className="flex gap-4">
                             <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-stone-50">
-                                <img src={rec.product.image} alt={rec.product.title} className="w-full h-full object-cover" />
+                                <OptimizedImage
+                                    src={rec.product.image || ''}
+                                    alt={rec.product.title}
+                                    containerClassName="w-full h-full"
+                                />
                             </div>
                             <div className="flex-1 min-w-0">
                                 <h4 className="font-bold text-sm text-text truncate">{rec.product.title}</h4>

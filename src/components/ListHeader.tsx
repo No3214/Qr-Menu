@@ -61,7 +61,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
                 ) : (
                     <>
                         <div className="flex-1">
-                            <h2 className="text-lg font-extrabold text-text tracking-tight animate-in fade-in duration-500 uppercase">
+                            <h2 className="text-lg font-bold text-text tracking-tight animate-in fade-in duration-500 uppercase">
                                 {activeCategoryTitle}
                             </h2>
                         </div>

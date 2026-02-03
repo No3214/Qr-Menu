@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Category } from '../services/MenuService';
 import { useLanguage } from '../context/LanguageContext';
+import { OptimizedImage } from './ui/OptimizedImage';
 
 interface CategoryGridProps {
     categories: Category[];
@@ -24,32 +25,32 @@ export const CategoryGrid: React.FC<CategoryGridProps> = memo(({ categories, onC
                     <div
                         key={category.id}
                         onClick={() => onCategorySelect(category.id)}
-                        className={`relative overflow-hidden rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.12)] group cursor-pointer active:scale-[0.98] transition-all duration-500 border border-black/5
+                        className={`relative overflow-hidden rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.12)] group cursor-pointer active:scale-[0.98] transition-all duration-500 border border-primary/5
               ${isLarge ? 'col-span-2 h-52' : 'col-span-1 h-40'}
             `}
                     >
                         {/* Background Image */}
-                        <img
-                            src={category.image}
-                            loading="lazy"
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                        <OptimizedImage
+                            src={category.image || ''}
                             alt={category.title}
+                            className="transition-transform duration-1000 group-hover:scale-110"
+                            containerClassName="absolute inset-0 w-full h-full"
                         />
 
                         {/* Sophisticated Gradient Overlay */}
                         <div className={`absolute inset-0 bg-gradient-to-t ${isLarge
-                            ? 'from-black/90 via-black/40 to-transparent'
-                            : 'from-black/85 via-black/20 to-transparent'
+                            ? 'from-primary/90 via-primary/40 to-transparent'
+                            : 'from-primary/85 via-primary/20 to-transparent'
                             } transition-opacity duration-500 group-hover:opacity-90`} />
 
                         {/* Content */}
                         <div className="absolute inset-0 p-5 flex flex-col justify-end">
                             <div className="transform transition-transform duration-500 group-hover:-translate-y-1">
-                                <h3 className={`font-extrabold text-white leading-tight tracking-tight ${isLarge ? 'text-2xl' : 'text-base'}`}>
+                                <h3 className={`font-bold text-white leading-tight tracking-tight ${isLarge ? 'text-2xl' : 'text-base'}`}>
                                     {category.title}
                                 </h3>
                                 {isLarge && (
-                                    <p className="text-white/70 text-[13px] mt-1.5 font-medium line-clamp-1 max-w-[80%]">
+                                    <p className="text-white/70 text-[13px] mt-1.5 font-medium font-sans line-clamp-1 max-w-[80%]">
                                         {t('category.heritagePrefix')} {category.title.toLowerCase()} {t('category.heritageSuffix')}
                                     </p>
                                 )}
