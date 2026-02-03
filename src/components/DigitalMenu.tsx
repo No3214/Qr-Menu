@@ -11,6 +11,7 @@ import { MenuAssistant } from './MenuAssistant';
 import { ListHeader } from './ListHeader';
 import { CategoryHero } from './CategoryHero';
 import { MenuFooter } from './MenuFooter';
+import { FloatingActionButton } from './FloatingActionButton';
 import { CookieConsent } from './CookieConsent';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RecommendationCarousel } from './RecommendationCarousel';
@@ -228,6 +229,13 @@ export const DigitalMenu: React.FC = () => {
 
             <MenuAssistant />
             <CookieConsent />
+
+            {/* Floating Action Button - FOOST style */}
+            {viewState !== 'LANDING' && (
+                <FloatingActionButton
+                    onFeedback={() => setShowReviewModal(true)}
+                />
+            )}
 
             {/* Powered by Footer */}
             {viewState !== 'LANDING' && <MenuFooter />}

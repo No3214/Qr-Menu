@@ -1,6 +1,9 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
-export type DietaryTag = 'vegetarian' | 'vegan' | 'gluten-free' | 'spicy' | 'lactose-free' | 'organic' | 'chef-special';
+export type DietaryTag =
+    | 'vegetarian' | 'vegan' | 'gluten-free' | 'spicy' | 'lactose-free'
+    | 'organic' | 'chef-special' | 'egg' | 'cheese' | 'mint' | 'meat'
+    | 'fish' | 'bread' | 'dairy' | 'new' | 'popular';
 
 // Price variant for products with multiple sizes/volumes
 export interface PriceVariant {
@@ -70,15 +73,15 @@ export const CATEGORIES: Category[] = [
 
 export const PRODUCTS: Product[] = [
     // === KAHVALTI ===
-    { id: 'k1', title: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu. 2 kişiliktir.', price: 850, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', tags: ['chef-special'] },
-    { id: 'k2', title: 'Kozbeyli Kahvaltı Tabağı', description: 'Organik köy yumurtası, ev yapımı reçeller, taze kaymak, süzme bal, ezine peyniri, taze simit ve mevsim sebzeleri. 1 kişiliktir.', price: 450, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80' },
-    { id: 'k3', title: 'Eggs Benedict', description: 'Poşe yumurta, füme somon, İngiliz muffin ve ev yapımı hollandaise sos. Hash brown patates ile servis edilir.', price: 380, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1608039829572-9b5d44b4b034?auto=format&fit=crop&q=80' },
+    { id: 'k1', title: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu. 2 kişiliktir.', price: 850, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', tags: ['new', 'chef-special', 'egg', 'cheese', 'mint'] },
+    { id: 'k2', title: 'Kozbeyli Kahvaltı Tabağı', description: 'Organik köy yumurtası, ev yapımı reçeller, taze kaymak, süzme bal, ezine peyniri, taze simit ve mevsim sebzeleri. 1 kişiliktir.', price: 450, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80', tags: ['egg', 'cheese', 'bread'] },
+    { id: 'k3', title: 'Eggs Benedict', description: 'Poşe yumurta, füme somon, İngiliz muffin ve ev yapımı hollandaise sos. Hash brown patates ile servis edilir.', price: 380, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1608039829572-9b5d44b4b034?auto=format&fit=crop&q=80', tags: ['egg', 'fish'] },
     { id: 'k4', title: 'Avokado Toast', description: 'Ekşi maya ekmeği üzerine ezilmiş avokado, cherry domates, feta peyniri, çeri biber ve zeytinyağı. Poşe yumurta ile taçlandırılır.', price: 320, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&q=80', tags: ['vegetarian'] },
 
     // === EKSTRALAR ===
     { id: 'e1', title: 'Fransız Tereyağlı Kruvasan', description: 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan. 2 adet.', price: 180, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80' },
     { id: 'e2', title: 'Bal Kaymak', description: 'Afyon kaymağı ve organik çam balı. Taze ekmek ile servis edilir.', price: 150, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&q=80' },
-    { id: 'e3', title: 'Sahanda Yumurta', description: 'Köy yumurtası tereyağında kızartılır. Sucuklu veya peynirli olarak tercih edilebilir.', price: 120, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80' },
+    { id: 'e3', title: 'Sahanda Yumurta', description: 'Köy yumurtası tereyağında kızartılır. Sucuklu veya peynirli olarak tercih edilebilir.', price: 120, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80', tags: ['egg'] },
 
     // === BAŞLANGIÇ ===
     { id: 'b1', title: 'Humus', description: 'Geleneksel tarif ile hazırlanan nohut ezmesi, tahin, limon ve zeytinyağı. Pide eşliğinde.', price: 180, category: 'baslangic', isAvailable: true, image: 'https://images.unsplash.com/photo-1577805947697-89e18249d767?auto=format&fit=crop&q=80', tags: ['vegan', 'gluten-free'] },
@@ -94,10 +97,10 @@ export const PRODUCTS: Product[] = [
     { id: 'p5', title: 'Tavuklu Wrap', description: 'Izgara tavuk, avokado, marul, domates ve ranch sos. Patates ile servis edilir.', price: 260, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&q=80' },
 
     // === ANA YEMEK ===
-    { id: 'ay1', title: 'Izgara Pirzola', description: 'Özenle marine edilmiş kuzu pirzola, odun ateşinde pişirilir. Patates püresi ve kavrulmuş sebzeler ile.', price: 680, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80' },
+    { id: 'ay1', title: 'Izgara Pirzola', description: 'Özenle marine edilmiş kuzu pirzola, odun ateşinde pişirilir. Patates püresi ve kavrulmuş sebzeler ile.', price: 680, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', tags: ['popular', 'meat', 'gluten-free'] },
     { id: 'ay2', title: 'Kozbeyli Kebabı', description: 'Şefin özel tarifi ile hazırlanan dana kebap. Közlenmiş biber, domates ve piyaz ile servis edilir.', price: 520, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&q=80', tags: ['chef-special', 'gluten-free'] },
-    { id: 'ay3', title: 'Levrek Fileto', description: 'Taze Ege levreği, fırında pişirilir. Limon tereyağı sos, kuşkonmaz ve bebek patates ile.', price: 480, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1535567465397-7523840f2ae9?auto=format&fit=crop&q=80' },
-    { id: 'ay4', title: 'Bonfile', description: '200gr dana bonfile, tercih edilen pişirme derecesinde. Trüflü patates püresi ve mantar sos ile.', price: 750, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1546833998-877b37c2e5c6?auto=format&fit=crop&q=80' },
+    { id: 'ay3', title: 'Levrek Fileto', description: 'Taze Ege levreği, fırında pişirilir. Limon tereyağı sos, kuşkonmaz ve bebek patates ile.', price: 480, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1535567465397-7523840f2ae9?auto=format&fit=crop&q=80', tags: ['fish', 'gluten-free'] },
+    { id: 'ay4', title: 'Bonfile', description: '200gr dana bonfile, tercih edilen pişirme derecesinde. Trüflü patates püresi ve mantar sos ile.', price: 750, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1546833998-877b37c2e5c6?auto=format&fit=crop&q=80', tags: ['meat', 'chef-special'] },
     { id: 'ay5', title: 'Tavuk Şiş', description: 'Marine edilmiş tavuk göğsü, sebzeler ile şişe dizilip ızgarada pişirilir. Pilav ve cacık ile.', price: 320, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80' },
 
     // === TATLI ===
