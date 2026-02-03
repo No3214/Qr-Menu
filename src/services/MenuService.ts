@@ -102,6 +102,7 @@ export const MenuService = {
             price: item.price,
             category: item.category_id,
             isAvailable: item.is_active,
+            is_active: item.is_active,
             image: item.image
         })) as Product[];
     },
@@ -130,6 +131,7 @@ export const MenuService = {
             price: item.price,
             category: item.category_id,
             isAvailable: item.is_active,
+            is_active: item.is_active,
             image: item.image
         })) as Product[];
     },
