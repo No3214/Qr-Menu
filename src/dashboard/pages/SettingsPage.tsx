@@ -18,6 +18,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 
 
@@ -108,15 +109,25 @@ export function SettingsPage() {
 
         {/* Settings content */}
         <div className="flex-1 min-w-0">
-          {activeSection === 'profile' && <ProfileSection />}
-          {activeSection === 'password' && <PasswordSection />}
-          {activeSection === 'restaurant' && <RestaurantSection />}
-          {activeSection === 'guest' && <GuestSection />}
-          {activeSection === 'qr' && <QRCodeSection />}
-          {activeSection === 'ai' && <AIChatSection />}
-          {activeSection === 'pdf' && <PDFSection />}
-          {activeSection === 'language' && <LanguageSection />}
-          {activeSection === 'billing' && <BillingSection />}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSection}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+            >
+              {activeSection === 'profile' && <ProfileSection />}
+              {activeSection === 'password' && <PasswordSection />}
+              {activeSection === 'restaurant' && <RestaurantSection />}
+              {activeSection === 'guest' && <GuestSection />}
+              {activeSection === 'qr' && <QRCodeSection />}
+              {activeSection === 'ai' && <AIChatSection />}
+              {activeSection === 'pdf' && <PDFSection />}
+              {activeSection === 'language' && <LanguageSection />}
+              {activeSection === 'billing' && <BillingSection />}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </div>

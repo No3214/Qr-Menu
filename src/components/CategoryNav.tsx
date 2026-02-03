@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, memo } from 'react';
+import React, { useRef, useEffect, memo, startTransition } from 'react';
 import { Category } from '../services/MenuService';
 
 interface CategoryNavProps {
@@ -36,11 +36,15 @@ export const CategoryNav: React.FC<CategoryNavProps> = memo(({
                         <button
                             key={category.id}
                             data-id={category.id}
-                            onClick={() => onCategoryClick(category.id)}
-                            className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 ease-out flex-shrink-0
+                            onClick={() => {
+                                startTransition(() => {
+                                    onCategoryClick(category.id);
+                                });
+                            }}
+                            className={`whitespace-nowrap px-2 py-3 text-[13px] font-bold tracking-tight transition-all duration-200 flex-shrink-0 border-b-2
                                 ${isActive
-                                    ? 'bg-primary text-white shadow-md shadow-primary/30 scale-105'
-                                    : 'text-text-muted bg-gray-100 hover:bg-gray-200 border border-transparent'
+                                    ? 'text-stone-900 border-stone-900 scale-100'
+                                    : 'text-stone-400 border-transparent hover:text-stone-600'
                                 }`}
                         >
                             {category.title}

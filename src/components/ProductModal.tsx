@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { Product, MenuService } from '../services/MenuService';
 import { X, Share2, Info, Sparkles, Plus } from 'lucide-react';
-import { getProductPairing } from '../services/geminiService';
 import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
 
@@ -115,17 +114,13 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                         </p>
                     </div>
 
-                    {/* AI Product Pairing */}
-                    <AIPairing
-                        productName={product.title}
-                        category={product.category}
+                    {/* Related Products Carousel */}
+                    <RelatedProducts
+                        categoryId={product.category}
+                        currentProductId={product.id}
                         onProductSelect={(p) => {
-                            // If we have a selection callback from parent, use it
-                            // This allows "jumping" to the next product
                             onClose();
                             setTimeout(() => {
-                                // We'll need to update DigitalMenu to handle this jump
-                                // For now, we'll trigger the select in the next tick
                                 const event = new CustomEvent('selectProduct', { detail: p });
                                 window.dispatchEvent(event);
                             }, 300);
@@ -159,106 +154,81 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
     );
 };
 
-const AIPairing: React.FC<{ productName: string, category: string, onProductSelect?: (product: Product) => void }> = ({ productName, category, onProductSelect }) => {
+interface RelatedProductsProps {
+    categoryId: string;
+    currentProductId: string;
+    onProductSelect: (product: Product) => void;
+}
+
+const RelatedProducts: React.FC<RelatedProductsProps> = ({ categoryId, currentProductId, onProductSelect }) => {
     const { t } = useLanguage();
-    const [pairing, setPairing] = React.useState<{ pairing: string, reason: string } | null>(null);
-    const [matchedProduct, setMatchedProduct] = React.useState<Product | null>(null);
+    const [products, setProducts] = React.useState<Product[]>([]);
     const [loading, setLoading] = React.useState(true);
 
     useEffect(() => {
-        const loadPairingAndMatch = async () => {
+        const loadRelated = async () => {
             setLoading(true);
             try {
-                // 1. Get AI Suggestion
-                const data = await getProductPairing(productName, category);
-                setPairing(data);
-
-                // 2. Try to find a match in real products
-                if (data.pairing) {
-                    const allProducts = await MenuService.getProducts();
-                    const searchStr = data.pairing.toLowerCase();
-
-                    // Simple exact or fuzzy match (start with exact/contains)
-                    const match = allProducts.find((p: Product) =>
-                        p.title.toLowerCase().includes(searchStr) ||
-                        searchStr.includes(p.title.toLowerCase())
-                    );
-
-                    if (match) setMatchedProduct(match);
-                }
-            } catch (error) {
-                console.error("Failed to load pairing match", error);
+                // Fetch related products from the same category
+                const related = await MenuService.getRelatedProducts(categoryId, currentProductId);
+                setProducts(related);
+            } catch (err) {
+                console.error("Failed to load related products", err);
             } finally {
                 setLoading(false);
             }
         };
-        loadPairingAndMatch();
-    }, [productName, category]);
+        loadRelated();
+    }, [categoryId, currentProductId]);
 
     if (loading) return (
-        <div className="mt-10 p-5 bg-stone-50 border border-stone-100 rounded-[24px] animate-pulse">
-            <div className="flex items-center gap-2 mb-4">
-                <div className="w-4 h-4 bg-stone-200 rounded-full"></div>
-                <div className="h-3 w-32 bg-stone-200 rounded"></div>
-            </div>
-            <div className="flex gap-4">
-                <div className="w-16 h-16 bg-stone-200 rounded-xl"></div>
-                <div className="flex-1 space-y-2">
-                    <div className="h-4 w-3/4 bg-stone-200 rounded"></div>
-                    <div className="h-3 w-1/2 bg-stone-100 rounded"></div>
-                </div>
+        <div className="mt-8 space-y-3">
+            <div className="h-4 w-32 bg-stone-100 rounded animate-pulse" />
+            <div className="flex gap-3 overflow-hidden">
+                {[1, 2].map(i => (
+                    <div key={i} className="w-40 h-32 bg-stone-50 rounded-xl animate-pulse" />
+                ))}
             </div>
         </div>
     );
 
-    if (!pairing) return null;
+    if (products.length === 0) return null;
 
     return (
-        <div className="mt-10 animate-premium-fade">
-            <div className="flex items-center gap-2 mb-4 px-1">
-                <div className="p-1.5 bg-accent/10 rounded-lg">
-                    <Sparkles className="w-4 h-4 text-accent" />
-                </div>
-                <h4 className="text-[11px] font-extrabold text-text/40 uppercase tracking-[0.2em]">{t('product.smartPairing')}</h4>
+        <div className="mt-8 animate-fade-in">
+            <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-4 h-4 text-accent" />
+                <h4 className="text-[11px] font-extrabold text-stone-400 uppercase tracking-widest">
+                    {t('menu.recommendations')}
+                </h4>
             </div>
 
-            {matchedProduct ? (
-                <div
-                    onClick={() => onProductSelect?.(matchedProduct)}
-                    className="group flex gap-4 p-4 bg-white border border-border/50 rounded-[24px] shadow-sm hover:shadow-md hover:border-primary/20 transition-all cursor-pointer active:scale-[0.98]"
-                >
-                    <div className="w-20 h-20 flex-shrink-0 overflow-hidden rounded-xl bg-stone-50">
-                        {matchedProduct.image ? (
-                            <img src={matchedProduct.image} alt={matchedProduct.title} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center text-xl">🍽️</div>
-                        )}
-                    </div>
-                    <div className="flex-1 py-0.5 space-y-1">
-                        <div className="flex items-center justify-between">
-                            <h5 className="font-bold text-text text-sm group-hover:text-primary transition-colors">{matchedProduct.title}</h5>
-                            <span className="text-xs font-bold text-primary">{matchedProduct.price}₺</span>
+            <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide snap-x">
+                {products.map(product => (
+                    <div
+                        key={product.id}
+                        onClick={() => onProductSelect(product)}
+                        className="flex-shrink-0 w-36 bg-white border border-stone-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all snap-start cursor-pointer active:scale-95"
+                    >
+                        <div className="h-24 bg-stone-100 relative">
+                            {product.image ? (
+                                <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-xl">🍽️</div>
+                            )}
                         </div>
-                        <p className="text-[12px] text-text-muted leading-snug line-clamp-2 italic font-medium opacity-80">
-                            "{pairing.reason}"
-                        </p>
-                        <div className="pt-1 flex items-center gap-1.5 text-[10px] font-bold text-accent uppercase tracking-wider">
-                            <span>{t('product.pairingText')}</span>
-                            <Plus className="w-3 h-3" />
+                        <div className="p-2.5">
+                            <h5 className="text-[12px] font-bold text-stone-800 line-clamp-1 mb-1">{product.title}</h5>
+                            <div className="flex items-center justify-between">
+                                <span className="text-[11px] font-bold text-primary">{product.price}₺</span>
+                                <div className="w-5 h-5 bg-stone-50 rounded-full flex items-center justify-center text-stone-400">
+                                    <Plus className="w-3 h-3" />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            ) : (
-                <div className="p-5 bg-stone-50/50 border border-stone-100/50 rounded-[24px] relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-3 opacity-10">
-                        <Sparkles className="w-12 h-12" />
-                    </div>
-                    <p className="text-sm font-bold text-text mb-1.5">{pairing.pairing}</p>
-                    <p className="text-[12px] text-text-muted leading-relaxed italic opacity-85">
-                        "{pairing.reason}"
-                    </p>
-                </div>
-            )}
+                ))}
+            </div>
         </div>
     );
 };

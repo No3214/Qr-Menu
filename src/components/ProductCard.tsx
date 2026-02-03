@@ -1,7 +1,7 @@
 
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { Product } from '../services/MenuService';
-import { Plus } from 'lucide-react';
+import { Plus, Flame, Wheat, Milk, Leaf, Info, Star, Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface ProductCardProps {
@@ -10,56 +10,105 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
     const { t } = useLanguage();
+    const [isExpanded, setIsExpanded] = useState(false);
     const formattedPrice = new Intl.NumberFormat('tr-TR').format(product.price);
 
+    // Allergens Mapping
+    const getAllergenIcon = (allergen: string) => {
+        switch (allergen) {
+            case 'gluten': return <Wheat className="w-3 h-3 text-amber-600" />;
+            case 'dairy': return <Milk className="w-3 h-3 text-blue-400" />;
+            case 'spicy': return <Flame className="w-3 h-3 text-red-500" />;
+            case 'vegan': return <Leaf className="w-3 h-3 text-green-500" />;
+            case 'vegetarian': return <Leaf className="w-3 h-3 text-green-600" />;
+            default: return <Info className="w-3 h-3 text-gray-400" />;
+        }
+    };
+
+    // Labels Mapping
+    const getLabelIcon = (label: string) => {
+        switch (label) {
+            case 'new': return <Sparkles className="w-3 h-3 text-purple-500" />;
+            case 'popular': return <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />;
+            default: return null;
+        }
+    };
+
     return (
-        <div className={`group relative bg-white rounded-2xl p-3 sm:p-3.5 mb-4 border-2 border-transparent shadow-[0_4px_16px_-4px_rgba(0,0,0,0.06)] transition-all duration-500 hover:shadow-[0_8px_24px_-4px_rgba(139,115,91,0.12)] hover:border-primary/10 hover:-translate-y-0.5 active:scale-[0.98] ${!product.is_active ? 'opacity-60 grayscale' : ''}`}>
-            <div className="flex gap-4 sm:gap-5">
-                {/* Image Area */}
-                {product.image ? (
-                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 overflow-hidden rounded-xl">
+        <div className={`group relative bg-white rounded-2xl p-4 mb-4 border border-stone-100 shadow-sm transition-all duration-300 hover:shadow-md ${!product.is_active ? 'opacity-60 grayscale' : ''}`}>
+            <div className="flex gap-4">
+                {/* Content Area (Left) */}
+                <div className="flex-1 flex flex-col min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-[16px] font-bold text-stone-900 leading-tight">
+                            {product.title}
+                        </h3>
+                        {/* Icons Row */}
+                        <div className="flex items-center gap-1">
+                            {product.labels?.map((label, i) => (
+                                <div key={`label-${i}`} title={label}>{getLabelIcon(label)}</div>
+                            ))}
+                            {product.allergens?.map((allergen, i) => (
+                                <div key={`allergen-${i}`} title={allergen} className="bg-stone-50 p-0.5 rounded-full">
+                                    {getAllergenIcon(allergen)}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="relative">
+                        <p
+                            className={`text-[13px] text-stone-500 leading-relaxed font-medium transition-all duration-300 ${!isExpanded ? 'line-clamp-2' : ''}`}
+                            onClick={() => setIsExpanded(!isExpanded)}
+                        >
+                            {product.description}
+                        </p>
+                        {product.description && product.description.length > 80 && !isExpanded && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsExpanded(true);
+                                }}
+                                className="text-[11px] font-bold text-stone-400 underline decoration-stone-300 underline-offset-2 mt-1 hover:text-primary transition-colors"
+                            >
+                                {t('product.seeMore') || 'Devamını Gör'}
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="flex items-center justify-between mt-3">
+                        <div className="flex items-baseline gap-0.5">
+                            <span className="text-[11px] font-bold text-stone-400 mr-0.5">₺</span>
+                            <span className="text-[18px] font-black text-stone-900 tracking-tight">{formattedPrice}</span>
+                        </div>
+
+                        {product.is_active && (
+                            <button className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-900 shadow-sm hover:bg-primary hover:text-white transition-all duration-300">
+                                <Plus className="w-4 h-4" />
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                {/* Image Area (Right) */}
+                {/* Image Area (Right) - Only render if image exists */}
+                {product.image && (
+                    <div className="relative w-28 h-28 flex-shrink-0 overflow-hidden rounded-xl border border-stone-100">
                         <img
                             src={product.image}
                             alt={product.title}
                             loading="lazy"
-                            className="w-full h-full object-cover rounded-xl shadow-sm transition-transform duration-700 group-hover:scale-110"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                         {!product.is_active && (
-                            <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
-                                <span className="text-[10px] font-bold text-white uppercase tracking-wider border border-white/30 px-2 py-1 rounded-md backdrop-blur-sm">
-                                    {t('product.outOfStock')}
+                            <div className="absolute inset-0 bg-stone-900/60 flex items-center justify-center">
+                                <span className="text-[9px] font-black text-white uppercase tracking-wider border border-white/20 px-2 py-1 rounded-md backdrop-blur-md">
+                                    Tükendi
                                 </span>
                             </div>
                         )}
                     </div>
-                ) : (
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-primary/5 flex items-center justify-center text-2xl border border-primary/10">
-                        <span className="opacity-40">🍽️</span>
-                    </div>
                 )}
-
-                {/* Content Area */}
-                <div className="flex-1 flex flex-col justify-between min-w-0 py-0.5">
-                    <div>
-                        <h3 className="text-[17px] font-bold text-text leading-tight mb-1 group-hover:text-primary transition-colors duration-300">
-                            {product.title}
-                        </h3>
-                        <p className="text-[13px] text-text-muted line-clamp-2 leading-relaxed font-medium opacity-85">
-                            {product.description}
-                        </p>
-                    </div>
-
-                    <div className="flex items-center justify-between mt-2.5">
-                        <div className="flex items-baseline gap-0.5">
-                            <span className="text-[19px] font-extrabold text-text tracking-tight">{formattedPrice}</span>
-                            <span className="text-[11px] font-bold text-primary/60 uppercase ml-0.5">₺</span>
-                        </div>
-
-                        <div className="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center text-primary shadow-sm border border-primary/10 group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-300">
-                            <Plus className="w-4.5 h-4.5" />
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     );

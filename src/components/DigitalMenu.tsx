@@ -70,8 +70,8 @@ export const DigitalMenu: React.FC = () => {
 
     // Handle Category Selection from Grid
     const handleCategorySelect = (id: string) => {
-        setViewState('LIST');
         startTransition(() => {
+            setViewState('LIST');
             setActiveCategory(id);
         });
         window.scrollTo({ top: 0, behavior: 'auto' });
@@ -101,7 +101,11 @@ export const DigitalMenu: React.FC = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                     >
-                        <VideoLanding onEnter={() => setViewState('GRID')} />
+                        <VideoLanding onEnter={() => {
+                            startTransition(() => {
+                                setViewState('GRID');
+                            });
+                        }} />
                     </motion.div>
                 ) : viewState === 'GRID' ? (
                     <motion.div
@@ -122,7 +126,11 @@ export const DigitalMenu: React.FC = () => {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <button
-                                        onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
+                                        onClick={() => {
+                                            startTransition(() => {
+                                                setLanguage(language === 'tr' ? 'en' : 'tr');
+                                            });
+                                        }}
                                         className="h-11 px-3 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all"
                                     >
                                         <Globe className="w-4 h-4 text-primary" />

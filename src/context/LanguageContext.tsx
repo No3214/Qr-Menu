@@ -24,6 +24,9 @@ const translations: Record<Language, Record<string, string>> = {
         'landing.history': 'Tarihi Mekan',
         'landing.foundedText': 'Est. 1904',
         'landing.discover': 'Keşfet',
+        'landing.location': 'KONUM',
+        'landing.googleReview': 'GOOGLE YORUMLARI',
+        'landing.scroll': 'KAYDIR',
 
         // CategoryGrid
         'category.heritagePrefix': 'Mansion mirası:',
@@ -41,6 +44,7 @@ const translations: Record<Language, Record<string, string>> = {
         'product.notFound': 'Ürün bulunamadı.',
         'product.smartPairing': 'Smart Pairing',
         'product.pairingText': 'Bu lezzeti tamamlayan mükemmel bir seçenek.',
+        'product.seeMore': 'Devamını Gör',
         'menu.recommendations': 'Sizin İçin Seçtiklerimiz',
         'menu.pairingReason': 'Neden?',
         'menu.addToOrderShort': 'Ekle',
@@ -56,6 +60,7 @@ const translations: Record<Language, Record<string, string>> = {
         'assistant.prompt2': 'Ne yemeliyim?',
         'assistant.prompt3': 'Tatlı önerisi',
         'assistant.prompt4': 'Sıcak içecekler',
+        'assistant.prompt5': 'Menu',
 
         // General
         'back': 'Geri',
@@ -356,8 +361,9 @@ const translations: Record<Language, Record<string, string>> = {
         'landing.history': 'Historical Venue',
         'landing.foundedText': 'Est. 1904',
         'landing.discover': 'Discover',
-        'landing.location': 'KONUM',
-        'landing.googleReview': 'GOOGLE YORUMLAR',
+        'landing.location': 'LOCATION',
+        'landing.googleReview': 'GOOGLE REVIEWS',
+        'landing.scroll': 'SCROLL',
 
         // CategoryGrid
         'category.heritagePrefix': 'Mansion heritage:',
@@ -375,7 +381,7 @@ const translations: Record<Language, Record<string, string>> = {
         'product.notFound': 'Product not found.',
         'product.smartPairing': 'Smart Pairing',
         'product.pairingText': 'Pairs well with',
-
+        'product.seeMore': 'See More',
         // MenuAssistant
         'assistant.welcome': 'Hello! I am the Kozbeyli Konağı AI assistant. How can I help you with our menu?',
         'assistant.error': "Sorry, I can't respond right now. Please try again later.",

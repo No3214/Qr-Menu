@@ -1,21 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { ArrowRight, Globe, MapPin, Award, Utensils, Sparkles } from 'lucide-react';
+import { ArrowRight, Globe, MapPin, Award } from 'lucide-react';
 
 interface VideoLandingProps {
     onEnter: () => void;
 }
 
-export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
+// Separated Header Component to isolate scroll re-renders
+const LandingHeader = React.memo(() => {
     const { t, language, setLanguage } = useLanguage();
-    const [isLoaded, setIsLoaded] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
+        let rafId: number;
+        const handleScroll = () => {
+            if (!rafId) {
+                rafId = requestAnimationFrame(() => {
+                    setScrolled(window.scrollY > 50);
+                    rafId = 0;
+                });
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            if (rafId) cancelAnimationFrame(rafId);
+        };
+    }, []);
+
+    return (
+        <header className={`fixed top-0 inset-x-0 p-6 flex justify-between items-center transition-all duration-500 z-50 ${scrolled ? 'bg-[#d6d3cb]/90 backdrop-blur-md py-4 shadow-sm border-b border-[#434b45]/5' : ''}`}>
+            <div className="flex items-center gap-2">
+                <div className="w-12 h-12 border-2 border-[#434b45]/20 rounded-xl flex items-center justify-center bg-white/20 overflow-hidden p-1">
+                    <img src="/assets/logo-main.jpg" alt="Logo" className="w-full h-full object-contain" />
+                </div>
+            </div>
+            <div className="flex items-center gap-6">
+                <span className="text-[10px] text-[#434b45]/40 uppercase tracking-[0.3em] font-bold hidden sm:block">{t('landing.founded')}</span>
+                <div className="h-4 w-[1px] bg-[#434b45]/10 hidden sm:block" />
+                <button
+                    onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
+                    className="h-9 px-3 bg-[#434b45]/5 hover:bg-[#434b45]/10 border border-[#434b45]/10 rounded-xl flex items-center justify-center gap-2 transition-all"
+                >
+                    <Globe className="w-3.5 h-3.5 text-[#434b45]/60" />
+                    <span className="text-[10px] text-[#434b45] uppercase tracking-[0.2em] font-black">{language}</span>
+                </button>
+            </div>
+        </header>
+    );
+});
+
+export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
+    const { t } = useLanguage();
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
         setIsLoaded(true);
-        const handleScroll = () => setScrolled(window.scrollY > 50);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     return (
@@ -37,25 +78,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
 
             {/* Content Layer */}
             <div className="relative z-10 flex flex-col min-h-screen">
-                {/* Minimal Header */}
-                <header className={`fixed top-0 inset-x-0 p-6 flex justify-between items-center transition-all duration-500 z-50 ${scrolled ? 'bg-[#d6d3cb]/90 backdrop-blur-md py-4 shadow-sm border-b border-[#434b45]/5' : ''}`}>
-                    <div className="flex items-center gap-2">
-                        <div className="w-12 h-12 border-2 border-[#434b45]/20 rounded-xl flex items-center justify-center bg-white/20 overflow-hidden p-1">
-                            <img src="/assets/logo-main.jpg" alt="Logo" className="w-full h-full object-contain" />
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-6">
-                        <span className="text-[10px] text-[#434b45]/40 uppercase tracking-[0.3em] font-bold hidden sm:block">{t('landing.founded')}</span>
-                        <div className="h-4 w-[1px] bg-[#434b45]/10 hidden sm:block" />
-                        <button
-                            onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
-                            className="h-9 px-3 bg-[#434b45]/5 hover:bg-[#434b45]/10 border border-[#434b45]/10 rounded-xl flex items-center justify-center gap-2 transition-all"
-                        >
-                            <Globe className="w-3.5 h-3.5 text-[#434b45]/60" />
-                            <span className="text-[10px] text-[#434b45] uppercase tracking-[0.2em] font-black">{language}</span>
-                        </button>
-                    </div>
-                </header>
+                <LandingHeader />
 
                 {/* Hero Section */}
                 <main className="flex-1 flex flex-col items-center justify-center px-6 text-center pt-16 md:pt-24">
@@ -72,8 +95,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                         {/* Text Content */}
                         <div className="space-y-4">
                             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-[#434b45] leading-[1.1] uppercase tracking-tighter">
-                                {t('landing.title')}<br />
-                                <span className="text-[#8b735b] italic lowercase block mt-2 opacity-90">{t('landing.titleAccent')}</span>
+                                {t('landing.title')} {t('landing.titleAccent')}
                             </h1>
                             <div className="flex items-center justify-center gap-4 text-[#434b45]/50 font-serif italic text-sm sm:text-lg tracking-widest max-w-2xl mx-auto">
                                 <div className="h-px flex-1 bg-[#434b45]/10" />
@@ -125,7 +147,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
                 {/* Scroll Indicator */}
                 <div className="pb-12 flex flex-col items-center gap-4 text-[#434b45]/20">
                     <div className="w-[1px] h-12 bg-gradient-to-b from-[#434b45] to-transparent animate-pulse" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] font-inter">Scroll</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] font-inter">{t('landing.scroll')}</span>
                 </div>
             </div>
         </div>

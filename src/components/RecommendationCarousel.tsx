@@ -18,27 +18,47 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({ 
         const loadRecommendations = async () => {
             setLoading(true);
             try {
-                // 1. Get AI Suggestion for the seed product
-                const aiData = await getProductPairing(seedProduct.title, seedProduct.category);
-
-                // 2. Find matching products in the database
                 const allProducts = await MenuService.getProducts();
-                const matched = allProducts.find(p =>
-                    p.id !== seedProduct.id &&
-                    (p.title.toLowerCase().includes(aiData.pairing.toLowerCase()) ||
-                        aiData.pairing.toLowerCase().includes(p.title.toLowerCase()))
-                );
 
-                if (matched) {
-                    setRecommendations([{ product: matched, reason: aiData.reason }]);
-                } else {
-                    // Fallback: Pick 2 random products from a different category
-                    const fallbacks = allProducts
-                        .filter(p => p.id !== seedProduct.id && p.category !== seedProduct.category)
-                        .slice(0, 2)
-                        .map(p => ({ product: p, reason: t('product.pairingText') }));
-                    setRecommendations(fallbacks);
+                // 1. Try to get AI Suggestion
+                let recommendedItems: { product: Product, reason: string }[] = [];
+
+                try {
+                    const aiData = await getProductPairing(seedProduct.title, seedProduct.category);
+                    const matched = allProducts.find(p =>
+                        p.id !== seedProduct.id &&
+                        (p.title.toLowerCase().includes(aiData.pairing.toLowerCase()) ||
+                            aiData.pairing.toLowerCase().includes(p.title.toLowerCase()))
+                    );
+
+                    if (matched) {
+                        recommendedItems.push({ product: matched, reason: aiData.reason });
+                    }
+                } catch (e) {
+                    console.warn("AI Pairing failed, falling back to smart logic");
                 }
+
+                // 2. Smart Fallback: Fill remaining spots with items from Different Categories (to encourage exploration)
+                if (recommendedItems.length < 3) {
+                    // Filter out current product and already recommended ones
+                    const existingIds = new Set([seedProduct.id, ...recommendedItems.map(r => r.product.id)]);
+
+                    // Priority: Popular items from other categories
+                    const others = allProducts
+                        .filter(p => !existingIds.has(p.id) && p.category !== seedProduct.category)
+                        .sort(() => 0.5 - Math.random()); // Simple shuffle
+
+                    const needed = 3 - recommendedItems.length;
+                    others.slice(0, needed).forEach(p => {
+                        recommendedItems.push({
+                            product: p,
+                            reason: t('product.pairingText') // Localized standard reason
+                        });
+                    });
+                }
+
+                setRecommendations(recommendedItems);
+
             } catch (error) {
                 console.error("Failed to load recommendations", error);
             } finally {
