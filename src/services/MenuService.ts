@@ -40,10 +40,70 @@ export const CATEGORIES: Category[] = [
 ];
 
 export const PRODUCTS: Product[] = [
-    { id: 'k1', title: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', price: 650, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80' },
-    { id: 'e1', title: '2 Adet Fransız Tereyağlı Kruvasan', description: 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan.', price: 300, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80' },
-    { id: 'p1', title: 'Gurme Rustik Sandviç', description: 'Taze pişirilen rustik baget, beyaz peynir, domates, roka, pesto sos ve zeytinyağı ile hazırlanır patates kızartması ile sıcak servis edilir.', price: 450, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80' },
-    { id: 'ay1', title: 'Izgara Pirzola', description: 'Izgarada pişirilen kemikli et dilimleri. Patates püresi tabanı ve kavrulmuş file badem ile servis edilir.', price: 1000, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80' }
+    // === KAHVALTI ===
+    { id: 'k1', title: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu. 2 kişiliktir.', price: 850, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80' },
+    { id: 'k2', title: 'Kozbeyli Kahvaltı Tabağı', description: 'Organik köy yumurtası, ev yapımı reçeller, taze kaymak, süzme bal, ezine peyniri, taze simit ve mevsim sebzeleri. 1 kişiliktir.', price: 450, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80' },
+    { id: 'k3', title: 'Eggs Benedict', description: 'Poşe yumurta, füme somon, İngiliz muffin ve ev yapımı hollandaise sos. Hash brown patates ile servis edilir.', price: 380, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1608039829572-9b5d44b4b034?auto=format&fit=crop&q=80' },
+    { id: 'k4', title: 'Avokado Toast', description: 'Ekşi maya ekmeği üzerine ezilmiş avokado, cherry domates, feta peyniri, çeri biber ve zeytinyağı. Poşe yumurta ile taçlandırılır.', price: 320, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&q=80' },
+
+    // === EKSTRALAR ===
+    { id: 'e1', title: 'Fransız Tereyağlı Kruvasan', description: 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan. 2 adet.', price: 180, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80' },
+    { id: 'e2', title: 'Bal Kaymak', description: 'Afyon kaymağı ve organik çam balı. Taze ekmek ile servis edilir.', price: 150, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&q=80' },
+    { id: 'e3', title: 'Sahanda Yumurta', description: 'Köy yumurtası tereyağında kızartılır. Sucuklu veya peynirli olarak tercih edilebilir.', price: 120, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80' },
+
+    // === BAŞLANGIÇ ===
+    { id: 'b1', title: 'Humus', description: 'Geleneksel tarif ile hazırlanan nohut ezmesi, tahin, limon ve zeytinyağı. Pide eşliğinde.', price: 180, category: 'baslangic', isAvailable: true, image: 'https://images.unsplash.com/photo-1577805947697-89e18249d767?auto=format&fit=crop&q=80' },
+    { id: 'b2', title: 'Çıtır Karides', description: 'Tempura hamuruyla kaplanmış karides, tatlı acı sos ile. 6 adet.', price: 380, category: 'baslangic', isAvailable: true, image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80' },
+    { id: 'b3', title: 'Köy Salatası', description: 'Domates, salatalık, soğan, biber, maydanoz ve taze otlar. Narince dökme zeytinyağı ile.', price: 160, category: 'baslangic', isAvailable: true, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80' },
+    { id: 'b4', title: 'Sigara Böreği', description: 'Çıtır yufka içinde beyaz peynir ve maydanoz. Yoğurt ile servis edilir. 4 adet.', price: 180, category: 'baslangic', isAvailable: true, image: 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&q=80' },
+
+    // === PIZZA & SANDVİÇ ===
+    { id: 'p1', title: 'Margherita Pizza', description: 'San Marzano domates sosu, taze mozzarella, fesleğen ve zeytinyağı. Taş fırında pişirilir.', price: 320, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80' },
+    { id: 'p2', title: 'Kozbeyli Special Pizza', description: 'Sucuk, pastırma, kaşar peyniri, mozzarella, domates ve biber. Şefin özel sosu ile.', price: 420, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80' },
+    { id: 'p3', title: 'Funghi Pizza', description: 'Karışık mantar (shiitake, portobello, kestane mantarı), trüf yağı, mozzarella ve parmesan.', price: 380, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&q=80' },
+    { id: 'p4', title: 'Gurme Rustik Sandviç', description: 'Taze rustik baget, beyaz peynir, domates, roka, pesto sos. Patates kızartması ile.', price: 280, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80' },
+    { id: 'p5', title: 'Tavuklu Wrap', description: 'Izgara tavuk, avokado, marul, domates ve ranch sos. Patates ile servis edilir.', price: 260, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&q=80' },
+
+    // === ANA YEMEK ===
+    { id: 'ay1', title: 'Izgara Pirzola', description: 'Özenle marine edilmiş kuzu pirzola, odun ateşinde pişirilir. Patates püresi ve kavrulmuş sebzeler ile.', price: 680, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80' },
+    { id: 'ay2', title: 'Kozbeyli Kebabı', description: 'Şefin özel tarifi ile hazırlanan dana kebap. Közlenmiş biber, domates ve piyaz ile servis edilir.', price: 520, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&q=80' },
+    { id: 'ay3', title: 'Levrek Fileto', description: 'Taze Ege levreği, fırında pişirilir. Limon tereyağı sos, kuşkonmaz ve bebek patates ile.', price: 480, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1535567465397-7523840f2ae9?auto=format&fit=crop&q=80' },
+    { id: 'ay4', title: 'Bonfile', description: '200gr dana bonfile, tercih edilen pişirme derecesinde. Trüflü patates püresi ve mantar sos ile.', price: 750, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1546833998-877b37c2e5c6?auto=format&fit=crop&q=80' },
+    { id: 'ay5', title: 'Tavuk Şiş', description: 'Marine edilmiş tavuk göğsü, sebzeler ile şişe dizilip ızgarada pişirilir. Pilav ve cacık ile.', price: 320, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80' },
+
+    // === TATLI ===
+    { id: 't1', title: 'Künefe', description: 'Geleneksel Antep künefesi, ince kadayıf ve özel peynir ile. Sıcak servis edilir.', price: 220, category: 'tatli', isAvailable: true, image: 'https://images.unsplash.com/photo-1563729784-0666a17fc10f?auto=format&fit=crop&q=80' },
+    { id: 't2', title: 'Sufle', description: 'Sıcak çikolatalı sufle, vanilyalı dondurma ile. Taze meyveler eşliğinde.', price: 200, category: 'tatli', isAvailable: true, image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&q=80' },
+    { id: 't3', title: 'Tiramisu', description: 'Klasik İtalyan tatlısı. Mascarpone, espresso ve kakaolu lady finger bisküvi.', price: 180, category: 'tatli', isAvailable: true, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&q=80' },
+    { id: 't4', title: 'San Sebastian Cheesecake', description: 'Yoğun krem peynirli, karamelize üstü. Mevsim meyveleri ile servis edilir.', price: 190, category: 'tatli', isAvailable: true, image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80' },
+
+    // === SOĞUK İÇECEK ===
+    { id: 'si1', title: 'Taze Sıkılmış Portakal Suyu', description: '250ml taze sıkılmış portakal suyu.', price: 90, category: 'soguk-icecek', isAvailable: true, image: 'https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?auto=format&fit=crop&q=80' },
+    { id: 'si2', title: 'Ev Yapımı Limonata', description: 'Taze limon, nane ve hafif şeker ile hazırlanan serinletici limonata.', price: 80, category: 'soguk-icecek', isAvailable: true, image: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&q=80' },
+    { id: 'si3', title: 'Ayran', description: 'Ev yapımı yoğurttan hazırlanan geleneksel ayran.', price: 50, category: 'soguk-icecek', isAvailable: true, image: 'https://images.unsplash.com/photo-1583064313642-a7c149480c7e?auto=format&fit=crop&q=80' },
+    { id: 'si4', title: 'Ice Tea', description: 'Şeftali veya limon aromalı buzlu çay.', price: 60, category: 'soguk-icecek', isAvailable: true, image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80' },
+
+    // === SICAK İÇECEK ===
+    { id: 'sc1', title: 'Türk Kahvesi', description: 'Geleneksel Türk kahvesi. Orta, sade veya şekerli tercih edilebilir.', price: 70, category: 'sicak-icecek', isAvailable: true, image: 'https://images.unsplash.com/photo-1578374173705-969cbe6f2d6b?auto=format&fit=crop&q=80' },
+    { id: 'sc2', title: 'Espresso', description: 'Tek veya çift shot olarak hazırlanan İtalyan espresso.', price: 60, category: 'sicak-icecek', isAvailable: true, image: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&q=80' },
+    { id: 'sc3', title: 'Latte', description: 'Espresso ve buharda ısıtılmış süt. Soya veya badem sütü seçeneği mevcut.', price: 90, category: 'sicak-icecek', isAvailable: true, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&q=80' },
+    { id: 'sc4', title: 'Cappuccino', description: 'Espresso, sıcak süt ve süt köpüğü. Tarçın veya kakao serpme isteğe bağlı.', price: 90, category: 'sicak-icecek', isAvailable: true, image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&q=80' },
+    { id: 'sc5', title: 'Çay', description: 'Demlik çay veya bardak çay. Taze demlenmiş Rize çayı.', price: 40, category: 'sicak-icecek', isAvailable: true, image: 'https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&q=80' },
+
+    // === ŞARAP ===
+    { id: 's1', title: 'Karma (Kırmızı)', description: 'Urla Şarapçılık. Cabernet Sauvignon, Merlot harmanı. Kadeh veya şişe.', price: 180, category: 'sarap', isAvailable: true, image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80' },
+    { id: 's2', title: 'Mozaik (Beyaz)', description: 'Urla Şarapçılık. Chardonnay ve yerli üzüm harmanı. Meyvemsi ve taze.', price: 160, category: 'sarap', isAvailable: true, image: 'https://images.unsplash.com/photo-1558001373-7b93ee48ffa0?auto=format&fit=crop&q=80' },
+    { id: 's3', title: 'Vinkara Rosé', description: 'Hafif ve ferahlatıcı rosé şarap. Yaz akşamları için ideal.', price: 150, category: 'sarap', isAvailable: true, image: 'https://images.unsplash.com/photo-1560148218-1a83060f7b32?auto=format&fit=crop&q=80' },
+
+    // === KOKTEYL ===
+    { id: 'c1', title: 'Mojito', description: 'Beyaz rom, taze nane, lime, şeker ve soda. Klasik Küba kokteyli.', price: 220, category: 'kokteyl', isAvailable: true, image: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&q=80' },
+    { id: 'c2', title: 'Aperol Spritz', description: 'Aperol, prosecco ve soda. Portakal dilimi ile servis edilir.', price: 240, category: 'kokteyl', isAvailable: true, image: 'https://images.unsplash.com/photo-1560508180-03f285f67ded?auto=format&fit=crop&q=80' },
+    { id: 'c3', title: 'Margarita', description: 'Tekila, triple sec ve taze lime suyu. Tuzlu kadeh kenarı ile.', price: 230, category: 'kokteyl', isAvailable: true, image: 'https://images.unsplash.com/photo-1556855810-ac404aa91e85?auto=format&fit=crop&q=80' },
+
+    // === BİRA ===
+    { id: 'bi1', title: 'Efes Pilsen', description: 'Türkiye\'nin en sevilen birası. 50cl şişe.', price: 120, category: 'bira', isAvailable: true, image: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?auto=format&fit=crop&q=80' },
+    { id: 'bi2', title: 'Gara Guzu IPA', description: 'Türk craft birası. Narenciye ve tropikal meyve notaları.', price: 150, category: 'bira', isAvailable: true, image: 'https://images.unsplash.com/photo-1618885472179-5e474019f2a9?auto=format&fit=crop&q=80' },
+    { id: 'bi3', title: 'Corona', description: 'Meksika birası. Lime dilimi ile servis edilir.', price: 140, category: 'bira', isAvailable: true, image: 'https://images.unsplash.com/photo-1613950801673-c608577baf9b?auto=format&fit=crop&q=80' }
 ];
 
 export const MenuService = {

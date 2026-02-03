@@ -2,6 +2,9 @@ import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { LanguageProvider } from './context/LanguageContext';
+import { AnalyticsProvider } from './context/AnalyticsContext';
+import { LocationProvider } from './context/LocationContext';
+import { BrandProvider } from './context/BrandContext';
 
 // Lazy load components for performance (Fixes INP issues on navigation)
 const DigitalMenu = React.lazy(() => import('./components/DigitalMenu').then(module => ({ default: module.DigitalMenu })));
@@ -41,8 +44,11 @@ export default function App() {
         }}
       />
 
-      <LanguageProvider>
-        <Suspense fallback={
+      <BrandProvider>
+        <LocationProvider>
+          <LanguageProvider>
+            <AnalyticsProvider>
+              <Suspense fallback={
           <div className="h-screen w-full flex items-center justify-center bg-gray-50">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
@@ -73,9 +79,12 @@ export default function App() {
 
             {/* 404 catch-all */}
             <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
-      </LanguageProvider>
+              </Routes>
+            </Suspense>
+          </AnalyticsProvider>
+        </LanguageProvider>
+      </LocationProvider>
+    </BrandProvider>
     </>
   );
 }
