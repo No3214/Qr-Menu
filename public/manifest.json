@@ -1,20 +1,85 @@
 {
-    "short_name": "Kozbeyli",
-    "name": "Kozbeyli Konağı Dijital Menü",
-    "icons": [
-        {
-            "src": "/assets/logo-dark.jpg",
-            "sizes": "192x192",
-            "type": "image/jpeg"
-        },
-        {
-            "src": "/assets/logo-dark.jpg",
-            "sizes": "512x512",
-            "type": "image/jpeg"
-        }
-    ],
-    "start_url": ".",
-    "display": "standalone",
-    "theme_color": "#FCFBF7",
-    "background_color": "#FCFBF7"
+  "short_name": "QR Menü",
+  "name": "Dijital Menü - QR Menu Platform",
+  "description": "Restoranlar için dijital menü platformu. Offline çalışır, hızlı ve kullanıcı dostu.",
+  "icons": [
+    {
+      "src": "/assets/logo-dark.jpg",
+      "sizes": "72x72",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/logo-dark.jpg",
+      "sizes": "96x96",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/logo-dark.jpg",
+      "sizes": "128x128",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/logo-dark.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/logo-dark.jpg",
+      "sizes": "384x384",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/logo-dark.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "theme_color": "#C5A059",
+  "background_color": "#FCFBF7",
+  "categories": ["food", "lifestyle", "business"],
+  "lang": "tr",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "/assets/logo-main.jpg",
+      "sizes": "540x720",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Ana Sayfa"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Menüyü Görüntüle",
+      "short_name": "Menü",
+      "description": "Dijital menüyü aç",
+      "url": "/",
+      "icons": [{"src": "/assets/logo-dark.jpg", "sizes": "192x192"}]
+    },
+    {
+      "name": "Yönetim Paneli",
+      "short_name": "Panel",
+      "description": "Admin paneline git",
+      "url": "/dashboard",
+      "icons": [{"src": "/assets/logo-dark.jpg", "sizes": "192x192"}]
+    }
+  ],
+  "related_applications": [],
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "auto"
+  }
 }
