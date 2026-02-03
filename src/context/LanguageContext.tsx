@@ -89,6 +89,7 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.nav.translations': 'Çeviriler',
         'dash.nav.qr': 'QR Tasarımı',
         'dash.nav.settings': 'Ayarlar',
+        'dash.nav.language': 'Dil',
         'dash.nav.logout': 'Çıkış Yap',
         'dash.header.workspace': 'Çalışma Alanı',
         'dash.header.branch': 'Ana Şube',
@@ -210,11 +211,12 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.settings.sections.password': 'Şifre',
         'dash.settings.sections.restaurant': 'Restoran Bilgileri',
         'dash.settings.sections.guest': 'Misafir Bilgileri',
-        'dash.settings.sections.qr': 'QR Kod Oluşturucu',
-        'dash.settings.sections.ai': 'AI Sohbet Botu',
-        'dash.settings.sections.pdf': 'PDF Menü',
-        'dash.settings.sections.language': 'Dil',
-        'dash.settings.sections.billing': 'Plan & Faturalandırma',
+        'dash.settings.sections.qr': 'QR Kod',
+        'dash.settings.sections.wifi': 'Wi-Fi',
+        'dash.settings.sections.ai': 'AI Chat',
+        'dash.settings.sections.pdf': 'PDF Menü İndir',
+        'dash.settings.sections.marketing': 'Pazarlama',
+        'dash.settings.sections.billing': 'Plan ve Faturalama',
 
         // Profile
         'dash.settings.profile.title': 'Profil Bilgileri',
@@ -260,6 +262,16 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.settings.qr.svg': 'SVG İndir',
         'dash.settings.qr.downloaded': '{format} indirildi!',
 
+        // Wi-Fi
+        'dash.settings.wifi.title': 'Wi-Fi Ayarları',
+        'dash.settings.wifi.desc': 'Misafirleriniz için Wi-Fi bilgilerini yapılandırın. Bu bilgiler menüde görüntülenebilir.',
+        'dash.settings.wifi.show': 'Wi-Fi Bilgilerini Göster',
+        'dash.settings.wifi.showHint': 'Menüde Wi-Fi bilgilerini müşterilere göster',
+        'dash.settings.wifi.name': 'Ağ Adı (SSID)',
+        'dash.settings.wifi.password': 'Wi-Fi Şifresi',
+        'dash.settings.wifi.security': 'Güvenlik Türü',
+        'dash.settings.wifi.noPassword': 'Şifresiz',
+
         // AI Settings
         'dash.settings.ai.title': 'AI Sohbet Botu Ayarları',
         'dash.settings.ai.desc': 'Müşterileriniz için AI destekli sohbet botunu yapılandırın.',
@@ -276,10 +288,17 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.settings.pdf.download': 'İndir',
         'dash.settings.pdf.regenerate': 'PDF Yeniden Oluştur',
 
-        // Language
-        'dash.settings.lang.title': 'Dil Ayarları',
-        'dash.settings.lang.panel': 'Panel Dili',
-        'dash.settings.lang.menu': 'Menü Varsayılan Dili',
+        // Marketing
+        'dash.settings.marketing.title': 'Pazarlama Ayarları',
+        'dash.settings.marketing.desc': 'Pazarlama ve promosyon araçlarınızı yönetin.',
+        'dash.settings.marketing.email': 'E-posta Pazarlama',
+        'dash.settings.marketing.emailDesc': 'Misafirlere promosyon e-postaları gönderin',
+        'dash.settings.marketing.push': 'Push Bildirimleri',
+        'dash.settings.marketing.pushDesc': 'Anlık bildirimlerle müşterilere ulaşın',
+        'dash.settings.marketing.social': 'Sosyal Medya',
+        'dash.settings.marketing.socialDesc': 'Sosyal medya hesaplarınızı bağlayın',
+        'dash.settings.marketing.popup': 'Promosyon Pop-up',
+        'dash.settings.marketing.popupDesc': 'Menüde özel teklifler gösterin',
 
         // Billing
         'dash.settings.bill.title': 'Plan & Faturalandırma',
@@ -420,6 +439,7 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.nav.translations': 'Translations',
         'dash.nav.qr': 'QR Design',
         'dash.nav.settings': 'Settings',
+        'dash.nav.language': 'Language',
         'dash.nav.logout': 'Logout',
         'dash.header.workspace': 'Workspace',
         'dash.header.branch': 'Main Branch',
@@ -508,10 +528,11 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.settings.sections.password': 'Password',
         'dash.settings.sections.restaurant': 'Restaurant Info',
         'dash.settings.sections.guest': 'Guest Info',
-        'dash.settings.sections.qr': 'QR Code Generator',
-        'dash.settings.sections.ai': 'AI Chatbot',
-        'dash.settings.sections.pdf': 'PDF Menu',
-        'dash.settings.sections.language': 'Language',
+        'dash.settings.sections.qr': 'QR Code',
+        'dash.settings.sections.wifi': 'Wi-Fi',
+        'dash.settings.sections.ai': 'AI Chat',
+        'dash.settings.sections.pdf': 'PDF Menu Download',
+        'dash.settings.sections.marketing': 'Marketing',
         'dash.settings.sections.billing': 'Plan & Billing',
 
         // Profile
@@ -558,6 +579,16 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.settings.qr.svg': 'Download SVG',
         'dash.settings.qr.downloaded': '{format} downloaded!',
 
+        // Wi-Fi
+        'dash.settings.wifi.title': 'Wi-Fi Settings',
+        'dash.settings.wifi.desc': 'Configure Wi-Fi information for your guests. This information can be displayed in the menu.',
+        'dash.settings.wifi.show': 'Show Wi-Fi Information',
+        'dash.settings.wifi.showHint': 'Display Wi-Fi information to customers in menu',
+        'dash.settings.wifi.name': 'Network Name (SSID)',
+        'dash.settings.wifi.password': 'Wi-Fi Password',
+        'dash.settings.wifi.security': 'Security Type',
+        'dash.settings.wifi.noPassword': 'No Password',
+
         // AI Settings
         'dash.settings.ai.title': 'AI Chatbot Settings',
         'dash.settings.ai.desc': 'Configure the AI-powered chatbot for your customers.',
@@ -574,10 +605,17 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.settings.pdf.download': 'Download',
         'dash.settings.pdf.regenerate': 'Regenerate PDF',
 
-        // Language
-        'dash.settings.lang.title': 'Language Settings',
-        'dash.settings.lang.panel': 'Panel Language',
-        'dash.settings.lang.menu': 'Menu Default Language',
+        // Marketing
+        'dash.settings.marketing.title': 'Marketing Settings',
+        'dash.settings.marketing.desc': 'Manage your marketing and promotional tools.',
+        'dash.settings.marketing.email': 'Email Marketing',
+        'dash.settings.marketing.emailDesc': 'Send promotional emails to guests',
+        'dash.settings.marketing.push': 'Push Notifications',
+        'dash.settings.marketing.pushDesc': 'Reach customers with instant notifications',
+        'dash.settings.marketing.social': 'Social Media',
+        'dash.settings.marketing.socialDesc': 'Connect your social media accounts',
+        'dash.settings.marketing.popup': 'Promotional Pop-up',
+        'dash.settings.marketing.popupDesc': 'Show special offers in menu',
 
         // Billing
         'dash.settings.bill.title': 'Plan & Billing',

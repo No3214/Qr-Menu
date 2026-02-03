@@ -13,26 +13,29 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
-  QrCode
+  Languages
 } from 'lucide-react';
 
 import { useLanguage } from '../context/LanguageContext';
 
 export const DashboardLayout: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
   const navItems = [
     { path: '/dashboard', icon: Home, label: t('dash.nav.panel') },
     { path: '/dashboard/menu', icon: MenuIcon, label: t('dash.nav.menu') },
-    { path: '/dashboard/analytics', icon: BarChart3, label: t('dash.nav.analytics') },
     { path: '/dashboard/events', icon: Calendar, label: t('dash.nav.events') },
+    { path: '/dashboard/analytics', icon: BarChart3, label: t('dash.nav.analytics') },
     { path: '/dashboard/reviews', icon: MessageSquare, label: t('dash.nav.reviews') },
     { path: '/dashboard/translations', icon: Globe, label: t('dash.nav.translations') },
-    { path: '/dashboard/qr-editor', icon: QrCode, label: t('dash.nav.qr') },
     { path: '/dashboard/settings', icon: Settings, label: t('dash.nav.settings') },
   ];
+
+  const toggleLanguage = () => {
+    setLanguage(language === 'tr' ? 'en' : 'tr');
+  };
 
   return (
     <div className="flex min-h-screen bg-bg">
@@ -91,7 +94,26 @@ export const DashboardLayout: React.FC = () => {
         </nav>
 
         {/* Footer Controls */}
-        <div className="p-4 border-t border-stone-800">
+        <div className="p-4 border-t border-stone-800 space-y-2">
+          {/* Language Toggle */}
+          <button
+            onClick={toggleLanguage}
+            className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-stone-500 hover:text-white hover:bg-white/5 transition-all group"
+          >
+            <Languages className={`w-5 h-5 ${isSidebarOpen ? '' : 'mx-auto'}`} />
+            {isSidebarOpen && (
+              <span className="text-sm font-bold tracking-tight">
+                {t('dash.nav.language')} ({language.toUpperCase()})
+              </span>
+            )}
+            {!isSidebarOpen && (
+              <div className="absolute left-full ml-4 px-3 py-2 bg-stone-800 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                {t('dash.nav.language')}
+              </div>
+            )}
+          </button>
+
+          {/* Logout */}
           <button
             onClick={() => navigate('/')}
             className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-stone-500 hover:text-white hover:bg-red-500/10 hover:text-red-500 transition-all group"

@@ -6,9 +6,10 @@ import {
   Building2,
   Users,
   QrCode,
+  Wifi,
   Bot,
   FileText,
-  Globe,
+  Megaphone,
   CreditCard,
   Save,
   Upload,
@@ -16,6 +17,9 @@ import {
   Copy,
   ExternalLink,
   ChevronDown,
+  Mail,
+  Bell,
+  Share2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -29,9 +33,10 @@ type SettingsSection =
   | 'restaurant'
   | 'guest'
   | 'qr'
+  | 'wifi'
   | 'ai'
   | 'pdf'
-  | 'language'
+  | 'marketing'
   | 'billing';
 
 export function SettingsPage() {
@@ -45,9 +50,10 @@ export function SettingsPage() {
     { id: 'restaurant' as const, icon: Building2, label: t('dash.settings.sections.restaurant') },
     { id: 'guest' as const, icon: Users, label: t('dash.settings.sections.guest') },
     { id: 'qr' as const, icon: QrCode, label: t('dash.settings.sections.qr') },
+    { id: 'wifi' as const, icon: Wifi, label: t('dash.settings.sections.wifi') },
     { id: 'ai' as const, icon: Bot, label: t('dash.settings.sections.ai') },
     { id: 'pdf' as const, icon: FileText, label: t('dash.settings.sections.pdf') },
-    { id: 'language' as const, icon: Globe, label: t('dash.settings.sections.language') },
+    { id: 'marketing' as const, icon: Megaphone, label: t('dash.settings.sections.marketing') },
     { id: 'billing' as const, icon: CreditCard, label: t('dash.settings.sections.billing') },
   ];
 
@@ -113,9 +119,10 @@ export function SettingsPage() {
           {activeSection === 'restaurant' && <RestaurantSection />}
           {activeSection === 'guest' && <GuestSection />}
           {activeSection === 'qr' && <QRCodeSection />}
+          {activeSection === 'wifi' && <WiFiSection />}
           {activeSection === 'ai' && <AIChatSection />}
           {activeSection === 'pdf' && <PDFSection />}
-          {activeSection === 'language' && <LanguageSection />}
+          {activeSection === 'marketing' && <MarketingSection />}
           {activeSection === 'billing' && <BillingSection />}
         </div>
       </div>
@@ -400,26 +407,90 @@ function PDFSection() {
   );
 }
 
-function LanguageSection() {
+function WiFiSection() {
   const { t } = useLanguage();
   return (
-    <SectionCard title={t('dash.settings.lang.title')}>
+    <SectionCard title={t('dash.settings.wifi.title')}>
+      <p className="text-sm text-text-muted">{t('dash.settings.wifi.desc')}</p>
+      <div className="flex items-center justify-between py-2">
+        <div>
+          <p className="text-sm font-medium text-text">{t('dash.settings.wifi.show')}</p>
+          <p className="text-xs text-text-muted">{t('dash.settings.wifi.showHint')}</p>
+        </div>
+        <Toggle defaultOn label={t('dash.settings.wifi.show')} />
+      </div>
+      <InputField label={t('dash.settings.wifi.name')} defaultValue="Kozbeyli_Misafir" placeholder="Wi-Fi ağ adı" />
+      <InputField label={t('dash.settings.wifi.password')} defaultValue="kozbeyli2024" placeholder="Wi-Fi şifresi" />
       <div>
-        <label className="block text-sm font-medium text-text mb-1.5">{t('dash.settings.lang.panel')}</label>
+        <label className="block text-sm font-medium text-text mb-1.5">{t('dash.settings.wifi.security')}</label>
         <select className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary bg-white">
-          <option>Türkçe</option>
-          <option>English</option>
+          <option value="WPA2">WPA2</option>
+          <option value="WPA3">WPA3</option>
+          <option value="WEP">WEP</option>
+          <option value="none">{t('dash.settings.wifi.noPassword')}</option>
         </select>
       </div>
-      <div>
-        <label className="block text-sm font-medium text-text mb-1.5">{t('dash.settings.lang.menu')}</label>
-        <select className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary bg-white">
-          <option>Türkçe</option>
-          <option>English</option>
-          <option>Deutsch</option>
-          <option>العربية</option>
-        </select>
+      <SaveButton />
+    </SectionCard>
+  );
+}
+
+function MarketingSection() {
+  const { t } = useLanguage();
+  return (
+    <SectionCard title={t('dash.settings.marketing.title')}>
+      <p className="text-sm text-text-muted">{t('dash.settings.marketing.desc')}</p>
+
+      {/* Email Marketing */}
+      <div className="p-4 border border-border rounded-xl space-y-3">
+        <div className="flex items-center gap-3">
+          <Mail size={20} className="text-primary" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-text">{t('dash.settings.marketing.email')}</p>
+            <p className="text-xs text-text-muted">{t('dash.settings.marketing.emailDesc')}</p>
+          </div>
+          <Toggle defaultOn label={t('dash.settings.marketing.email')} />
+        </div>
       </div>
+
+      {/* Push Notifications */}
+      <div className="p-4 border border-border rounded-xl space-y-3">
+        <div className="flex items-center gap-3">
+          <Bell size={20} className="text-primary" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-text">{t('dash.settings.marketing.push')}</p>
+            <p className="text-xs text-text-muted">{t('dash.settings.marketing.pushDesc')}</p>
+          </div>
+          <Toggle defaultOn={false} label={t('dash.settings.marketing.push')} />
+        </div>
+      </div>
+
+      {/* Social Media Integration */}
+      <div className="p-4 border border-border rounded-xl space-y-3">
+        <div className="flex items-center gap-3">
+          <Share2 size={20} className="text-primary" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-text">{t('dash.settings.marketing.social')}</p>
+            <p className="text-xs text-text-muted">{t('dash.settings.marketing.socialDesc')}</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <InputField label="Instagram" placeholder="@kozbeylikonagi" defaultValue="@kozbeylikonagi" />
+          <InputField label="Facebook" placeholder="kozbeylikonagi" defaultValue="kozbeylikonagi" />
+        </div>
+      </div>
+
+      {/* Promotional Popups */}
+      <div className="p-4 border border-border rounded-xl space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-text">{t('dash.settings.marketing.popup')}</p>
+            <p className="text-xs text-text-muted">{t('dash.settings.marketing.popupDesc')}</p>
+          </div>
+          <Toggle defaultOn label={t('dash.settings.marketing.popup')} />
+        </div>
+      </div>
+
       <SaveButton />
     </SectionCard>
   );
