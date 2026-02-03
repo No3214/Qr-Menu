@@ -11,16 +11,17 @@ import {
   ImageIcon,
   Save,
   X,
-  Star,
 } from 'lucide-react';
 import { MenuService, Product, Category } from '../../services/MenuService';
 import { parseMenuFromImage } from '../../services/geminiService';
 import toast from 'react-hot-toast';
 import { Sparkles, Loader2 } from 'lucide-react';
 
-type Tab = 'products' | 'recommendations' | 'display';
-
 import { useLanguage } from '../../context/LanguageContext';
+import { RecommendationsPage } from './RecommendationsPage';
+import { DisplayPreferencesPage } from './DisplayPreferencesPage';
+
+type Tab = 'products' | 'recommendations' | 'display';
 
 export function MenuManagement() {
   const { t } = useLanguage();
@@ -158,8 +159,8 @@ export function MenuManagement() {
           onAddProduct={() => setIsAddingProduct(true)}
         />
       )}
-      {activeTab === 'recommendations' && <RecommendationsTab products={products} />}
-      {activeTab === 'display' && <DisplayPreferencesTab />}
+      {activeTab === 'recommendations' && <RecommendationsPage />}
+      {activeTab === 'display' && <DisplayPreferencesPage />}
 
       {/* Edit/Add Modal */}
       {(editingProduct || isAddingProduct) && (
@@ -731,157 +732,4 @@ function ProductEditModal({
   );
 }
 
-/* ── Recommendations Tab ── */
-function RecommendationsTab({ products }: { products: Product[] }) {
-  const { t } = useLanguage();
-  const recommendedProducts = products.slice(0, 6);
 
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-xl font-semibold text-text">{t('dash.menu.tab.recommendations')}</h2>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {recommendedProducts.map((product) => (
-          <div
-            key={product.id}
-            className="bg-white border border-border rounded-xl p-4 hover:shadow-card transition-shadow"
-          >
-            <div className="flex items-start gap-3">
-              <div className="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
-                {product.image ? (
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <Star size={18} className="text-warning" />
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-medium text-text truncate">
-                  {product.title}
-                </h3>
-                <p className="text-xs text-text-muted mt-0.5 line-clamp-2">
-                  {product.description}
-                </p>
-                <p className="text-sm font-semibold text-primary mt-2">
-                  ₺{product.price.toFixed(2)}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ── Display Preferences Tab ── */
-function DisplayPreferencesTab() {
-  const { t } = useLanguage();
-  return (
-    <div className="space-y-6 max-w-3xl">
-      {/* Restaurant Info */}
-      <div className="bg-white border border-border rounded-xl p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-text">{t('dash.display.restInfo')}</h2>
-
-        <div>
-          <label className="block text-sm font-medium text-text mb-1.5">
-            {t('dash.display.restName')}
-          </label>
-          <input
-            type="text"
-            defaultValue="Kozbeyli Konağı"
-            className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-text mb-1.5">
-            {t('dash.display.logo')}
-          </label>
-          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/30 transition-colors cursor-pointer">
-            <ImageIcon size={24} className="mx-auto text-text-muted mb-2" />
-            <p className="text-sm text-text-muted">{t('dash.display.logoUpload')}</p>
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-text mb-1.5">
-            {t('dash.display.videoUrl')}
-          </label>
-          <input
-            type="url"
-            placeholder="https://youtube.com/..."
-            className="w-full px-3 py-2.5 rounded-lg border border-border text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-          />
-        </div>
-      </div>
-
-      {/* Theme Settings */}
-      <div className="bg-white border border-border rounded-xl p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-text">{t('dash.display.themeSettings')}</h2>
-
-        <div>
-          <label className="block text-sm font-medium text-text mb-2">
-            {t('dash.display.colorTheme')}
-          </label>
-          <div className="flex gap-3">
-            {[
-              { name: 'Default', color: '#4F6EF7' },
-              { name: 'Gold', color: '#C5A059' },
-              { name: 'Green', color: '#16A34A' },
-              { name: 'Red', color: '#EF4444' },
-              { name: 'Purple', color: '#8B5CF6' },
-            ].map((theme) => (
-              <button
-                key={theme.name}
-                className="flex flex-col items-center gap-1.5 group"
-              >
-                <div
-                  className="w-10 h-10 rounded-full border-2 border-transparent group-hover:border-gray-300 transition-colors"
-                  style={{ backgroundColor: theme.color }}
-                />
-                <span className="text-xs text-text-muted">{theme.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-text mb-2">
-            {t('dash.display.categoryView')}
-          </label>
-          <div className="flex gap-3">
-            <button className="flex-1 border-2 border-primary rounded-xl p-3 text-center">
-              <div className="grid grid-cols-3 gap-1 mb-2">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-6 rounded bg-gray-200" />
-                ))}
-              </div>
-              <p className="text-xs font-medium text-primary">{t('dash.display.view.grid')}</p>
-            </button>
-            <button className="flex-1 border-2 border-border rounded-xl p-3 text-center hover:border-gray-300 transition-colors">
-              <div className="space-y-1 mb-2">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-4 rounded bg-gray-200" />
-                ))}
-              </div>
-              <p className="text-xs font-medium text-text-muted">{t('dash.display.view.list')}</p>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-end">
-        <button className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
-          <Save size={16} />
-          {t('dash.display.save')}
-        </button>
-      </div>
-    </div>
-  );
-}
