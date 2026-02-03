@@ -19,12 +19,10 @@ export const generateTaglines = async (restaurantName: string, vibe: string): Pr
 
     try {
       return parseAIJson<string[]>(text);
-    } catch (e) {
-      console.warn("Failed to parse JSON, returning raw splits", e);
+    } catch {
       return text.split('\n').filter(line => line.length > 0).slice(0, 3);
     }
-  } catch (error) {
-    console.error("AI Tagline Error:", error);
+  } catch {
     return [
       "Scan to view our menu",
       "Experience our flavors",
@@ -44,8 +42,7 @@ export const getProductPairing = async (productName: string, category: string): 
 
     const text = await generateAIText(prompt);
     return parseAIJson<{ pairing: string, reason: string }>(text);
-  } catch (error) {
-    console.error("AI Pairing Error:", error);
+  } catch {
     return { pairing: "Chef's Special", reason: "Our chef recommends this combination." };
   }
 };
@@ -59,8 +56,7 @@ export const getChatResponse = async (message: string, context: string = ""): Pr
     Answer briefly (max 2-3 sentences), warmly, and professionally. Recommend items if appropriate.`;
 
     return await generateAIText(prompt);
-  } catch (error) {
-    console.error("AI Chat Error:", error);
+  } catch {
     return "I am currently offline, please ask a staff member.";
   }
 };

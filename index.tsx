@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
+import { initProtection } from './lib/protection';
+
+// Initialize code protection in production
+initProtection();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -10,7 +14,6 @@ if (!rootElement) {
 }
 
 const root = ReactDOM.createRoot(rootElement);
-console.log("Kozbeyli Konagi Digital Menu v2.0.0");
 root.render(
   <React.StrictMode>
     <BrowserRouter>

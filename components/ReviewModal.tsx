@@ -116,8 +116,9 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
                             <input
                                 type="text"
                                 value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                onChange={(e) => setName(e.target.value.slice(0, 50))}
                                 placeholder={t('review.namePlaceholder')}
+                                maxLength={50}
                                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                             />
                         </div>
@@ -125,11 +126,13 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ onClose }) => {
                             <label className="block text-xs font-medium text-gray-700 mb-1 ml-1">{t('review.commentLabel')}</label>
                             <textarea
                                 value={comment}
-                                onChange={(e) => setComment(e.target.value)}
+                                onChange={(e) => setComment(e.target.value.slice(0, 500))}
                                 placeholder={t('review.commentPlaceholder')}
                                 rows={3}
+                                maxLength={500}
                                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                             />
+                            <span className="text-xs text-gray-400 ml-1">{comment.length}/500</span>
                         </div>
                     </div>
 

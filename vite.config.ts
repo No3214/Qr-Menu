@@ -11,7 +11,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false, // Disabled in production for security
     commonjsOptions: {
       transformMixedEsModules: true,
     },

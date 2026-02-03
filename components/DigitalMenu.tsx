@@ -162,7 +162,13 @@ export const DigitalMenu: React.FC = () => {
                                         className="w-full h-full object-contain"
                                         onError={(e) => {
                                             e.currentTarget.style.display = 'none';
-                                            e.currentTarget.parentElement!.innerHTML = '<span class="text-primary font-bold text-xl">K</span>';
+                                            const parent = e.currentTarget.parentElement;
+                                            if (parent) {
+                                                const fallback = document.createElement('span');
+                                                fallback.className = 'text-primary font-bold text-xl';
+                                                fallback.textContent = 'K';
+                                                parent.appendChild(fallback);
+                                            }
                                         }}
                                     />
                                 </button>
