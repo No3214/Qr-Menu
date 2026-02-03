@@ -196,8 +196,8 @@ export const DigitalMenu: React.FC = () => {
                                         <ProductCard product={product} />
                                     </motion.div>
 
-                                    {/* Smart Recommendation Break: Insert after 2nd product if we have enough items */}
-                                    {idx === 1 && filteredProducts.length > 3 && (
+                                    {/* Smart Recommendation Break: Show after 2nd product */}
+                                    {idx === 1 && filteredProducts.length >= 2 && (
                                         <RecommendationCarousel seedProduct={filteredProducts[0]} />
                                     )}
                                 </React.Fragment>
