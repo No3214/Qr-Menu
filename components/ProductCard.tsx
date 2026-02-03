@@ -18,7 +18,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
     return (
         <motion.div
             variants={fadeInUp}
-            className={`group relative bg-white rounded-2xl p-3 sm:p-4 mb-4 border border-stone-100 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] hover:shadow-lg ${!product.isAvailable ? 'opacity-60 grayscale' : ''}`}
+            className="group relative bg-white rounded-2xl p-3 sm:p-4 mb-4 border border-stone-100 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] hover:shadow-lg"
             whileTap={{ scale: 0.99 }}
             style={{ willChange: 'transform, opacity' }}
         >
@@ -33,11 +33,6 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                             wrapperClassName="w-full h-full rounded-xl shadow-sm"
                             className="rounded-xl"
                         />
-                        {!product.isAvailable && (
-                            <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
-                                <span className="text-[10px] font-bold text-white uppercase tracking-wider border border-white/30 px-2 py-1 rounded-md backdrop-blur-sm">{t('product.outOfStock')}</span>
-                            </div>
-                        )}
                     </div>
                 ) : (
                     <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-stone-50 flex items-center justify-center text-2xl border border-stone-100">

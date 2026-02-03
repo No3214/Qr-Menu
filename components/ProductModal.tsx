@@ -92,11 +92,6 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose, on
                                     </h2>
                                 </div>
 
-                                {!product.isAvailable && (
-                                    <span className="inline-block px-3 py-1 mb-4 text-[10px] font-bold uppercase bg-stone-100 text-stone-500 rounded-full tracking-wider border border-stone-200">
-                                        {t('product.outOfStock')}
-                                    </span>
-                                )}
 
                                 <div className="flex items-baseline gap-1 mb-8">
                                     <span className="text-4xl font-bold text-stone-900">{formattedPrice}</span>
@@ -166,10 +161,9 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose, on
                                         toast.success(t('product.addedToOrder'));
                                         onClose();
                                     }}
-                                    disabled={!product.isAvailable}
-                                    className="w-full mt-6 bg-stone-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-stone-900/20 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full mt-6 bg-stone-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-stone-900/20 active:scale-[0.98] transition-all"
                                 >
-                                    {product.isAvailable ? t('product.addToOrder') : t('product.outOfStock')}
+                                    {t('product.addToOrder')}
                                 </button>
                             </div>
                         </div>
