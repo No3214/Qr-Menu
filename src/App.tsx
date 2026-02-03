@@ -16,6 +16,9 @@ const EventsPage = React.lazy(() => import('./dashboard/pages/EventsPage').then(
 const ReviewsPage = React.lazy(() => import('./dashboard/pages/ReviewsPage').then(module => ({ default: module.ReviewsPage })));
 const SettingsPage = React.lazy(() => import('./dashboard/pages/SettingsPage').then(module => ({ default: module.SettingsPage })));
 const TranslationsPage = React.lazy(() => import('./dashboard/pages/TranslationsPage').then(module => ({ default: module.TranslationsPage })));
+const QRCodePage = React.lazy(() => import('./dashboard/pages/QRCodePage').then(module => ({ default: module.QRCodePage })));
+const WifiPage = React.lazy(() => import('./dashboard/pages/WifiPage').then(module => ({ default: module.WifiPage })));
+const PDFExportPage = React.lazy(() => import('./dashboard/pages/PDFExportPage').then(module => ({ default: module.PDFExportPage })));
 
 /**
  * App - Ana uygulama bileşeni
@@ -75,6 +78,9 @@ export default function App() {
               <Route path="reviews" element={<ReviewsPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="translations" element={<TranslationsPage />} />
+              <Route path="qr-codes" element={<QRCodePage />} />
+              <Route path="wifi" element={<WifiPage />} />
+              <Route path="pdf-export" element={<PDFExportPage />} />
             </Route>
 
             {/* 404 catch-all */}

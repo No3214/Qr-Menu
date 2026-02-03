@@ -88,11 +88,25 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                         )}
                     </p>
 
-                    {/* Price */}
+                    {/* Price / Variants */}
                     <div className="mt-3">
-                        <span className="text-[15px] font-bold text-stone-900">
-                            ₺{formattedPrice}
-                        </span>
+                        {product.variants && product.variants.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                                {product.variants.map((variant) => (
+                                    <span
+                                        key={variant.id}
+                                        className="inline-flex items-center gap-1 px-2 py-1 bg-stone-50 rounded-lg text-xs"
+                                    >
+                                        <span className="text-stone-500">{variant.label}</span>
+                                        <span className="font-bold text-stone-900">₺{new Intl.NumberFormat('tr-TR').format(variant.price)}</span>
+                                    </span>
+                                ))}
+                            </div>
+                        ) : (
+                            <span className="text-[15px] font-bold text-stone-900">
+                                ₺{formattedPrice}
+                            </span>
+                        )}
                     </div>
 
                     {/* Out of Stock Badge */}

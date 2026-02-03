@@ -13,7 +13,10 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
-  Languages
+  Languages,
+  QrCode,
+  Wifi,
+  FileText
 } from 'lucide-react';
 
 import { useLanguage } from '../context/LanguageContext';
@@ -30,6 +33,9 @@ export const DashboardLayout: React.FC = () => {
     { path: '/dashboard/analytics', icon: BarChart3, label: t('dash.nav.analytics') },
     { path: '/dashboard/reviews', icon: MessageSquare, label: t('dash.nav.reviews') },
     { path: '/dashboard/translations', icon: Globe, label: t('dash.nav.translations') },
+    { path: '/dashboard/qr-codes', icon: QrCode, label: 'QR Kodları' },
+    { path: '/dashboard/wifi', icon: Wifi, label: 'Wi-Fi' },
+    { path: '/dashboard/pdf-export', icon: FileText, label: 'PDF Menü' },
     { path: '/dashboard/settings', icon: Settings, label: t('dash.nav.settings') },
   ];
 

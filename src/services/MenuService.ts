@@ -2,17 +2,26 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 export type DietaryTag = 'vegetarian' | 'vegan' | 'gluten-free' | 'spicy' | 'lactose-free' | 'organic' | 'chef-special';
 
+// Price variant for products with multiple sizes/volumes
+export interface PriceVariant {
+    id: string;
+    label: string;       // "35cl", "50cl", "Şişe", "Tek", "Duble"
+    price: number;
+}
+
 export interface Product {
     id: string;
     title: string;
     description: string;
     price: number;
     category: string;
+    subcategory?: string;  // Alt kategori desteği
     isAvailable: boolean;
     image?: string;
     category_id?: string;
     is_active?: boolean;
     tags?: DietaryTag[];
+    variants?: PriceVariant[];  // Hacim/porsiyon seçenekleri
 }
 
 export interface Category {
@@ -21,7 +30,24 @@ export interface Category {
     slug: string;
     description?: string;
     image?: string;
+    parent_id?: string;  // Alt kategori için üst kategori ID'si
 }
+
+// Alt kategoriler
+export const SUBCATEGORIES: Category[] = [
+    // Kahvaltı alt kategorileri
+    { id: 'kahvalti-ekstralar', title: 'Ekstralar', slug: 'ekstralar', parent_id: 'kahvalti' },
+    { id: 'kahvalti-oneriler', title: 'Öneriler', slug: 'oneriler', parent_id: 'kahvalti' },
+    // Alkollü içecek alt kategorileri
+    { id: 'alkol-bira', title: 'Bira', slug: 'bira', parent_id: 'alkollu-icecek' },
+    { id: 'alkol-sarap', title: 'Şarap', slug: 'sarap', parent_id: 'alkollu-icecek' },
+    { id: 'alkol-raki', title: 'Rakı', slug: 'raki', parent_id: 'alkollu-icecek' },
+    { id: 'alkol-viski', title: 'Viski', slug: 'viski', parent_id: 'alkollu-icecek' },
+    { id: 'alkol-kokteyl', title: 'Kokteyl', slug: 'kokteyl', parent_id: 'alkollu-icecek' },
+    // Alkolsüz içecek alt kategorileri
+    { id: 'alkolsuz-sicak', title: 'Sıcak İçecekler', slug: 'sicak', parent_id: 'alkolsuz-icecek' },
+    { id: 'alkolsuz-soguk', title: 'Soğuk İçecekler', slug: 'soguk', parent_id: 'alkolsuz-icecek' },
+];
 
 export const CATEGORIES: Category[] = [
     { id: 'kahvalti', title: 'Kahvaltı', slug: 'kahvalti', description: 'Güne lezzetli bir başlangıç.', image: 'https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&q=80' },
@@ -94,9 +120,18 @@ export const PRODUCTS: Product[] = [
     { id: 'sc5', title: 'Çay', description: 'Demlik çay veya bardak çay. Taze demlenmiş Rize çayı.', price: 40, category: 'sicak-icecek', isAvailable: true, image: 'https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&q=80' },
 
     // === ŞARAP ===
-    { id: 's1', title: 'Karma (Kırmızı)', description: 'Urla Şarapçılık. Cabernet Sauvignon, Merlot harmanı. Kadeh veya şişe.', price: 180, category: 'sarap', isAvailable: true, image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80' },
-    { id: 's2', title: 'Mozaik (Beyaz)', description: 'Urla Şarapçılık. Chardonnay ve yerli üzüm harmanı. Meyvemsi ve taze.', price: 160, category: 'sarap', isAvailable: true, image: 'https://images.unsplash.com/photo-1558001373-7b93ee48ffa0?auto=format&fit=crop&q=80' },
-    { id: 's3', title: 'Vinkara Rosé', description: 'Hafif ve ferahlatıcı rosé şarap. Yaz akşamları için ideal.', price: 150, category: 'sarap', isAvailable: true, image: 'https://images.unsplash.com/photo-1560148218-1a83060f7b32?auto=format&fit=crop&q=80' },
+    { id: 's1', title: 'Karma (Kırmızı)', description: 'Urla Şarapçılık. Cabernet Sauvignon, Merlot harmanı.', price: 180, category: 'sarap', isAvailable: true, image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&q=80', variants: [{ id: 's1-kadeh', label: 'Kadeh', price: 180 }, { id: 's1-sise', label: 'Şişe', price: 850 }] },
+    { id: 's2', title: 'Mozaik (Beyaz)', description: 'Urla Şarapçılık. Chardonnay ve yerli üzüm harmanı. Meyvemsi ve taze.', price: 160, category: 'sarap', isAvailable: true, image: 'https://images.unsplash.com/photo-1558001373-7b93ee48ffa0?auto=format&fit=crop&q=80', variants: [{ id: 's2-kadeh', label: 'Kadeh', price: 160 }, { id: 's2-sise', label: 'Şişe', price: 780 }] },
+    { id: 's3', title: 'Vinkara Rosé', description: 'Hafif ve ferahlatıcı rosé şarap. Yaz akşamları için ideal.', price: 150, category: 'sarap', isAvailable: true, image: 'https://images.unsplash.com/photo-1560148218-1a83060f7b32?auto=format&fit=crop&q=80', variants: [{ id: 's3-kadeh', label: 'Kadeh', price: 150 }, { id: 's3-sise', label: 'Şişe', price: 720 }] },
+
+    // === RAKI ===
+    { id: 'r1', title: 'Beylerbeyi Göbek', description: 'Premium Türk rakısı. Üzüm ve anason aroması.', price: 250, category: 'raki', isAvailable: true, image: 'https://images.unsplash.com/photo-1514362545857-3bc16549766b?auto=format&fit=crop&q=80', variants: [{ id: 'r1-tek', label: 'Tek', price: 120 }, { id: 'r1-duble', label: 'Duble', price: 220 }, { id: 'r1-35', label: '35cl', price: 650 }, { id: 'r1-50', label: '50cl', price: 850 }, { id: 'r1-70', label: '70cl', price: 1100 }] },
+    { id: 'r2', title: 'Yeni Rakı', description: 'Türkiye\'nin klasik rakısı. Geleneksel tarif.', price: 200, category: 'raki', isAvailable: true, image: 'https://images.unsplash.com/photo-1514362545857-3bc16549766b?auto=format&fit=crop&q=80', variants: [{ id: 'r2-tek', label: 'Tek', price: 100 }, { id: 'r2-duble', label: 'Duble', price: 180 }, { id: 'r2-35', label: '35cl', price: 550 }, { id: 'r2-50', label: '50cl', price: 720 }, { id: 'r2-70', label: '70cl', price: 950 }] },
+
+    // === VİSKİ ===
+    { id: 'v1', title: 'Chivas Regal 12', description: 'Premium blended Scotch whisky. Bal ve vanilya notaları.', price: 180, category: 'viski', isAvailable: true, image: 'https://images.unsplash.com/photo-1514362545857-3bc16549766b?auto=format&fit=crop&q=80', variants: [{ id: 'v1-tek', label: 'Tek', price: 180 }, { id: 'v1-duble', label: 'Duble', price: 340 }] },
+    { id: 'v2', title: 'Jack Daniels', description: 'Tennessee whiskey. Meşe fıçısında olgunlaştırılmış.', price: 150, category: 'viski', isAvailable: true, image: 'https://images.unsplash.com/photo-1514362545857-3bc16549766b?auto=format&fit=crop&q=80', variants: [{ id: 'v2-tek', label: 'Tek', price: 150 }, { id: 'v2-duble', label: 'Duble', price: 280 }] },
+    { id: 'v3', title: 'Woodford Reserve', description: 'Kentucky bourbon. Karamel ve meşe aroması.', price: 220, category: 'viski', isAvailable: true, image: 'https://images.unsplash.com/photo-1514362545857-3bc16549766b?auto=format&fit=crop&q=80', variants: [{ id: 'v3-tek', label: 'Tek', price: 220 }, { id: 'v3-duble', label: 'Duble', price: 420 }] },
 
     // === KOKTEYL ===
     { id: 'c1', title: 'Mojito', description: 'Beyaz rom, taze nane, lime, şeker ve soda. Klasik Küba kokteyli.', price: 220, category: 'kokteyl', isAvailable: true, image: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&q=80' },
