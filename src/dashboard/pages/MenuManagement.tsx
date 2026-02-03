@@ -390,7 +390,7 @@ function ProductsTab({
                     </span>
                   </td>
                   <td className="px-3 py-3">
-                    {product.isAvailable ? (
+                    {product.is_active ? (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-success bg-green-50 px-2 py-1 rounded-full">
                         <Eye size={12} />
                         {t('dash.menu.status.active')}
@@ -459,7 +459,7 @@ function ProductEditModal({
   const [name, setName] = useState(product?.title || '');
   const [price, setPrice] = useState(product?.price.toString() || '');
   const [description, setDescription] = useState(product?.description || '');
-  const [isAvailable, setIsAvailable] = useState(product?.isAvailable ?? true);
+  const [is_active, setIsActive] = useState(product?.is_active ?? true);
   const [categoryId, setCategoryId] = useState(product?.category || categories[0]?.id || '');
   const [imageUrl, setImageUrl] = useState(product?.image || '');
 
@@ -689,12 +689,12 @@ function ProductEditModal({
               </p>
             </div>
             <button
-              onClick={() => setIsAvailable(!isAvailable)}
-              className={`relative w-11 h-6 rounded-full transition-colors ${isAvailable ? 'bg-primary' : 'bg-gray-300'
+              onClick={() => setIsActive(!is_active)}
+              className={`relative w-11 h-6 rounded-full transition-colors ${is_active ? 'bg-primary' : 'bg-gray-300'
                 }`}
             >
               <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${isAvailable ? 'translate-x-5' : ''
+                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${is_active ? 'translate-x-5' : ''
                   }`}
               />
             </button>
@@ -716,7 +716,7 @@ function ProductEditModal({
                 price: parseFloat(price) || 0,
                 description,
                 category: categoryId,
-                isAvailable,
+                is_active,
                 image: imageUrl
               });
             }}

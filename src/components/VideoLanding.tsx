@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { ArrowRight, Globe, MapPin, Award, Utensils, Sparkles } from 'lucide-react';
+import { ArrowRight, Globe, MapPin, Award } from 'lucide-react';
 
 interface VideoLandingProps {
     onEnter: () => void;
@@ -19,7 +19,7 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
     }, []);
 
     return (
-        <div className="relative min-h-screen bg-[#d6d3cb] overflow-hidden font-inter text-[#434b45]">
+        <div className="relative min-h-screen bg-[#F4F1EA] overflow-hidden font-sans text-[#1A1A1A]">
             {/* Minimalist Texture Over Video */}
             <div className={`absolute inset-0 transition-transform duration-[2s] ease-out ${isLoaded ? 'scale-100' : 'scale-110'}`}>
                 <video
@@ -38,21 +38,21 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
             {/* Content Layer */}
             <div className="relative z-10 flex flex-col min-h-screen">
                 {/* Minimal Header */}
-                <header className={`fixed top-0 inset-x-0 p-6 flex justify-between items-center transition-all duration-500 z-50 ${scrolled ? 'bg-[#d6d3cb]/90 backdrop-blur-md py-4 shadow-sm border-b border-[#434b45]/5' : ''}`}>
+                <header className={`fixed top-0 inset-x-0 p-6 flex justify-between items-center transition-all duration-500 z-50 ${scrolled ? 'bg-[#F4F1EA]/90 backdrop-blur-md py-4 shadow-sm border-b border-[#1A1A1A]/5' : ''}`}>
                     <div className="flex items-center gap-2">
-                        <div className="w-12 h-12 border-2 border-[#434b45]/20 rounded-xl flex items-center justify-center bg-white/20 overflow-hidden p-1">
+                        <div className="w-12 h-12 border-2 border-[#1A1A1A]/20 rounded-xl flex items-center justify-center bg-white/20 overflow-hidden p-1">
                             <img src="/assets/logo-main.jpg" alt="Logo" className="w-full h-full object-contain" />
                         </div>
                     </div>
-                    <div className="flex items-center gap-6">
-                        <span className="text-[10px] text-[#434b45]/40 uppercase tracking-[0.3em] font-bold hidden sm:block">{t('landing.founded')}</span>
-                        <div className="h-4 w-[1px] bg-[#434b45]/10 hidden sm:block" />
+                    <div className="flex items-center gap-6 font-sans">
+                        <span className="text-[10px] text-[#1A1A1A]/40 uppercase tracking-[0.3em] font-bold hidden sm:block">{t('landing.founded')}</span>
+                        <div className="h-4 w-[1px] bg-[#1A1A1A]/10 hidden sm:block" />
                         <button
                             onClick={() => setLanguage(language === 'tr' ? 'en' : 'tr')}
-                            className="h-9 px-3 bg-[#434b45]/5 hover:bg-[#434b45]/10 border border-[#434b45]/10 rounded-xl flex items-center justify-center gap-2 transition-all"
+                            className="h-9 px-3 bg-[#1A1A1A]/5 hover:bg-[#1A1A1A]/10 border border-[#1A1A1A]/10 rounded-xl flex items-center justify-center gap-2 transition-all"
                         >
-                            <Globe className="w-3.5 h-3.5 text-[#434b45]/60" />
-                            <span className="text-[10px] text-[#434b45] uppercase tracking-[0.2em] font-black">{language}</span>
+                            <Globe className="w-3.5 h-3.5 text-[#1A1A1A]/60" />
+                            <span className="text-[10px] text-[#1A1A1A] uppercase tracking-[0.2em] font-bold">{language}</span>
                         </button>
                     </div>
                 </header>
@@ -71,52 +71,52 @@ export const VideoLanding: React.FC<VideoLandingProps> = ({ onEnter }) => {
 
                         {/* Text Content */}
                         <div className="space-y-4">
-                            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-[#434b45] leading-[1.1] uppercase tracking-tighter">
+                            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-[#1A1A1A] leading-[1.1] uppercase tracking-tight font-serif">
                                 {t('landing.title')}<br />
-                                <span className="text-[#8b735b] italic lowercase block mt-2 opacity-90">{t('landing.titleAccent')}</span>
+                                <span className="text-[#C5A059] italic lowercase block mt-2 opacity-90">{t('landing.titleAccent')}</span>
                             </h1>
-                            <div className="flex items-center justify-center gap-4 text-[#434b45]/50 font-serif italic text-sm sm:text-lg tracking-widest max-w-2xl mx-auto">
-                                <div className="h-px flex-1 bg-[#434b45]/10" />
+                            <div className="flex items-center justify-center gap-4 text-[#1A1A1A]/50 font-serif italic text-sm sm:text-lg tracking-widest max-w-2xl mx-auto">
+                                <div className="h-px flex-1 bg-[#1A1A1A]/10" />
                                 <span className="px-4">{t('landing.subtitle')}</span>
-                                <div className="h-px flex-1 bg-[#434b45]/10" />
+                                <div className="h-px flex-1 bg-[#1A1A1A]/10" />
                             </div>
                         </div>
 
                         {/* CTAs */}
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto w-full pt-4">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto w-full pt-4 font-sans">
                             <button
                                 onClick={onEnter}
-                                className="group relative w-full sm:w-auto bg-[#434b45] text-white px-12 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all hover:bg-[#3d443e] hover:shadow-2xl hover:scale-105 active:scale-95"
+                                className="group relative w-full sm:w-auto bg-[#1A1A1A] text-white px-12 py-5 rounded-2xl font-bold text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all hover:bg-[#2A2A2A] hover:shadow-2xl hover:scale-105 active:scale-95"
                             >
                                 <span>{t('landing.cta')}</span>
                                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                             </button>
 
-                            <button className="w-full sm:w-auto bg-white/30 backdrop-blur-md text-[#434b45] border border-[#434b45]/10 px-12 py-5 rounded-2xl font-bold text-xs tracking-[0.2em] hover:bg-white/50 transition-all uppercase">
+                            <button className="w-full sm:w-auto bg-white/30 backdrop-blur-md text-[#1A1A1A] border border-[#1A1A1A]/10 px-12 py-5 rounded-2xl font-bold text-xs tracking-[0.2em] hover:bg-white/50 transition-all uppercase">
                                 {t('landing.reservation')}
                             </button>
                         </div>
 
                         {/* Location & Reviews */}
-                        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 pt-4 border-t border-[#434b45]/5 max-w-lg mx-auto">
+                        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 pt-4 border-t border-[#1A1A1A]/5 max-w-lg mx-auto font-sans">
                             <a
                                 href="https://maps.google.com/?q=Kozbeyli+Konağı"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2.5 text-[#434b45]/40 hover:text-[#434b45] transition-all group"
+                                className="flex items-center gap-2.5 text-[#1A1A1A]/40 hover:text-[#1A1A1A] transition-all group"
                             >
                                 <MapPin className="w-4 h-4 opacity-50 group-hover:opacity-100" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em]">{t('landing.location')}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-[0.25em]">{t('landing.location')}</span>
                             </a>
-                            <div className="w-1 h-1 bg-[#434b45]/10 rounded-full hidden xs:block" />
+                            <div className="w-1 h-1 bg-[#1A1A1A]/10 rounded-full hidden xs:block" />
                             <a
                                 href="https://g.page/r/CUHDLHRfWTPMEBM/review"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2.5 text-[#434b45]/40 hover:text-[#434b45] transition-all group"
+                                className="flex items-center gap-2.5 text-[#1A1A1A]/40 hover:text-[#1A1A1A] transition-all group"
                             >
                                 <Award className="w-4 h-4 opacity-50 group-hover:opacity-100" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.25em]">{t('landing.googleReview')}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-[0.25em]">{t('landing.googleReview')}</span>
                             </a>
                         </div>
                     </div>

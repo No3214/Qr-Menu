@@ -4,6 +4,7 @@ import { Product, MenuService } from '../services/MenuService';
 import { X, Share2, Info, Sparkles, Plus } from 'lucide-react';
 import { getProductPairing } from '../services/geminiService';
 import { useLanguage } from '../context/LanguageContext';
+import { RecommendationCarousel } from './RecommendationCarousel';
 import toast from 'react-hot-toast';
 
 interface ProductModalProps {
@@ -93,7 +94,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                     <div className="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-8" />
 
                     <div className="flex items-start justify-between gap-4 mb-4">
-                        <h2 className="text-3xl font-bold text-text leading-tight tracking-tight">
+                        <h2 className="text-3xl font-bold text-text leading-tight tracking-tight font-serif">
                             {product.title}
                         </h2>
                     </div>
@@ -105,12 +106,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                     )}
 
                     <div className="flex items-baseline gap-1 mb-8">
-                        <span className="text-4xl font-bold text-stone-900">{formattedPrice}</span>
-                        <span className="text-xl text-stone-400 font-medium">₺</span>
+                        <span className="text-4xl font-bold text-primary">{formattedPrice}</span>
+                        <span className="text-xl text-accent font-medium">₺</span>
                     </div>
 
-                    <div className="prose prose-stone prose-sm">
-                        <p className="text-stone-600 text-base leading-relaxed font-medium">
+                    <div className="prose prose-stone prose-sm font-sans">
+                        <p className="text-text/80 text-base leading-relaxed font-medium">
                             {product.description}
                         </p>
                     </div>
@@ -131,6 +132,10 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                             }, 300);
                         }}
                     />
+
+                    <div className="mt-4">
+                        <RecommendationCarousel seedProduct={product} />
+                    </div>
 
                     <div className="mt-10 pt-6 border-t border-stone-100 flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm font-medium text-stone-500 bg-stone-50 px-3 py-1.5 rounded-full">
