@@ -49,7 +49,31 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({ 
         loadRecommendations();
     }, [seedProduct, t]);
 
-    if (loading || recommendations.length === 0) return null;
+    // Show skeleton while loading
+    if (loading) {
+        return (
+            <div className="py-6 px-2 overflow-hidden bg-primary/5 rounded-3xl my-6 border border-primary/10 animate-pulse">
+                <div className="px-4 mb-4 flex items-center gap-2">
+                    <div className="w-4 h-4 bg-stone-200 rounded" />
+                    <div className="h-4 w-24 bg-stone-200 rounded" />
+                </div>
+                <div className="flex gap-4 px-4">
+                    <div className="flex-shrink-0 w-[280px] bg-white rounded-2xl p-4">
+                        <div className="flex gap-4">
+                            <div className="w-16 h-16 rounded-xl bg-stone-200" />
+                            <div className="flex-1">
+                                <div className="h-4 w-24 bg-stone-200 rounded mb-2" />
+                                <div className="h-3 w-12 bg-stone-200 rounded" />
+                            </div>
+                        </div>
+                        <div className="mt-3 h-16 bg-stone-100 rounded-xl" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (recommendations.length === 0) return null;
 
     return (
         <div className="py-6 px-2 overflow-hidden bg-primary/5 rounded-3xl my-6 border border-primary/10">
@@ -83,12 +107,12 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({ 
                         </div>
                         <div className="mt-3 p-3 bg-stone-50 rounded-xl relative">
                             <p className="text-[11px] text-text-muted leading-relaxed italic">
-                                <span className="font-black text-text not-italic uppercase mr-1">Neden?</span>
+                                <span className="font-black text-text not-italic uppercase mr-1">{t('menu.pairingReason')}</span>
                                 {rec.reason}
                             </p>
                         </div>
                         <div className="mt-3 flex items-center justify-end text-[10px] font-black text-primary uppercase tracking-widest gap-1 group">
-                            <span>Ekle</span>
+                            <span>{t('menu.addToOrderShort')}</span>
                             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
                         </div>
                     </motion.div>

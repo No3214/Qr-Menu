@@ -26,6 +26,7 @@ export default {
                     hover: "#007A94",
                     foreground: "#FFFFFF"
                 },
+                accent: "#C5A059", // Gold accent color
                 success: "#16A34A",
                 warning: "#F59E0B",
                 danger: "#EF4444",
@@ -46,6 +47,9 @@ export default {
                 'fade-in': 'fadeIn 0.5s ease-out forwards',
                 'slide-up': 'slideUp 0.4s ease-out forwards',
                 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                'premium-fade': 'premiumFade 0.6s ease-out forwards',
+                'scale-up': 'scaleUp 0.3s ease-out forwards',
+                'bounce-in': 'bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards',
             },
             keyframes: {
                 fadeIn: {
@@ -55,6 +59,20 @@ export default {
                 slideUp: {
                     '0%': { opacity: '0', transform: 'translateY(20px)' },
                     '100%': { opacity: '1', transform: 'translateY(0)' },
+                },
+                premiumFade: {
+                    '0%': { opacity: '0', transform: 'translateY(10px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                },
+                scaleUp: {
+                    '0%': { opacity: '0', transform: 'scale(0.95)' },
+                    '100%': { opacity: '1', transform: 'scale(1)' },
+                },
+                bounceIn: {
+                    '0%': { opacity: '0', transform: 'scale(0.3)' },
+                    '50%': { transform: 'scale(1.05)' },
+                    '70%': { transform: 'scale(0.9)' },
+                    '100%': { opacity: '1', transform: 'scale(1)' },
                 },
             },
         },

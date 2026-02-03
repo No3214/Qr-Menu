@@ -64,6 +64,11 @@ const translations: Record<Language, Record<string, string>> = {
         'menu': 'Menü',
         'close': 'Kapat',
 
+        // Floating Action Button
+        'fab.review': 'Değerlendir',
+        'fab.help': 'Yardım',
+        'fab.callWaiter': 'Garson Çağır',
+
         // Review Modal
         'review.title': 'Deneyiminiz Nasıldı?',
         'review.subtitle': 'Fikriniz Bizim İçin Çok Değerli',
@@ -394,6 +399,9 @@ const translations: Record<Language, Record<string, string>> = {
         'product.notFound': 'Product not found.',
         'product.smartPairing': 'Smart Pairing',
         'product.pairingText': 'Pairs well with',
+        'menu.recommendations': 'Our Picks for You',
+        'menu.pairingReason': 'Why?',
+        'menu.addToOrderShort': 'Add',
 
         // MenuAssistant
         'assistant.welcome': 'Hello! I am the Kozbeyli Konağı AI assistant. How can I help you with our menu?',
@@ -413,6 +421,11 @@ const translations: Record<Language, Record<string, string>> = {
         'loading': 'Loading...',
         'menu': 'Menu',
         'close': 'Close',
+
+        // Floating Action Button
+        'fab.review': 'Review',
+        'fab.help': 'Help',
+        'fab.callWaiter': 'Call Waiter',
 
         // Review Modal
         'review.title': 'How Was Your Experience?',
@@ -514,9 +527,6 @@ const translations: Record<Language, Record<string, string>> = {
         'dash.menu.delete.success': 'Product deleted successfully',
         'dash.menu.error.load': 'Error loading data',
         'dash.menu.error.save': 'Error saving changes',
-        'menu.recommendations': 'Chef\'s Recommendations',
-        'menu.pairingReason': 'Why?',
-        'menu.addToOrderShort': 'Add',
 
         // Dashboard Settings
         'dash.settings.title': 'Settings',

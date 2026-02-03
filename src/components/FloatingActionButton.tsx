@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Sparkles, X, MessageCircle, Star, HelpCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface FloatingActionButtonProps {
     onFeedback?: () => void;
@@ -14,6 +15,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     onFeedback,
     onHelp
 }) => {
+    const { t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -30,7 +32,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                             className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl shadow-lg border border-stone-100 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
                         >
                             <Star className="w-4 h-4 text-amber-500" />
-                            Değerlendir
+                            {t('fab.review')}
                         </button>
                     )}
                     {onHelp && (
@@ -42,7 +44,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                             className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl shadow-lg border border-stone-100 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
                         >
                             <HelpCircle className="w-4 h-4 text-blue-500" />
-                            Yardım
+                            {t('fab.help')}
                         </button>
                     )}
                     <button
@@ -50,7 +52,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                         className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl shadow-lg border border-stone-100 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
                     >
                         <MessageCircle className="w-4 h-4 text-green-500" />
-                        Garson Çağır
+                        {t('fab.callWaiter')}
                     </button>
                 </div>
             )}
@@ -58,9 +60,11 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             {/* Main FAB button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
+                aria-label={isOpen ? t('close') : t('menu')}
+                aria-expanded={isOpen}
                 className={`
                     w-12 h-12 rounded-xl shadow-lg flex items-center justify-center
-                    transition-all duration-300 transform
+                    transition-all duration-300 transform focus:outline-none focus:ring-2 focus:ring-primary/50
                     ${isOpen
                         ? 'bg-stone-800 rotate-45'
                         : 'bg-stone-700 hover:bg-stone-800 hover:scale-105'
@@ -71,9 +75,9 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
                 }}
             >
                 {isOpen ? (
-                    <X className="w-5 h-5 text-white" />
+                    <X className="w-5 h-5 text-white" aria-hidden="true" />
                 ) : (
-                    <Sparkles className="w-5 h-5 text-amber-400" />
+                    <Sparkles className="w-5 h-5 text-amber-400" aria-hidden="true" />
                 )}
             </button>
         </div>
