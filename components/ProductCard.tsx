@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Product, PRODUCTS, PRODUCT_PAIRINGS } from '../services/MenuData';
-import { ChevronUp, ChevronDown, ArrowRight, Info } from 'lucide-react';
+import { Product, PRODUCTS, PRODUCT_PAIRINGS, DietaryFlag } from '../services/MenuData';
+import { ChevronUp, ChevronDown, ArrowRight, Info, Flame, Clock, Scale, Leaf, Wheat, Dumbbell, AlertTriangle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { fadeInUp } from '../lib/animations';
 import { OptimizedImage } from './OptimizedImage';
@@ -11,6 +11,26 @@ interface ProductCardProps {
     product: Product;
     onExplore?: (product: Product) => void;
 }
+
+// Dietary flag icon mapping
+const DIETARY_ICONS: Record<DietaryFlag, { icon: React.ElementType; color: string; bg: string }> = {
+    'VEGAN': { icon: Leaf, color: 'text-green-600', bg: 'bg-green-50' },
+    'VEGETARIAN': { icon: Leaf, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    'GLUTEN_FREE': { icon: Wheat, color: 'text-amber-600', bg: 'bg-amber-50' },
+    'HIGH_PROTEIN': { icon: Dumbbell, color: 'text-blue-600', bg: 'bg-blue-50' },
+    'CONTAINS_NUTS': { icon: AlertTriangle, color: 'text-orange-600', bg: 'bg-orange-50' },
+    'SPICY': { icon: Flame, color: 'text-red-500', bg: 'bg-red-50' },
+};
+
+// Dietary flag translation key mapping
+const DIETARY_KEYS: Record<DietaryFlag, string> = {
+    'VEGAN': 'dietary.vegan',
+    'VEGETARIAN': 'dietary.vegetarian',
+    'GLUTEN_FREE': 'dietary.glutenFree',
+    'HIGH_PROTEIN': 'dietary.highProtein',
+    'CONTAINS_NUTS': 'dietary.containsNuts',
+    'SPICY': 'dietary.spicy',
+};
 
 export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplore }) => {
     const { t, language } = useLanguage();
@@ -33,6 +53,8 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
         .filter(Boolean) as { product: Product; reason: string }[] | undefined;
 
     const hasPairings = pairedProducts && pairedProducts.length > 0;
+    const hasNutritionalInfo = product.calories || product.weight || product.prepTime;
+    const hasDietaryFlags = product.dietaryFlags && product.dietaryFlags.length > 0;
 
     return (
         <motion.div
@@ -49,6 +71,25 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
                         wrapperClassName="w-full h-full"
                         className="object-cover"
                     />
+                    {/* Dietary Badges on Image */}
+                    {hasDietaryFlags && (
+                        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                            {product.dietaryFlags!.map((flag) => {
+                                const config = DIETARY_ICONS[flag];
+                                const Icon = config.icon;
+                                return (
+                                    <span
+                                        key={flag}
+                                        className={`${config.bg} ${config.color} px-2 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-sm`}
+                                        title={t(DIETARY_KEYS[flag])}
+                                    >
+                                        <Icon className="w-3 h-3" />
+                                        {t(DIETARY_KEYS[flag])}
+                                    </span>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -70,11 +111,9 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
                         )}
                     </button>
 
-                    {/* Category emoji */}
-                    <span className="text-lg">🍽️</span>
-
                     {/* Info icon */}
                     <button
+                        onClick={() => onExplore?.(product)}
                         className="w-5 h-5 rounded-full border border-stone-300 flex items-center justify-center"
                         aria-label={t('product.info')}
                     >
@@ -83,9 +122,35 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
                 </div>
 
                 {/* Description */}
-                <p className="text-sm text-stone-600 leading-relaxed mb-4">
+                <p className="text-sm text-stone-600 leading-relaxed mb-3">
                     {product.description}
                 </p>
+
+                {/* Nutritional Info Bar */}
+                {hasNutritionalInfo && (
+                    <div className="flex items-center gap-4 mb-4 text-xs text-stone-500">
+                        {product.calories && (
+                            <div className="flex items-center gap-1">
+                                <Flame className="w-3.5 h-3.5 text-orange-500" />
+                                <span className="font-medium">{product.calories}</span>
+                                <span>{t('product.calories')}</span>
+                            </div>
+                        )}
+                        {product.prepTime && (
+                            <div className="flex items-center gap-1">
+                                <Clock className="w-3.5 h-3.5 text-blue-500" />
+                                <span className="font-medium">{product.prepTime}</span>
+                                <span>{t('product.prepTime')}</span>
+                            </div>
+                        )}
+                        {product.weight && (
+                            <div className="flex items-center gap-1">
+                                <Scale className="w-3.5 h-3.5 text-stone-400" />
+                                <span className="font-medium">{product.weight}</span>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Price and Explore Button */}
                 <div className="flex items-center justify-between mb-6">

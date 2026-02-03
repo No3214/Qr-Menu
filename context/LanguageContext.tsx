@@ -49,6 +49,16 @@ const translations: Record<Language, Record<string, string>> = {
         'product.showMore': 'Devamını Gör',
         'product.showLess': 'Daha Az',
         'product.info': 'Bilgi',
+        'product.calories': 'kcal',
+        'product.prepTime': 'dk',
+        'product.weight': 'Porsiyon',
+        // Dietary flags
+        'dietary.vegan': 'Vegan',
+        'dietary.vegetarian': 'Vejetaryen',
+        'dietary.glutenFree': 'Glutensiz',
+        'dietary.highProtein': 'Yüksek Protein',
+        'dietary.containsNuts': 'Fındık/Fıstık İçerir',
+        'dietary.spicy': 'Acılı',
 
         // Review
         'review.title': 'Değerlendir',
@@ -480,6 +490,16 @@ const translations: Record<Language, Record<string, string>> = {
         'product.showMore': 'Show More',
         'product.showLess': 'Show Less',
         'product.info': 'Info',
+        'product.calories': 'kcal',
+        'product.prepTime': 'min',
+        'product.weight': 'Serving',
+        // Dietary flags
+        'dietary.vegan': 'Vegan',
+        'dietary.vegetarian': 'Vegetarian',
+        'dietary.glutenFree': 'Gluten Free',
+        'dietary.highProtein': 'High Protein',
+        'dietary.containsNuts': 'Contains Nuts',
+        'dietary.spicy': 'Spicy',
 
         // Review
         'review.title': 'Rate Us',
