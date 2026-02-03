@@ -9,6 +9,8 @@ import { useLanguage } from '../context/LanguageContext';
 import { ReviewModal } from './ReviewModal';
 import { MenuAssistant } from './MenuAssistant';
 import { ListHeader } from './ListHeader';
+import { CategoryHero } from './CategoryHero';
+import { MenuFooter } from './MenuFooter';
 import { CookieConsent } from './CookieConsent';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RecommendationCarousel } from './RecommendationCarousel';
@@ -174,7 +176,16 @@ export const DigitalMenu: React.FC = () => {
                             setViewState={setViewState}
                             setActiveCategory={setActiveCategory}
                         />
-                        <div className="p-4 space-y-4 pb-24">
+
+                        {/* Category Hero Banner */}
+                        {!isSearchOpen && !debouncedQuery && categories.find(c => c.id === activeCategory) && (
+                            <CategoryHero
+                                category={categories.find(c => c.id === activeCategory)!}
+                                productCount={products.filter(p => p.category === activeCategory).length}
+                            />
+                        )}
+
+                        <div className="bg-white rounded-t-2xl -mt-4 relative z-10">
                             {filteredProducts.map((product, idx) => (
                                 <React.Fragment key={product.id}>
                                     <motion.div
@@ -195,6 +206,9 @@ export const DigitalMenu: React.FC = () => {
                                     <p>{t('product.notFound')}</p>
                                 </div>
                             )}
+
+                            {/* Spacer for bottom navigation */}
+                            <div className="h-24" />
                         </div>
                     </motion.div>
                 )}
@@ -214,6 +228,9 @@ export const DigitalMenu: React.FC = () => {
 
             <MenuAssistant />
             <CookieConsent />
+
+            {/* Powered by Footer */}
+            {viewState !== 'LANDING' && <MenuFooter />}
         </div>
     );
 };
