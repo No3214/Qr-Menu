@@ -52,7 +52,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
     const { t, language } = useLanguage();
     const formattedPrice = new Intl.NumberFormat(language === 'tr' ? 'tr-TR' : 'en-US').format(product.price);
     const [isExpanded, setIsExpanded] = useState(true);
-    const [showVideo, setShowVideo] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     // Get pairings - prefer AI-generated, fallback to hardcoded
     const aiPairings = getProductPairings(product.id);
@@ -80,16 +80,20 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
             variants={fadeInUp}
             initial="initial"
             whileHover="hover"
-            className="bg-white mb-6 rounded-2xl overflow-hidden"
+            className="bg-white mb-6 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300"
             style={{ willChange: 'transform, opacity' }}
         >
-            {/* Main Product Image/Video - Full Width */}
+            {/* Main Product Image/Video - Full Width with Hover-to-Play */}
             {(product.image || hasVideo) && (
                 <motion.div
-                    className="relative w-full aspect-[16/9] overflow-hidden"
+                    className="relative w-full aspect-[16/9] overflow-hidden cursor-pointer"
                     variants={hoverScale}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    onClick={() => onExplore?.(product)}
                 >
-                    {showVideo && product.videoUrl ? (
+                    {/* Video plays on hover (Foost style) */}
+                    {hasVideo && isHovered ? (
                         <video
                             src={product.videoUrl}
                             className="w-full h-full object-cover"
@@ -107,9 +111,12 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
                         />
                     )}
 
+                    {/* Gradient Overlay from Bottom (Foost style) */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none" />
+
                     {/* Popular Badge - Top Right */}
                     {product.isPopular && (
-                        <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg">
+                        <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg z-10">
                             <Star className="w-3.5 h-3.5 fill-current" />
                             {t('product.popular')}
                         </div>
@@ -117,7 +124,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
 
                     {/* Dietary Badges - Top Left */}
                     {hasDietaryFlags && (
-                        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[60%]">
+                        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[60%] z-10">
                             {product.dietaryFlags!.map((flag) => {
                                 const config = DIETARY_ICONS[flag];
                                 const Icon = config.icon;
@@ -135,34 +142,21 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
                         </div>
                     )}
 
-                    {/* Video Play Button - Center */}
-                    {hasVideo && !showVideo && (
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setShowVideo(true);
-                            }}
-                            className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors group"
-                            aria-label={t('product.watchVideo')}
-                        >
-                            <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                                <Play className="w-7 h-7 text-stone-900 ml-1" fill="currentColor" />
-                            </div>
-                        </button>
+                    {/* Video Indicator - Shows when video available */}
+                    {hasVideo && !isHovered && (
+                        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 bg-black/60 text-white px-2.5 py-1.5 rounded-full text-xs font-medium backdrop-blur-sm z-10">
+                            <Play className="w-3.5 h-3.5" fill="currentColor" />
+                            {t('product.watchVideo')}
+                        </div>
                     )}
 
-                    {/* Stop Video Button */}
-                    {showVideo && (
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setShowVideo(false);
-                            }}
-                            className="absolute bottom-3 right-3 px-3 py-1.5 bg-black/70 text-white text-xs font-medium rounded-full hover:bg-black/90 transition-colors"
-                        >
-                            ✕
-                        </button>
-                    )}
+                    {/* Price overlay on image (Foost style) */}
+                    <div className="absolute bottom-3 right-3 z-10">
+                        <div className="bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg">
+                            <span className="text-sm text-stone-500">₺</span>
+                            <span className="text-lg font-bold text-stone-900">{formattedPrice}</span>
+                        </div>
+                    </div>
                 </motion.div>
             )}
 
@@ -236,16 +230,11 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product, onExplor
                     </div>
                 )}
 
-                {/* Price and Explore Button */}
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-baseline gap-0.5">
-                        <span className="text-sm text-stone-400">₺</span>
-                        <span className="text-2xl font-bold text-stone-900">{formattedPrice}</span>
-                    </div>
-
+                {/* Explore Button */}
+                <div className="flex items-center justify-end mb-4">
                     <button
                         onClick={() => onExplore?.(product)}
-                        className="flex items-center gap-1 px-4 py-2 border border-stone-300 rounded-full text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors"
+                        className="flex items-center gap-1 px-4 py-2 bg-stone-900 text-white rounded-full text-sm font-medium hover:bg-stone-800 transition-colors"
                     >
                         {t('product.explore')}
                         <ArrowRight className="w-4 h-4" />
