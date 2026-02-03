@@ -105,12 +105,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                     )}
 
                     <div className="flex items-baseline gap-1 mb-8 font-sans">
-                        <span className="text-4xl font-bold text-stone-900">{formatPrice(product.price)}</span>
-                        <span className="text-xl text-stone-400 font-medium">₺</span>
+                        <span className="text-4xl font-bold text-text">{formatPrice(product.price)}</span>
+                        <span className="text-xl text-text-muted font-medium ml-1">₺</span>
                     </div>
 
                     <div className="prose prose-stone prose-sm font-sans">
-                        <p className="text-stone-600 text-base leading-relaxed font-medium">
+                        <p className="text-text-muted text-base leading-relaxed font-medium opacity-90">
                             {product.description}
                         </p>
                     </div>
@@ -132,15 +132,15 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
                         }}
                     />
 
-                    <div className="mt-10 pt-6 border-t border-stone-100 flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-sm font-medium text-stone-500 bg-stone-50 px-3 py-1.5 rounded-full">
+                    <div className="mt-10 pt-6 border-t border-primary/5 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm font-medium text-text-muted bg-primary/5 px-3 py-1.5 rounded-full">
                             <Info className="w-4 h-4" />
                             <span className="text-[10px] font-bold uppercase tracking-wider">{t('menu.categories')}</span>
                         </div>
 
                         <button
                             onClick={handleShare}
-                            className="p-3 bg-stone-50 hover:bg-stone-100 text-stone-400 hover:text-primary rounded-xl transition-all active:scale-95"
+                            className="p-3 bg-primary/5 hover:bg-primary/10 text-text-muted hover:text-primary rounded-xl transition-all active:scale-95"
                             title={t('product.share')}
                         >
                             <Share2 className="w-5 h-5" />
@@ -196,16 +196,16 @@ const AIPairing: React.FC<{ productName: string, category: string, onProductSele
     }, [productName, category]);
 
     if (loading) return (
-        <div className="mt-10 p-5 bg-stone-50 border border-stone-100 rounded-[24px] animate-pulse">
+        <div className="mt-10 p-5 bg-primary/5 border border-primary/5 rounded-[24px] animate-pulse">
             <div className="flex items-center gap-2 mb-4">
-                <div className="w-4 h-4 bg-stone-200 rounded-full"></div>
-                <div className="h-3 w-32 bg-stone-200 rounded"></div>
+                <div className="w-4 h-4 bg-primary/10 rounded-full"></div>
+                <div className="h-3 w-32 bg-primary/10 rounded"></div>
             </div>
             <div className="flex gap-4">
-                <div className="w-16 h-16 bg-stone-200 rounded-xl"></div>
+                <div className="w-16 h-16 bg-primary/10 rounded-xl"></div>
                 <div className="flex-1 space-y-2">
-                    <div className="h-4 w-3/4 bg-stone-200 rounded"></div>
-                    <div className="h-3 w-1/2 bg-stone-100 rounded"></div>
+                    <div className="h-4 w-3/4 bg-primary/10 rounded"></div>
+                    <div className="h-3 w-1/2 bg-primary/5 rounded"></div>
                 </div>
             </div>
         </div>
@@ -254,9 +254,9 @@ const AIPairing: React.FC<{ productName: string, category: string, onProductSele
                     </div>
                 </div>
             ) : (
-                <div className="p-5 bg-stone-50/50 border border-stone-100/50 rounded-[24px] relative overflow-hidden">
+                <div className="p-5 bg-primary/5 border border-primary/5 rounded-[24px] relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-3 opacity-10">
-                        <Sparkles className="w-12 h-12" />
+                        <Sparkles className="w-12 h-12 text-primary" />
                     </div>
                     <p className="text-sm font-bold text-text mb-1.5">{pairing.pairing}</p>
                     <p className="text-[12px] text-text-muted leading-relaxed italic opacity-85">

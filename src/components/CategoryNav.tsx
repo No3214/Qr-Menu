@@ -24,7 +24,7 @@ export const CategoryNav: React.FC<CategoryNavProps> = memo(({
     }, [activeCategoryId]);
 
     return (
-        <nav className="sticky top-16 z-40 bg-white/95 backdrop-blur-sm border-b border-stone-100 shadow-sm transition-all">
+        <nav className="sticky top-16 z-40 bg-surface/95 backdrop-blur-sm border-b border-primary/5 shadow-sm transition-all">
             <div
                 ref={scrollRef}
                 className="flex items-center gap-2 px-4 py-3 overflow-x-auto scrollbar-hide"
@@ -37,10 +37,10 @@ export const CategoryNav: React.FC<CategoryNavProps> = memo(({
                             key={category.id}
                             data-id={category.id}
                             onClick={() => onCategoryClick(category.id)}
-                            className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 ease-out flex-shrink-0
+                            className={`whitespace-nowrap px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ease-out flex-shrink-0
                                 ${isActive
                                     ? 'bg-primary text-white shadow-md shadow-primary/30 scale-105'
-                                    : 'text-text-muted bg-gray-100 hover:bg-gray-200 border border-transparent'
+                                    : 'text-text-muted bg-primary/5 hover:bg-primary/10 border border-transparent'
                                 }`}
                         >
                             {category.title}

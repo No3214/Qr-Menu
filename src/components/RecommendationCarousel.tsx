@@ -86,14 +86,14 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({ 
                                 <p className="text-[10px] text-accent font-black mt-0.5">₺{rec.product.price}</p>
                             </div>
                         </div>
-                        <div className="mt-3 p-3 bg-stone-50 rounded-xl relative">
+                        <div className="mt-3 p-3 bg-surface rounded-xl relative border border-primary/5">
                             <p className="text-[11px] text-text-muted leading-relaxed italic">
-                                <span className="font-black text-text not-italic uppercase mr-1">Neden?</span>
+                                <span className="font-black text-text not-italic uppercase mr-1">{t('menu.pairingReason')}</span>
                                 {rec.reason}
                             </p>
                         </div>
-                        <div className="mt-3 flex items-center justify-end text-[10px] font-black text-primary uppercase tracking-widest gap-1 group">
-                            <span>Ekle</span>
+                        <div className="mt-3 flex items-center justify-end text-[10px] font-black text-primary uppercase tracking-widest gap-1 group cursor-pointer">
+                            <span>{t('menu.addToOrderShort')}</span>
                             <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
                         </div>
                     </motion.div>

@@ -3,6 +3,7 @@ import React from 'react';
 import { Search, ChevronLeft, X } from 'lucide-react';
 import { CategoryNav } from './CategoryNav';
 import { Category } from '../services/MenuService';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ListHeaderProps {
     categories: Category[];
@@ -29,7 +30,8 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
     setViewState,
     setActiveCategory
 }) => {
-    const activeCategoryTitle = categories.find(c => c.id === activeCategory)?.title || 'Menü';
+    const { t } = useLanguage();
+    const activeCategoryTitle = categories.find(c => c.id === activeCategory)?.title || t('menu');
 
     return (
         <div className="sticky top-0 z-30 bg-surface/95 backdrop-blur-md border-b border-primary/10 shadow-sm">
@@ -48,7 +50,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Lezzet ara..."
+                            placeholder={t('menu.search')}
                             className="flex-1 h-10 px-4 bg-primary/5 rounded-xl text-sm outline-none ring-accent/20 focus:ring-2 transition-all"
                         />
                         <button
