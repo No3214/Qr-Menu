@@ -7,7 +7,7 @@ interface ProductCardProps {
     product: Product;
 }
 
-// FOOST-style dietary icons - small gray icons inline with title
+// Dietary icons - small gray icons inline with title
 const DIETARY_ICONS: Record<DietaryTag, { icon: string; label: string; color: string }> = {
     'vegetarian': { icon: '🌱', label: 'Vejetaryen', color: 'text-green-600' },
     'vegan': { icon: '🥬', label: 'Vegan', color: 'text-emerald-600' },
@@ -77,7 +77,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                                 {product.title}
                             </h3>
 
-                            {/* Inline dietary icons - FOOST style */}
+                            {/* Inline dietary icons */}
                             {inlineTags.length > 0 && (
                                 <div className="flex items-center gap-0.5 flex-shrink-0">
                                     {inlineTags.slice(0, 4).map((tag) => {
@@ -151,7 +151,7 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                     )}
                 </div>
 
-                {/* Image Area - Right (Thumbnail) - FOOST style absolute positioning */}
+                {/* Image Area - Right (Thumbnail) */}
                 {product.image && (
                     <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 overflow-hidden rounded-xl shadow-sm">
                         <img

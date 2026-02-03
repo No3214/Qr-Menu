@@ -7,7 +7,7 @@ interface FloatingActionButtonProps {
 }
 
 /**
- * FloatingActionButton - FOOST style floating button
+ * FloatingActionButton - Floating action button with quick actions
  * Shows sparkle icon, expands to show quick actions
  */
 export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({

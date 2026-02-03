@@ -15,7 +15,7 @@ interface ListHeaderProps {
 }
 
 /**
- * ListHeader - FOOST style header with centered logo and horizontal category tabs
+ * ListHeader - Header with centered logo and horizontal category tabs
  */
 export const ListHeader: React.FC<ListHeaderProps> = ({
     categories,

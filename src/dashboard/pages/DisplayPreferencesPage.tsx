@@ -153,7 +153,7 @@ export const DisplayPreferencesPage: React.FC = () => {
                             <label className="block text-sm font-medium text-stone-700 mb-2">Restoran URL Yolu</label>
                             <div className="flex">
                                 <span className="inline-flex items-center px-3 text-sm text-stone-500 bg-stone-50 border border-r-0 border-stone-200 rounded-l-lg">
-                                    thefoost.com/
+                                    kozbeylikonagi.com/
                                 </span>
                                 <input
                                     type="text"

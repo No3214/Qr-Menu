@@ -230,7 +230,7 @@ export const DigitalMenu: React.FC = () => {
             <MenuAssistant />
             <CookieConsent />
 
-            {/* Floating Action Button - FOOST style */}
+            {/* Floating Action Button */}
             {viewState !== 'LANDING' && (
                 <FloatingActionButton
                     onFeedback={() => setShowReviewModal(true)}

@@ -7,7 +7,7 @@ interface CategoryHeroProps {
 }
 
 /**
- * CategoryHero - FOOST style hero image banner for each category
+ * CategoryHero - Hero image banner for each category
  */
 export const CategoryHero: React.FC<CategoryHeroProps> = ({ category, productCount }) => {
     return (
