@@ -4,9 +4,11 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import { initProtection } from './lib/protection';
+import { initIntegrityChecks } from './lib/integrity';
 
-// Initialize code protection in production
+// Initialize security measures in production
 initProtection();
+initIntegrityChecks();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
