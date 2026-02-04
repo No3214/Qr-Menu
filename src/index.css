@@ -4,19 +4,18 @@
   --font-serif: "Cormorant Garamond", serif;
   --font-sans: "Montserrat", sans-serif;
 
-  --color-primary: #434b45;
-  /* Deep Sage Charcoal from Logo */
-  --color-primary-hover: #3d443e;
-  --color-accent: #8b735b;
-  /* Earthy Umber for warm contrast */
-  --color-accent-hover: #725d4a;
-  --color-bg: #d6d3cb;
-  /* Exact Logo Background */
-  --color-surface: #e5e2db;
-  --color-text: #434b45;
-  /* Brand Dark */
-  --color-text-muted: #737b75;
-  --color-border: #c9c5bc;
+  --color-primary: #1A1A1A;
+  /* Eerie Black */
+  --color-primary-hover: #2A2A2A;
+  --color-accent: #C5A059;
+  /* Kozbeyli Gold */
+  --color-accent-hover: #B48F48;
+  --color-bg: #F4F1EA;
+  /* Alabaster Stone */
+  --color-surface: #FFFFFF;
+  --color-text: #1A1A1A;
+  --color-text-muted: #555555;
+  --color-border: #E5E1D8;
 }
 
 @layer base {
