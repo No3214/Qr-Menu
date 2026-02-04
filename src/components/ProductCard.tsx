@@ -1,64 +1,60 @@
 import React, { memo, useState } from 'react';
 import { Product, DietaryTag } from '../services/MenuService';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronRight, Plus } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface ProductCardProps {
     product: Product;
 }
 
-// Dietary icons - small gray icons inline with title
-const DIETARY_ICONS: Record<DietaryTag, { icon: string; label: string; color: string }> = {
-    'vegetarian': { icon: '🌱', label: 'Vejetaryen', color: 'text-green-600' },
-    'vegan': { icon: '🥬', label: 'Vegan', color: 'text-emerald-600' },
-    'gluten-free': { icon: '🌾', label: 'Glutensiz', color: 'text-amber-600' },
-    'spicy': { icon: '🌶️', label: 'Acılı', color: 'text-red-500' },
-    'lactose-free': { icon: '🥛', label: 'Laktozsuz', color: 'text-blue-500' },
-    'organic': { icon: '🍃', label: 'Organik', color: 'text-lime-600' },
-    'chef-special': { icon: '👨‍🍳', label: 'Şef Önerisi', color: 'text-primary' },
-    'egg': { icon: '🥚', label: 'Yumurta', color: 'text-stone-500' },
-    'cheese': { icon: '🧀', label: 'Peynir', color: 'text-stone-500' },
-    'mint': { icon: '🌿', label: 'Nane/Taze', color: 'text-stone-500' },
-    'meat': { icon: '🥩', label: 'Et', color: 'text-stone-500' },
-    'fish': { icon: '🐟', label: 'Balık', color: 'text-stone-500' },
-    'bread': { icon: '🍞', label: 'Ekmek/Tahıl', color: 'text-stone-500' },
-    'dairy': { icon: '🥛', label: 'Süt Ürünü', color: 'text-stone-500' },
-    'new': { icon: '✨', label: 'Yeni', color: 'text-blue-500' },
-    'popular': { icon: '🔥', label: 'Popüler', color: 'text-orange-500' },
+// Dietary icons with premium styling
+const DIETARY_ICONS: Record<DietaryTag, { icon: string; label: string; color: string; bg: string }> = {
+    'vegetarian': { icon: '🌱', label: 'Vejetaryen', color: 'text-green-700', bg: 'bg-green-50' },
+    'vegan': { icon: '🥬', label: 'Vegan', color: 'text-emerald-700', bg: 'bg-emerald-50' },
+    'gluten-free': { icon: '🌾', label: 'Glutensiz', color: 'text-amber-700', bg: 'bg-amber-50' },
+    'spicy': { icon: '🌶️', label: 'Acılı', color: 'text-red-600', bg: 'bg-red-50' },
+    'lactose-free': { icon: '🥛', label: 'Laktozsuz', color: 'text-blue-700', bg: 'bg-blue-50' },
+    'organic': { icon: '🍃', label: 'Organik', color: 'text-lime-700', bg: 'bg-lime-50' },
+    'chef-special': { icon: '⭐', label: 'Şef Önerisi', color: 'text-amber-600', bg: 'bg-amber-50' },
+    'egg': { icon: '🥚', label: 'Yumurta', color: 'text-stone-600', bg: 'bg-stone-50' },
+    'cheese': { icon: '🧀', label: 'Peynir', color: 'text-yellow-700', bg: 'bg-yellow-50' },
+    'mint': { icon: '🌿', label: 'Taze', color: 'text-green-600', bg: 'bg-green-50' },
+    'meat': { icon: '🥩', label: 'Et', color: 'text-red-700', bg: 'bg-red-50' },
+    'fish': { icon: '🐟', label: 'Balık', color: 'text-blue-600', bg: 'bg-blue-50' },
+    'bread': { icon: '🍞', label: 'Tahıl', color: 'text-amber-700', bg: 'bg-amber-50' },
+    'dairy': { icon: '🥛', label: 'Süt', color: 'text-sky-600', bg: 'bg-sky-50' },
+    'new': { icon: '✨', label: 'Yeni', color: 'text-blue-600', bg: 'bg-blue-100' },
+    'popular': { icon: '🔥', label: 'Popüler', color: 'text-orange-600', bg: 'bg-orange-100' },
 };
-
-const DESCRIPTION_LIMIT = 80;
 
 export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
     const { t } = useLanguage();
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
     const formattedPrice = new Intl.NumberFormat('tr-TR').format(product.price);
 
-    const shouldTruncate = product.description.length > DESCRIPTION_LIMIT;
-    const displayDescription = isExpanded || !shouldTruncate
-        ? product.description
-        : product.description.slice(0, DESCRIPTION_LIMIT) + '...';
-
-    // Separate badge tags (new, popular) from inline icons
-    const badgeTags = product.tags?.filter(t => t === 'new' || t === 'popular') || [];
-    const inlineTags = product.tags?.filter(t => t !== 'new' && t !== 'popular') || [];
+    // Separate special tags from regular ones
+    const specialTags = product.tags?.filter(t => t === 'new' || t === 'popular' || t === 'chef-special') || [];
+    const regularTags = product.tags?.filter(t => t !== 'new' && t !== 'popular' && t !== 'chef-special') || [];
 
     return (
-        <div className={`group bg-white border-b border-stone-100 last:border-b-0 ${!product.is_active ? 'opacity-60' : ''}`}>
-            <div className="flex gap-3 p-4">
-                {/* Content Area - Left */}
-                <div className="flex-1 min-w-0">
-                    {/* Badge Tags (New, Popular) */}
-                    {badgeTags.length > 0 && (
-                        <div className="flex gap-1.5 mb-1.5">
-                            {badgeTags.map((tag) => {
+        <div
+            className={`group relative bg-white transition-all duration-300 ${!product.is_active ? 'opacity-50' : ''}`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            {/* Main Card Content */}
+            <div className="flex gap-4 p-4 sm:p-5">
+                {/* Content Area */}
+                <div className="flex-1 min-w-0 flex flex-col">
+                    {/* Special Tags Row */}
+                    {specialTags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-2">
+                            {specialTags.map((tag) => {
                                 const tagInfo = DIETARY_ICONS[tag];
                                 return (
                                     <span
                                         key={tag}
-                                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                                            tag === 'new' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'
-                                        }`}
+                                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${tagInfo.bg} ${tagInfo.color}`}
                                     >
                                         {tagInfo.icon} {tagInfo.label}
                                     </span>
@@ -67,128 +63,116 @@ export const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
                         </div>
                     )}
 
-                    {/* Title Row with Inline Icons and Chevron */}
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => setIsExpanded(!isExpanded)}
-                            className="flex items-center gap-2 text-left flex-1 min-w-0"
-                        >
-                            <h3 className="text-[15px] font-semibold text-stone-900 leading-tight">
-                                {product.title}
-                            </h3>
-
-                            {/* Inline dietary icons */}
-                            {inlineTags.length > 0 && (
-                                <div className="flex items-center gap-0.5 flex-shrink-0">
-                                    {inlineTags.slice(0, 4).map((tag) => {
-                                        const tagInfo = DIETARY_ICONS[tag];
-                                        return (
-                                            <span
-                                                key={tag}
-                                                className="text-stone-400 text-sm"
-                                                title={tagInfo.label}
-                                            >
-                                                {tagInfo.icon}
-                                            </span>
-                                        );
-                                    })}
-                                </div>
-                            )}
-
-                            {/* Chevron - always show for expandable feel */}
-                            <span className="flex-shrink-0 text-stone-400 ml-auto">
-                                {isExpanded ? (
-                                    <ChevronUp className="w-4 h-4" />
-                                ) : (
-                                    <ChevronDown className="w-4 h-4" />
-                                )}
-                            </span>
-                        </button>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-[13px] text-stone-500 leading-relaxed mt-2">
-                        {displayDescription}
-                        {shouldTruncate && !isExpanded && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setIsExpanded(true);
-                                }}
-                                className="text-stone-400 underline text-xs ml-1 hover:text-primary"
-                            >
-                                Devamını Gör
-                            </button>
-                        )}
-                    </p>
-
-                    {/* Price / Variants */}
-                    <div className="mt-3">
-                        {product.variants && product.variants.length > 0 ? (
-                            <div className="flex flex-wrap gap-2">
-                                {product.variants.map((variant) => (
-                                    <span
-                                        key={variant.id}
-                                        className="inline-flex items-center gap-1 px-2 py-1 bg-stone-50 rounded-lg text-xs"
-                                    >
-                                        <span className="text-stone-500">{variant.label}</span>
-                                        <span className="font-bold text-stone-900">₺{new Intl.NumberFormat('tr-TR').format(variant.price)}</span>
-                                    </span>
-                                ))}
-                            </div>
-                        ) : (
-                            <span className="text-lg font-bold text-stone-900">
-                                ₺{formattedPrice}
-                            </span>
-                        )}
-                    </div>
-
-                    {/* Out of Stock Badge */}
-                    {!product.is_active && (
-                        <span className="inline-block mt-2 text-[10px] font-semibold text-red-600 uppercase tracking-wide">
-                            {t('product.outOfStock')}
-                        </span>
-                    )}
-                </div>
-
-                {/* Image Area - Right (Thumbnail) */}
-                {product.image && (
-                    <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 overflow-hidden rounded-xl shadow-sm">
-                        <img
-                            src={product.image}
-                            alt={product.title}
-                            loading="lazy"
-                            className="w-full h-full object-cover rounded-xl"
+                    {/* Title with Arrow */}
+                    <div className="flex items-start gap-2">
+                        <h3 className="text-base sm:text-[17px] font-bold text-stone-900 leading-snug group-hover:text-primary transition-colors">
+                            {product.title}
+                        </h3>
+                        <ChevronRight
+                            className={`w-5 h-5 text-stone-300 flex-shrink-0 mt-0.5 transition-all duration-300 ${isHovered ? 'text-primary translate-x-1' : ''}`}
                         />
-                        {!product.is_active && (
-                            <div className="absolute inset-0 bg-black/40 rounded-xl" />
-                        )}
                     </div>
-                )}
-            </div>
 
-            {/* Expanded Content */}
-            {isExpanded && (
-                <div className="px-4 pb-4 animate-in slide-in-from-top-2 duration-200">
-                    {/* Full description and additional info */}
-                    {product.tags && product.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 pt-2 border-t border-stone-100">
-                            {product.tags.map((tag) => {
+                    {/* Dietary Icons Row */}
+                    {regularTags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                            {regularTags.slice(0, 5).map((tag) => {
                                 const tagInfo = DIETARY_ICONS[tag];
                                 return (
                                     <span
                                         key={tag}
-                                        className="inline-flex items-center gap-1 px-2 py-1 bg-stone-50 rounded-full text-[11px] text-stone-600"
+                                        className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] ${tagInfo.bg} ${tagInfo.color}`}
+                                        title={tagInfo.label}
                                     >
-                                        <span>{tagInfo.icon}</span>
-                                        <span>{tagInfo.label}</span>
+                                        <span className="text-xs">{tagInfo.icon}</span>
+                                        <span className="font-medium hidden sm:inline">{tagInfo.label}</span>
                                     </span>
                                 );
                             })}
                         </div>
                     )}
+
+                    {/* Description */}
+                    <p className="text-[13px] sm:text-sm text-stone-500 leading-relaxed mt-2 line-clamp-2">
+                        {product.description}
+                    </p>
+
+                    {/* Price Section */}
+                    <div className="mt-auto pt-3">
+                        {product.variants && product.variants.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                                {product.variants.slice(0, 4).map((variant, idx) => (
+                                    <div
+                                        key={variant.id}
+                                        className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs transition-all ${
+                                            idx === 0
+                                                ? 'bg-primary/10 border border-primary/20'
+                                                : 'bg-stone-50 border border-stone-100'
+                                        }`}
+                                    >
+                                        <span className={`font-medium ${idx === 0 ? 'text-primary' : 'text-stone-500'}`}>
+                                            {variant.label}
+                                        </span>
+                                        <span className={`font-bold ${idx === 0 ? 'text-primary' : 'text-stone-900'}`}>
+                                            ₺{new Intl.NumberFormat('tr-TR').format(variant.price)}
+                                        </span>
+                                    </div>
+                                ))}
+                                {product.variants.length > 4 && (
+                                    <span className="text-xs text-stone-400 self-center">
+                                        +{product.variants.length - 4}
+                                    </span>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <span className="text-xl sm:text-2xl font-bold text-stone-900">
+                                    ₺{formattedPrice}
+                                </span>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            )}
+
+                {/* Image Area */}
+                <div className="relative flex-shrink-0">
+                    {product.image ? (
+                        <div className={`relative w-24 h-24 sm:w-28 sm:h-28 overflow-hidden rounded-2xl shadow-sm transition-all duration-300 ${isHovered ? 'shadow-lg scale-[1.02]' : ''}`}>
+                            <img
+                                src={product.image}
+                                alt={product.title}
+                                loading="lazy"
+                                className="w-full h-full object-cover"
+                            />
+                            {/* Gradient overlay on hover */}
+                            <div className={`absolute inset-0 bg-gradient-to-t from-black/20 to-transparent transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+
+                            {/* Add button on hover */}
+                            <div className={`absolute bottom-2 right-2 transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+                                <button className="w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+                                    <Plus className="w-4 h-4" />
+                                </button>
+                            </div>
+
+                            {/* Out of Stock overlay */}
+                            {!product.is_active && (
+                                <div className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center">
+                                    <span className="text-[10px] font-bold text-white uppercase tracking-wider bg-red-500 px-2 py-1 rounded">
+                                        {t('product.outOfStock')}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="w-24 h-24 sm:w-28 sm:h-28 bg-stone-100 rounded-2xl flex items-center justify-center">
+                            <span className="text-3xl">🍽️</span>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Bottom border with hover effect */}
+            <div className={`h-px bg-stone-100 mx-4 transition-colors ${isHovered ? 'bg-primary/20' : ''}`} />
         </div>
     );
 });
