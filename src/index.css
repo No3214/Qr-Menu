@@ -1,32 +1,42 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #434b45;
-  /* Deep Sage Charcoal from Logo */
-  --color-primary-hover: #3d443e;
-  --color-accent: #8b735b;
-  /* Earthy Umber for warm contrast */
-  --color-accent-hover: #725d4a;
-  --color-bg: #d6d3cb;
-  /* Exact Logo Background */
-  --color-surface: #e5e2db;
-  --color-text: #434b45;
-  /* Brand Dark */
-  --color-text-muted: #737b75;
-  --color-border: #c9c5bc;
+  /* Premium Palette */
+  --color-primary: #2C332E;
+  /* Deep Forest Charcoal - More sophisticated */
+  --color-primary-hover: #1F2420;
+
+  --color-accent: #C5A082;
+  /* Muted Bronze/Gold - Elegant contrast */
+  --color-accent-hover: #A88669;
+
+  --color-bg: #F4F2ED;
+  /* Warm Alabaster - Clean but not sterile */
+  --color-surface: #FFFFFF;
+
+  --color-text: #1A1C1B;
+  /* Soft Black */
+  --color-text-muted: #858585;
+  /* Sophisticated Gray */
+
+  --color-border: #E5E0D8;
+  /* Subtle warm border */
+
+  /* Status Colors */
+  --color-success: #4A6C4C;
+  --color-warning: #D4A353;
+  --color-error: #B94B4B;
 }
 
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
-    /* Almost black */
     --card: 0 0% 100%;
     --card-foreground: 20 14.3% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 20 14.3% 4.1%;
     --primary: 24 9.8% 10%;
-    /* Stone 900 */
     --primary-foreground: 60 9.1% 97.8%;
     --secondary: 60 4.8% 95.9%;
     --secondary-foreground: 24 9.8% 10%;
@@ -39,67 +49,88 @@
     --border: 20 5.9% 90%;
     --input: 20 5.9% 90%;
     --ring: 24 5.4% 63.9%;
-    --radius: 0.75rem;
-  }
-
-  .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 60 9.1% 97.8%;
-    /* ... dark mode vars ... */
+    --radius: 1rem;
   }
 
   html {
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
+    font-family: 'Inter', system-ui, sans-serif;
+    /* Modern, readable sans */
   }
 
   body {
     background-color: var(--color-bg);
     color: var(--color-text);
-    @apply font-sans antialiased;
+    @apply font-sans antialiased selection:bg-accent/20 selection:text-primary;
   }
 }
 
 @layer utilities {
+
+  /* Ultra-Premium Glassmorphism */
   .glass {
-    @apply bg-white/80 backdrop-blur-md border-b border-white/20;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    @apply shadow-sm;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
   }
 
-  .night-glass {
-    background: rgba(15, 15, 15, 0.8);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  .glass-dark {
+    background: rgba(20, 20, 20, 0.75);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  .premium-gradient {
-    background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+  /* Text Styles */
+  .text-balance {
+    text-wrap: balance;
   }
 
-  @keyframes premium-fade {
-    from {
+  /* Animations */
+  @keyframes fade-in-up {
+    0% {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(20px);
     }
 
-    to {
+    100% {
       opacity: 1;
       transform: translateY(0);
     }
   }
 
-  .animate-premium-fade {
-    animation: premium-fade 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
+  @keyframes pulse-subtle {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Scrollbar Hide */
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -109,23 +140,8 @@
     scrollbar-width: none;
   }
 
-  .shadow-card {
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 10px -2px rgba(0, 0, 0, 0.02);
-  }
-
-  .shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-
-    100% {
-      background-position: 200% 0;
-    }
+  /* Masking for scroll overflow fade */
+  .mask-fade-right {
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
   }
 }

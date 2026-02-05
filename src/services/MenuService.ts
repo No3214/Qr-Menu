@@ -12,6 +12,8 @@ export interface Product {
     is_active?: boolean;
     allergens?: string[];
     labels?: string[];
+    prepTime?: number;
+    calories?: number;
 }
 
 export interface Category {
@@ -42,10 +44,10 @@ export const CATEGORIES: Category[] = [
 ];
 
 export const PRODUCTS: Product[] = [
-    { id: 'k1', title: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', price: 650, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', allergens: ['gluten', 'dairy', 'egg'], labels: ['popular'] },
-    { id: 'e1', title: '2 Adet Fransız Tereyağlı Kruvasan', description: 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan.', price: 300, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80', allergens: ['gluten', 'dairy'] },
-    { id: 'p1', title: 'Gurme Rustik Sandviç', description: 'Taze pişirilen rustik baget, beyaz peynir, domates, roka, pesto sos ve zeytinyağı ile hazırlanır patates kızartması ile sıcak servis edilir.', price: 450, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80', allergens: ['gluten'] },
-    { id: 'ay1', title: 'Izgara Pirzola', description: 'Izgarada pişirilen kemikli et dilimleri. Patates püresi tabanı ve kavrulmuş file badem ile servis edilir.', price: 1000, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', allergens: [] }
+    { id: 'k1', title: 'Gurme Serpme Kahvaltı', description: 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', price: 650, category: 'kahvalti', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', allergens: ['gluten', 'dairy', 'egg'], labels: ['popular'], prepTime: 20, calories: 1200 },
+    { id: 'e1', title: '2 Adet Fransız Tereyağlı Kruvasan', description: 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan.', price: 300, category: 'ekstralar', isAvailable: true, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80', allergens: ['gluten', 'dairy'], prepTime: 5, calories: 450 },
+    { id: 'p1', title: 'Gurme Rustik Sandviç', description: 'Taze pişirilen rustik baget, beyaz peynir, domates, roka, pesto sos ve zeytinyağı ile hazırlanır patates kızartması ile sıcak servis edilir.', price: 450, category: 'pizza-sandvic', isAvailable: true, image: 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80', allergens: ['gluten'], labels: ['new'], prepTime: 12, calories: 550 },
+    { id: 'ay1', title: 'Izgara Pirzola', description: 'Izgarada pişirilen kemikli et dilimleri. Patates püresi tabanı ve kavrulmuş file badem ile servis edilir.', price: 1000, category: 'ana-yemek', isAvailable: true, image: 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', allergens: [], prepTime: 25, calories: 850 }
 ];
 
 export const MenuService = {
@@ -106,7 +108,9 @@ export const MenuService = {
             isAvailable: item.is_active,
             image: item.image,
             allergens: item.allergens || [],
-            labels: item.labels || []
+            labels: item.labels || [],
+            prepTime: item.preparation_time,
+            calories: item.calories
         })) as Product[];
     },
 
@@ -136,7 +140,9 @@ export const MenuService = {
             isAvailable: item.is_active,
             image: item.image,
             allergens: item.allergens || [],
-            labels: item.labels || []
+            labels: item.labels || [],
+            prepTime: item.preparation_time,
+            calories: item.calories
         })) as Product[];
     },
 
@@ -170,7 +176,9 @@ export const MenuService = {
             isAvailable: item.is_active,
             image: item.image,
             allergens: item.allergens || [],
-            labels: item.labels || []
+            labels: item.labels || [],
+            prepTime: item.preparation_time,
+            calories: item.calories
         })) as Product[];
     },
 

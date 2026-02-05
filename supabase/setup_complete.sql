@@ -17,7 +17,7 @@ CREATE TABLE categories (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 3. CREATE Products Table (Using TEXT ID and Foreign Key)
+-- 3. CREATE Products Table (Using TEXT ID and enriched with Premium metadata)
 CREATE TABLE products (
   id TEXT PRIMARY KEY, -- 'k1', 'ay1' etc.
   category_id TEXT REFERENCES categories(id) ON DELETE CASCADE,
@@ -26,6 +26,10 @@ CREATE TABLE products (
   price NUMERIC(10, 2) NOT NULL,
   image TEXT,
   is_active BOOLEAN DEFAULT true,
+  allergens TEXT[] DEFAULT '{}',
+  labels TEXT[] DEFAULT '{}',
+  preparation_time INTEGER DEFAULT 15, -- minutes
+  calories INTEGER,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -60,44 +64,37 @@ INSERT INTO categories (id, title, slug, description, "order", image) VALUES
 ('viski', 'Viski', 'viski', 'Özenle seçilmiş damıtımlar.', 15, 'https://images.unsplash.com/photo-1514362545857-3bc16549766b?auto=format&fit=crop&q=80'),
 ('raki', 'Rakı', 'raki', 'Geleneksel lezzet.', 16, 'https://images.unsplash.com/photo-1514362545857-3bc16549766b?auto=format&fit=crop&q=80');
 
--- 6. INSERT DATA (Products)
-INSERT INTO products (id, title, description, price, category_id, is_active, image) VALUES
-('k1', 'Gurme Serpme Kahvaltı', 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', 650, 'kahvalti', true, 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80'),
-('e1', '2 Adet Fransız Tereyağlı Kruvasan', 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan.', 300, 'ekstralar', true, 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80'),
-('e2', 'Çikolata Kreması', 'Ünlü fındık ve kakao bazlı kremalı bir sürülebilir tatlı.', 80, 'ekstralar', true, 'https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&q=80'),
-('e3', 'Dulce De Leche', 'Tatlı ve yoğun kremamsı bir sos, karamelize süt tadıyla öne çıkar.', 100, 'ekstralar', true, 'https://plus.unsplash.com/premium_photo-1675279435422-77291a13e551?auto=format&fit=crop&q=80'),
-('e4', 'Fesleğenli Domatesli Ciabatta', 'İtalya kökenli ciabatta ekmeği fesleğen ve domatesle aromalandırılarak sunulur. 4 Adet servis edilir.', 300, 'ekstralar', true, 'https://images.unsplash.com/photo-1529312266912-b33cf6227e2f?auto=format&fit=crop&q=80'),
-('e5', 'Kare Rustik Ekmek', 'Kare şeklinde hazırlanmış rustik ekmek. Geleneksel yöntemle mayalanıp fırında pişirilir.', 300, 'ekstralar', true, 'https://images.unsplash.com/photo-1509440159596-0249088b7280?auto=format&fit=crop&q=80'),
-('e6', 'Mıhlama', 'Karadeniz mutfağının ünlü mısır unu ve peynirle hazırlanan sıcak yemeği.', 400, 'ekstralar', true, 'https://images.cookieandkate.com/images/2020/10/creamy-polenta-recipe-1.jpg'),
-('e7', 'Omlet (Sade/Peynirli)', 'Yumurta bazlı ve tercihe göre peynir eklenen kahvaltı klasiği.', 300, 'ekstralar', true, 'https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&q=80'),
-('e8', 'Patates Kızartması', 'Taze patates dilimleri kızartılarak hazırlanır, isteğe göre baharatlı veya sade.', 300, 'ekstralar', true, 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&q=80'),
-('e9', 'Pişi (Adet)', 'Kızarmış hamur olarak servis edilen lezzetli bir hamur işi.', 100, 'ekstralar', true, 'https://i.nefisyemektarifleri.com/2021/04/16/yag-cekmeyen-mayasiz-pisi-tarifi.jpg'),
-('e10', 'Sahanda Menemen', 'Domates, biber ve yumurta ile hazırlanan geleneksel bir Türk kahvaltı lezzeti.', 300, 'ekstralar', true, 'https://images.unsplash.com/photo-1634509122392-1259e8e6047e?auto=format&fit=crop&q=80'),
-('e11', 'Sahanda Peynirli Yumurta', 'Yumurta ve peynirin tavada birleştiği lezzetli bir kahvaltı.', 250, 'ekstralar', true, 'https://images.unsplash.com/photo-1525351484163-7529414395d8?auto=format&fit=crop&q=80'),
-('e12', 'Sahanda Sucuklu Yumurta', 'Sucuk dilimleri ve yumurta ile hazırlanan, tavada tereyağı ile pişirilerek servis edilen doyurucu bir kahvaltı yemeği.', 350, 'ekstralar', true, 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&q=80'),
-('e13', 'Sigara Böreği (4 Adet)', 'İnce yufkaya sarılan ve kızartılmış içi genellikle peynirli hafif bir atıştırmalık.', 300, 'ekstralar', true, 'https://images.unsplash.com/photo-1616429402636-2f08514a37a8?auto=format&fit=crop&q=80'),
-('b1', 'Başlangıç Tabağı', 'Zeytin, zahter, zeytinyağı ve fesleğenli domatesli ciabatta ekmeği içeren lezzetli bir atıştırmalık tabağı.', 350, 'baslangic', true, 'https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&q=80'),
-('b2', 'Kızarmış Tavuk Ve Baharatlı Patates Kızartması', 'Tavuk parçaları kızartılıp baharatlanır ve yanında patates kızartması sunulur.', 500, 'baslangic', true, 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80'),
-('b3', 'Patates Kızartması', 'Taze patateslerden kızartılmış lezzetli bir garnitür. Baharatlı veya sade tercih edilebilir.', 300, 'baslangic', true, 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&q=80'),
-('b4', 'Roka Salatası', 'Roka Beyaz Peynir Tarla Domates ve Ceviz üzeri Balsamik Glaze ile Servis Edilir.', 350, 'baslangic', true, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80'),
-('b5', 'Rustik Ekmek Üstü Füme Somon', 'Füme somon parçaları, rustik ekmek üzerinde sunulur ve taze aromalarla zenginleştirilir.', 450, 'baslangic', true, 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80'),
-('p1', 'Gurme Rustik Sandviç', 'Taze pişirilen rustik baget, beyaz peynir, domates, roka, pesto sos ve zeytinyağı ile hazırlanır patates kızartması ile sıcak servis edilir.', 450, 'pizza-sandvic', true, 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80'),
-('p2', 'Taş Fırın Karışık Pizza', 'Taş fırında pişirilmiş, farklı malzemelerle zenginleştirilmiş roka, parmesan ve acılı zeytinyağı ile sunulan doyurucu bir karışık pizza.', 500, 'pizza-sandvic', true, 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80'),
-('p3', 'Taş Fırın Margarita Pizza', 'Taş fırında pişirilmiş, taze roka, parmesan peyniri ve acılı zeytinyağı ile sunulan geleneksel bir Margarita Pizza.', 500, 'pizza-sandvic', true, 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&q=80'),
-('pt1', 'Rakı Eşlikçisi Peynir Tabağı', 'Rakı ile uyum sağlayan çeşitli peynir türlerinden oluşan bir tabaktır.', 850, 'peynir-tabagi', true, 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&q=80'),
-('pt2', 'Türk Yerli Peynir Şarap Tabağı', 'Çeşitli yerli peynirlerin bir araya geldiği, şarapla uyumlu zengin bir tabağa sahiptir.', 1000, 'peynir-tabagi', true, 'https://images.unsplash.com/photo-1559561853-08451507cbe4?auto=format&fit=crop&q=80'),
-('t1', '2''Li Çikolatalı Mini Berliner', 'İki adet mini çikolatalı berliner tatlı hamur topudur.', 200, 'tatli', true, 'https://images.unsplash.com/photo-1601614769062-859187399945?auto=format&fit=crop&q=80'),
-('t2', 'Antakya Künefe', 'Geleneksel bir Türk tatlısı. İncecik tel kadayıf arasında eriyen peynir ve şerbetiyle sıcak servis edilir.', 350, 'tatli', true, 'https://images.unsplash.com/photo-1594520771801-b552b96c8c4c?auto=format&fit=crop&q=80'),
-('t3', 'Churros', 'Klasik İspanyol tatlısı olarak kızartılmış hamur çubukları. Çilek Reçeli, Vişne Reçeli veya Nutella ile servis edilir.', 400, 'tatli', true, 'https://images.unsplash.com/photo-1624300626442-164a696de23a?auto=format&fit=crop&q=80'),
-('t4', 'Fransız Tereyağlı Kruvasan (Sade)', 'Çıtır kruvasan, file bademlerle zenginleştirilmiştir. Çilek Reçeli, Vişne Reçeli veya Nutella ile servis edilir.', 300, 'tatli', true, 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80'),
-('t5', 'Vanilyalı Dondurma (2 Top)', 'Klasik vanilya lezzetiyle iki top dondurma sunumu.', 200, 'tatli', true, 'https://images.unsplash.com/photo-1576506295286-5cda18df43e7?auto=format&fit=crop&q=80'),
-('ay1', 'Izgara Pirzola', 'Izgarada pişirilen kemikli et dilimleri. Patates püresi tabanı ve kavrulmuş file badem ile servis edilir.', 1000, 'ana-yemek', true, 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80'),
-('ay2', 'Konak Köfte', 'Geleneksel tarifle hazırlanan nefis köfteler. Patates püresi tabanı, kavrulmuş file badem ile tatlandırılır.', 800, 'ana-yemek', true, 'https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&q=80'),
-('ay3', 'Konak Sac Kavurma', 'Sacda pişirilen lezzetli et parçaları. Patates püresi tabanı, kavrulmuş file badem ile servis edilir.', 850, 'ana-yemek', true, 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80'),
-('ay4', 'Lokum Bonfile', 'Yumuşacık bir biftek olarak patates püresi tabanı üzerinde sunulur. Kavrulmuş file badem ile lezzeti tamamlar.', 1200, 'ana-yemek', true, 'https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&q=80'),
-('ay5', 'Izgara Levrek', 'Taze günlük levrek, kömür ateşinde ızgara edilir. Yanında roka, kırmızı soğan ve fırın patates ile servis edilir.', 950, 'ana-yemek', true, '/assets/products/levrek.png'),
-('as1', 'İçli Köfte', 'Dış hamuru bulgurdan hazırlanan, içi kıymayla doldurulan geleneksel bir köfte çeşidi.', 200, 'ara-sicaklar', true, 'https://cdn.yemek.com/mnresize/1250/833/uploads/2021/03/icli-kofte-tarifi-yeni.jpg'),
-('as2', 'Kaşarlı Mantar', 'Taze mantarlar üzerine kaşar peyniri serpilerek fırınlanır.', 300, 'ara-sicaklar', true, 'https://images.unsplash.com/photo-1625938146369-adc83368bda7?auto=format&fit=crop&q=80'),
+-- 6. INSERT DATA (Products with Premium Metadata)
+INSERT INTO products (id, title, description, price, category_id, is_active, image, allergens, labels, preparation_time, calories) VALUES
+('k1', 'Gurme Serpme Kahvaltı', 'Sahanda tereyağlı sucuklu yumurta, domates, salatalık, yeşil biber, roka, avokado, siyah zeytin, Hatay kırma zeytin, çeşitli peynirler, ceviz ve mevsim meyveleri içeren zengin bir serpme kahvaltı sunumu.', 650, 'kahvalti', true, 'https://images.unsplash.com/photo-1544436856-78e9b6a6df2e?auto=format&fit=crop&q=80', '{"gluten", "dairy", "egg"}', '{"popular"}', 20, 1250),
+('e1', '2 Adet Fransız Tereyağlı Kruvasan', 'Kat kat açılan hamurun tereyağı ile harmanlanmasıyla yapılan klasik fransız kruvasan.', 300, 'ekstralar', true, 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80', '{"gluten", "dairy"}', '{"new"}', 5, 450),
+('e6', 'Mıhlama', 'Karadeniz mutfağının ünlü mısır unu ve peynirle hazırlanan sıcak yemeği.', 400, 'ekstralar', true, 'https://images.unsplash.com/photo-1638258673898-1e43343606f2?auto=format&fit=crop&q=80', '{"dairy", "gluten"}', '{"popular"}', 15, 650),
+('p3', 'Taş Fırın Margarita Pizza', 'Taş fırında pişirilmiş, taze roka, parmesan peyniri ve acılı zeytinyağı ile sunulan geleneksel bir Margarita Pizza.', 500, 'pizza-sandvic', true, 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&q=80', '{"gluten", "dairy"}', '{"popular"}', 15, 850),
+('ay1', 'Izgara Pirzola', 'Izgarada pişirilen kemikli et dilimleri. Patates püresi tabanı ve kavrulmuş file badem ile servis edilir.', 1000, 'ana-yemek', true, 'https://images.unsplash.com/photo-1544025162-d76690b67f14?auto=format&fit=crop&q=80', '{}', '{"popular"}', 25, 1100),
+('ay5', 'Izgara Levrek', 'Taze günlük levrek, kömür ateşinde ızgara edilir. Yanında roka, kırmızı soğan ve fırın patates ile servis edilir.', 950, 'ana-yemek', true, 'https://images.unsplash.com/photo-1594041680534-e8c8cdebd659?auto=format&fit=crop&q=80', '{}', '{"new"}', 30, 450),
+('e10', 'Sahanda Menemen', 'Domates, biber ve yumurta ile hazırlanan geleneksel bir Türk kahvaltı lezzeti.', 300, 'ekstralar', true, 'https://images.unsplash.com/photo-1590412200988-a436970781fa?auto=format&fit=crop&q=80', '{}', '{}', 15, 350),
+('e11', 'Sahanda Peynirli Yumurta', 'Yumurta ve peynirin tavada birleştiği lezzetli bir kahvaltı.', 250, 'ekstralar', true, 'https://images.unsplash.com/photo-1525351484163-7529414395d8?auto=format&fit=crop&q=80', '{"egg", "dairy"}', '{}', 10, 300),
+('e12', 'Sahanda Sucuklu Yumurta', 'Sucuk dilimleri ve yumurta ile hazırlanan, tavada tereyağı ile pişirilerek servis edilen doyurucu bir kahvaltı yemeği.', 350, 'ekstralar', true, 'https://images.unsplash.com/photo-1525351484163-7529414395d8?auto=format&fit=crop&q=80', '{"egg"}', '{"popular"}', 10, 450),
+('e13', 'Sigara Böreği (4 Adet)', 'İnce yufkaya sarılan ve kızartılmış içi genellikle peynirli hafif bir atıştırmalık.', 300, 'ekstralar', true, 'https://images.unsplash.com/photo-1582236744837-1246944e05b3?auto=format&fit=crop&q=80', '{"gluten", "dairy"}', '{}', 10, 320),
+('b1', 'Başlangıç Tabağı', 'Zeytin, zahter, zeytinyağı ve fesleğenli domatesli ciabatta ekmeği içeren lezzetli bir atıştırmalık tabağı.', 350, 'baslangic', true, 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80', '{"gluten"}', '{}', 8, 250),
+('b2', 'Kızarmış Tavuk Ve Baharatlı Patates Kızartması', 'Tavuk parçaları kızartılıp baharatlanır ve yanında patates kızartması sunulur.', 500, 'baslangic', true, 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80', '{"gluten"}', '{"popular"}', 15, 600),
+('b3', 'Patates Kızartması', 'Taze patateslerden kızartılmış lezzetli bir garnitür. Baharatlı veya sade tercih edilebilir.', 300, 'baslangic', true, 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&q=80', '{}', '{}', 8, 400),
+('b4', 'Roka Salatası', 'Roka Beyaz Peynir Tarla Domates ve Ceviz üzeri Balsamik Glaze ile Servis Edilir.', 350, 'baslangic', true, 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80', '{"dairy", "nuts"}', '{"vegan"}', 8, 180),
+('b5', 'Rustik Ekmek Üstü Füme Somon', 'Füme somon parçaları, rustik ekmek üzerinde sunulur ve taze aromalarla zenginleştirilir.', 450, 'baslangic', true, 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80', '{"fish", "gluten"}', '{"new"}', 10, 350),
+('p1', 'Gurme Rustik Sandviç', 'Taze pişirilen rustik baget, beyaz peynir, domates, roka, pesto sos ve zeytinyağı ile hazırlanır patates kızartması ile sıcak servis edilir.', 450, 'pizza-sandvic', true, 'https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?auto=format&fit=crop&q=80', '{"gluten", "dairy"}', '{}', 12, 550),
+('p2', 'Taş Fırın Karışık Pizza', 'Taş fırında pişirilmiş, farklı malzemelerle zenginleştirilmiş roka, parmesan ve acılı zeytinyağı ile sunulan doyurucu bir karışık pizza.', 500, 'pizza-sandvic', true, 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80', '{"gluten", "dairy", "meat"}', '{"popular"}', 20, 900),
+('pt1', 'Rakı Eşlikçisi Peynir Tabağı', 'Rakı ile uyum sağlayan çeşitli peynir türlerinden oluşan bir tabaktır.', 850, 'peynir-tabagi', true, 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&q=80', '{"dairy", "nuts"}', '{"shareable"}', 5, 600),
+('pt2', 'Türk Yerli Peynir Şarap Tabağı', 'Çeşitli yerli peynirlerin bir araya geldiği, şarapla uyumlu zengin bir tabağa sahiptir.', 1000, 'peynir-tabagi', true, 'https://images.unsplash.com/photo-1559561853-08451507cbe4?auto=format&fit=crop&q=80', '{"dairy", "nuts"}', '{"shareable"}', 5, 650),
+('t1', '2''Li Çikolatalı Mini Berliner', 'İki adet mini çikolatalı berliner tatlı hamur topudur.', 200, 'tatli', true, 'https://images.unsplash.com/photo-1601614769062-859187399945?auto=format&fit=crop&q=80', '{"gluten", "dairy"}', '{"sweet"}', 5, 300),
+('t2', 'Antakya Künefe', 'Geleneksel bir Türk tatlısı. İncecik tel kadayıf arasında eriyen peynir ve şerbetiyle sıcak servis edilir.', 350, 'tatli', true, 'https://images.unsplash.com/photo-1594520771801-b552b96c8c4c?auto=format&fit=crop&q=80', '{"gluten", "dairy"}', '{"signature"}', 20, 750),
+('t3', 'Churros', 'Klasik İspanyol tatlısı olarak kızartılmış hamur çubukları. Çilek Reçeli, Vişne Reçeli veya Nutella ile servis edilir.', 400, 'tatli', true, 'https://images.unsplash.com/photo-1624300626442-164a696de23a?auto=format&fit=crop&q=80', '{"gluten"}', '{"popular"}', 10, 500),
+('t4', 'Fransız Tereyağlı Kruvasan (Sade)', 'Çıtır kruvasan, file bademlerle zenginleştirilmiştir. Çilek Reçeli, Vişne Reçeli veya Nutella ile servis edilir.', 300, 'tatli', true, 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80', '{"gluten", "dairy"}', '{}', 5, 350),
+('t5', 'Vanilyalı Dondurma (2 Top)', 'Klasik vanilya lezzetiyle iki top dondurma sunumu.', 200, 'tatli', true, 'https://images.unsplash.com/photo-1576506295286-5cda18df43e7?auto=format&fit=crop&q=80', '{"dairy"}', '{}', 2, 200),
+('ay2', 'Konak Köfte', 'Geleneksel tarifle hazırlanan nefis köfteler. Patates püresi tabanı, kavrulmuş file badem ile tatlandırılır.', 800, 'ana-yemek', true, 'https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&q=80', '{"meat", "gluten"}', '{"popular"}', 20, 850),
+('ay3', 'Konak Sac Kavurma', 'Sacda pişirilen lezzetli et parçaları. Patates püresi tabanı, kavrulmuş file badem ile servis edilir.', 850, 'ana-yemek', true, 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80', '{"meat"}', '{}', 25, 900),
+('ay4', 'Lokum Bonfile', 'Yumuşacık bir biftek olarak patates püresi tabanı üzerinde sunulur. Kavrulmuş file badem ile lezzeti tamamlar.', 1200, 'ana-yemek', true, 'https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&q=80', '{"meat"}', '{"premium"}', 25, 950),
+('as1', 'İçli Köfte', 'Dış hamuru bulgurdan hazırlanan, içi kıymayla doldurulan geleneksel bir köfte çeşidi.', 200, 'ara-sicaklar', true, 'https://images.unsplash.com/photo-1616429402636-2f08514a37a8?auto=format&fit=crop&q=80', '{"gluten", "meat"}', '{}', 10, 300),
+('as2', 'Kaşarlı Mantar', 'Taze mantarlar üzerine kaşar peyniri serpilerek fırınlanır.', 300, 'ara-sicaklar', true, 'https://images.unsplash.com/photo-1625938146369-adc83368bda7?auto=format&fit=crop&q=80', '{"dairy", "mushroom"}', '{}', 15, 250);,
 ('as3', 'Paçanga Böreği', 'Pastırma ve peynirle doldurulmuş, ince yufkayla sarılı lezzetli bir börek türü.', 200, 'ara-sicaklar', true, 'https://cdn.yemek.com/mnresize/940/940/uploads/2016/06/pacanga-boregi-rece.jpg'),
 ('m1', 'Acılı Atom', 'Yoğurt ve acı biberle hazırlanan bir meze. Baharatlı tadıyla sofraya canlılık katar.', 250, 'meze', true, 'https://cdn.yemek.com/mnresize/1250/833/uploads/2021/10/ev-yapimi-atom-mezesi.jpg'),
 ('m2', 'Avokadolu Kapya Biber', 'Avokado ve kapya biberin taze birleşimiyle sunulan bu meze, hafif ve renkli bir lezzet sunar.', 300, 'meze', true, 'https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&q=80'),
